@@ -51,10 +51,8 @@ export default {
   },
   methods: {
     login: function() {
-      // 조회 결과 학생이면 homestudent
-      window.open('/homestudent', '_self');
-      // 선생 : hometeacher
-      // 관리자 : homeadmin
+      // 로그인 반환 결과 (0 : 관리자, 1 : 선생님, 2 : 학생)
+      window.open('/home')
     }
   }
 };

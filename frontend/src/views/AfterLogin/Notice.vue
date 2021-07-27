@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import NavSideBar from '@/components/NavSideBar.vue'
+import NavSideBar from '@/components/NavSideBarTeacher.vue'
 export default {
   name: 'Notice',
   components: {

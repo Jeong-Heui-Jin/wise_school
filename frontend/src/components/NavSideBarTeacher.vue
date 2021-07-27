@@ -17,7 +17,7 @@
 
 <script>
 export default {
-  name: 'Navsidebar',
+  name: 'NavsidebarTeacher',
   methods: {
     myDropFunc: function () {
       var x = document.getElementById("demoDrop")

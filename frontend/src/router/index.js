@@ -4,7 +4,7 @@ import Login from '../views/BeforeLogin/Login.vue'
 import PasswordReset from '../views/BeforeLogin/PasswordReset'
 import PasswordChange from '../views/BeforeLogin/PasswordChange'
 import ServiceRequest from '../views/BeforeLogin/ServiceRequest'
-import HomeStudent from '../views/AfterLogin/HomeStudent'
+import Home from '../views/AfterLogin/Home'
 import Class from '../views/AfterLogin/Class'
 import Timetable from '../views/AfterLogin/Timetable'
 import Homework from '../views/AfterLogin/Homework'
@@ -42,9 +42,9 @@ const routes = [
     component: ServiceRequest,
   },
   {
-    path: '/homestudent',
-    name: 'HomeStudent',
-    component: HomeStudent,
+    path: '/home',
+    name: 'Home',
+    component: Home,
   },
   {
     path: '/class',
