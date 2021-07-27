@@ -1,6 +1,7 @@
 <template>
   <div>
     <!-- 백엔드와 연동하여 권한을 확인한 후 해당 페이지를 띄워줄 예정 -->
+    <NavBar/>
     <div v-if="authority==='0'"><NavSideBarAdmin/></div>
     <div v-else-if="authority==='1'"><NavSideBarTeacher/></div>
     <div v-else><NavSideBarStudent/></div>
@@ -12,6 +13,7 @@
 import NavSideBarAdmin from '@/components/NavSideBarAdmin.vue'
 import NavSideBarTeacher from '@/components/NavSideBarTeacher.vue'
 import NavSideBarStudent from '@/components/NavSideBarStudent.vue'
+import NavBar from '@/components/NavBar.vue'
 
 export default {
   name: 'Home',
@@ -28,6 +30,7 @@ export default {
     NavSideBarAdmin,
     NavSideBarTeacher,
     NavSideBarStudent,
+    NavBar
   },
   created: function () {
     //this.$router.push({ name: 'Login' })

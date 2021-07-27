@@ -1,5 +1,5 @@
 <template>
-  <div style="font-family: 'Jua', sans-serif;" class="sidenav con w3-sidebar w3-bar-block" aria-label="Sidebar with custom footer" no-header shadow>      
+  <div style="font-family: 'Jua', sans-serif;" class="sidenav con w3-sidebar w3-bar-block fixed-top" aria-label="Sidebar with custom footer" no-header shadow>      
     <img class="navbar-logo" src="@/assets/슬학생_로고.png" alt="슬학생_로고">
     <div style="margin-top:10%;">
       <router-link class="w3-bar-item w3-button tablink text-decoration-none" to="/home">홈</router-link><br>
