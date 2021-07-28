@@ -8,12 +8,6 @@
     <NavBar />
     <div id="backgroundForm">
       <div id="listForm">
-        <!-- 일반 리스트 태그로는 개행이 안됨 -->
-        <!-- <ul>
-        <li v-for="(notice, index) in noticeList" v-bind:key="index">
-          {{ index }}{{ notice.name }}
-        </li>
-      </ul> -->
         <b-list-group>
           <b-list-group id="textNotice">
             <div>
@@ -48,30 +42,6 @@
             >
           </b-list-group-item>
         </b-list-group>
-
-        <!-- 설정 -->
-        <!-- <b-table over :fields="fields" :items="items">
-        <template colspan="1" #cell(index)="data">
-          {{ data.index + 1 }}
-        </template>
-        <template style="text-align: 'left'" #cell(name)="data">
-          {{ data.value }}
-        </template>
-      </b-table> -->
-        <!-- <b-table-simple hover small caption-top responsive>
-        <b-thead head-variant="dark">
-          <b-tr>
-            <b-th colspan="1">Country</b-th>
-            <b-th colspan="3">City</b-th>
-          </b-tr>
-        </b-thead>
-        <b-tbody>
-          <b-tr v-for="(item, index) in items" v-bind:key="index">
-            <b-th colspan="1">{{ index }}</b-th>
-            <b-td colspan="9">{{ item.name }}</b-td>
-          </b-tr>
-        </b-tbody>
-      </b-table-simple> -->
       </div>
     </div>
   </div>
