@@ -9,7 +9,7 @@ import Class from '../views/AfterLogin/Class'
 import Timetable from '../views/AfterLogin/Timetable'
 import Homework from '../views/AfterLogin/Homework'
 import Notice from '../views/AfterLogin/Notice'
-import Notice from '../views/AfterLogin/NoticeCreate'
+import NoticeCreate from '../views/AfterLogin/NoticeCreate'
 import Attendance from '../views/AfterLogin/Attendance'
 import Attitude from '../views/AfterLogin/Attitude'
 
