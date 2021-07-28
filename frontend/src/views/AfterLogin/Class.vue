@@ -5,6 +5,18 @@
 
     <h1 id="title">우리반 친구들</h1>
 
+    <div id="teacher" class="d-flex">
+      <img id="teacher-img" src="@/assets/owl.png" alt="프로필"/>
+      <div id="teacher-form">
+        <h3 id="class-num">{{teacher.class}}</h3>
+        <div class="d-flex">
+          <h2 id="teacher-name">{{teacher.name}}</h2>
+          <h3 id="teacher-title">담임 선생님</h3>
+        </div>
+        <h3 id="call">전화 번호 : {{teacher.number}}</h3>
+      </div>
+      <button id="teacher-button" href="#">메시지 보내기</button>
+    </div>
     <div id="content" class="d-flex flex-wrap justify-content-start flex-row">
     </div>
   </div>
@@ -28,6 +40,11 @@ export default {
   name: 'Class',
   data() {
     return{
+      teacher: {
+        name: '유재석',
+        number: '02-123-4567',
+        class: '2학년 2반'
+      },
       students: [
         {name: '김우진', number: '1234'}, 
         {name: '목상원', number: '2341'}, 
@@ -75,7 +92,7 @@ export default {
           <h3>${li.name}</h3>
           <img id="img" src=${img} alt="프로필"/>
           <br/>
-          <button href="#" id="button">메시지 보내기</b-button>
+          <button href="#" id="button">메시지 보내기</button>
           </div>`;
       }).join("");
     });
@@ -93,9 +110,64 @@ export default {
   left: 22%;
 }
 
+#class #teacher {
+  position: absolute;
+  top: 90px;
+  left: 22%;
+  background-color: #ccf0ef;
+  border-radius: 30px;
+  min-width: 76%;
+  min-height: 200px;
+  padding: 30px;
+}
+
+#class #teacher-img {
+  width: 150px;
+  height: 150px;
+  margin-right: 30px;
+}
+
+#class #teacher-button {
+  position: absolute;
+  right: 10%;
+  border-radius: 10px;
+  min-width: 120px;
+  min-height: 50px;
+  border: 0;
+
+}
+
+#class #teacher-form {
+  min-width: 50%;
+}
+
+#class #class-num {
+  margin-right: 80%;
+  margin-bottom: 10px;
+  width: 200px;
+}
+
+#class #teacher-name {
+  margin-right: 30px;
+  margin-bottom: 20px;
+  width: 200px;
+}
+
+#class #call {
+  width: 500px;
+  margin-top: 15px;
+  text-align: left;
+  margin-left: 20px;
+}
+
+#class #teacher-title {
+  margin-top: 7px;
+  width: 200px;
+}
+
 #class #content {
   position: absolute;
-  top: 10%;
+  top: 300px;
   left: 22%;
   min-width: 78%;
 }
