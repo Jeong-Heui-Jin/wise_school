@@ -12,7 +12,11 @@
           <b-list-group id="textNotice">
             <div>
               <span id="noticeTitle" style="text-align: left">공지사항</span
-              ><button id="noticeButton" style="text-align: right">
+              ><button
+                id="noticeButton"
+                style="text-align: right"
+                @click="goNoticeCreate()"
+              >
                 공지사항 작성
               </button>
             </div>
@@ -71,6 +75,11 @@ export default {
   components: {
     NavSideBar,
     NavBar,
+  },
+  methods: {
+    goNoticeCreate: function () {
+      window.open("/notice_create", "_self");
+    },
   },
 };
 </script>
