@@ -9,6 +9,7 @@ import Class from '../views/AfterLogin/Class'
 import Timetable from '../views/AfterLogin/Timetable'
 import Homework from '../views/AfterLogin/Homework'
 import Notice from '../views/AfterLogin/Notice'
+import Notice from '../views/AfterLogin/NoticeCreate'
 import Attendance from '../views/AfterLogin/Attendance'
 import Attitude from '../views/AfterLogin/Attitude'
 
@@ -65,6 +66,11 @@ const routes = [
     path: '/notice',
     name: 'Notice',
     component: Notice,
+  },
+  {
+    path: '/notice_create',
+    name: 'NoticeCreate',
+    component: NoticeCreate,
   },
   {
     path: '/attendance',
