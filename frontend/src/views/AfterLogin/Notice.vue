@@ -16,19 +16,39 @@
             >
               공지사항 작성
             </button>
-          </div>
-        </b-list-group>
+          </div> </b-list-group
+        ><b-list-group-item
+          id="textNoticeImportant"
+          v-for="(important_item, index) in important_items"
+          v-bind:key="index"
+        >
+          <a id="noticeImportant" href="/notice"
+            >🎈 {{ important_item.name }}</a
+          >
+        </b-list-group-item>
         <b-list-group-item
           id="textNotice"
           v-for="(item, index) in items"
           v-bind:key="index"
         >
-          <a href="/notice" v-if="index % 6 === 0">📕 {{ item.name }}</a>
-          <a href="/notice" v-else-if="index % 6 === 1">📗 {{ item.name }}</a>
-          <a href="/notice" v-else-if="index % 6 === 2">📘 {{ item.name }}</a>
-          <a href="/notice" v-else-if="index % 6 === 3">📔 {{ item.name }}</a>
-          <a href="/notice" v-else-if="index % 6 === 4">📙 {{ item.name }}</a>
-          <a href="/notice" v-else-if="index % 6 === 5">📒 {{ item.name }}</a>
+          <a id="notice" href="/notice" v-if="index % 10 === 0"
+            >📕 {{ item.name }}</a
+          >
+          <a id="notice" href="/notice" v-else-if="index % 10 === 1"
+            >📗 {{ item.name }}</a
+          >
+          <a id="notice" href="/notice" v-else-if="index % 10 === 2"
+            >📘 {{ item.name }}</a
+          >
+          <a id="notice" href="/notice" v-else-if="index % 10 === 3"
+            >📔 {{ item.name }}</a
+          >
+          <a id="notice" href="/notice" v-else-if="index % 10 === 4"
+            >📙 {{ item.name }}</a
+          >
+          <a id="notice" href="/notice" v-else-if="index % 10 === 5"
+            >📒 {{ item.name }}</a
+          >
         </b-list-group-item>
       </b-list-group>
     </div>
@@ -42,7 +62,13 @@ export default {
   name: "Notice",
   data() {
     return {
-      fields: [{ key: "name", label: "wa" }],
+      // fields: [{ key: "name", label: "wa" }],
+      important_items: [
+        { name: "중요 공지사항 1" },
+        { name: "중요 공지사항 2" },
+        { name: "중요 공지사항 3" },
+        { name: "중요 공지사항 4" },
+      ],
       items: [
         { name: "공지사항 1" },
         { name: "공지사항 2" },
@@ -67,21 +93,43 @@ export default {
 </script>
 
 <style>
-a {
+#noticeImportant {
+  font-weight: bold;
   font-size: 120%;
+
+  /* padding: 10px; */
 }
 
-a:link {
+#noticeImportant:link {
   color: red;
   text-decoration: none;
 }
 
-a:visited {
+#noticeImportant:visited {
   color: black;
   text-decoration: none;
 }
 
-a:hover {
+#noticeImportant:hover {
+  color: dodgerblue;
+  text-decoration: underline;
+}
+
+#notice {
+  font-size: 120%;
+}
+
+#notice:link {
+  color: red;
+  text-decoration: none;
+}
+
+#notice:visited {
+  color: black;
+  text-decoration: none;
+}
+
+#notice:hover {
   color: rgb(255, 207, 94);
   text-decoration: underline;
 }
@@ -101,6 +149,15 @@ a:hover {
   position: absolute;
   top: 90px;
   left: 22%;
+}
+
+#listForm #textNoticeImportant {
+  background-color: #f9f5d8;
+  text-align: left;
+  min-width: 800px;
+  border-radius: 10px;
+  border: 1px solid;
+  margin-top: 20px;
 }
 
 #listForm #textNotice {
