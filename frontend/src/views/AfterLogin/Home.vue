@@ -9,7 +9,7 @@
     <h3 id="date">{{ year }}년 {{ month }}월 {{ date }}일 {{ day }}</h3>
     <div>
       <!-- 수업참여 숙제 -->
-      <div id="top-2" class="d-flex">
+      <div id="top-2" class="d-flex fixed-top">
       <!-- 수업참여 -->
         <div id="attend-class">
           <div class="d-flex justify-content-left" id="home-title">
@@ -31,7 +31,7 @@
         </div>  
       </div>
       <!-- 공지사항 -->
-      <div id="notes">
+      <div id="notes" class="fixed-top">
         <div class="d-flex justify-content-left" id="home-title">
             <img id="img" src="@/assets/alert.png" alt="공지사항"/>
             <h2>공지사항</h2>
@@ -42,7 +42,7 @@
         </ul>
       </div>
       <!-- 오늘의 시간표 -->
-      <div id="timetable">
+      <div id="timetable" class="fixed-top">
         <div class="d-flex justify-content-left" id="home-title">
             <img id="img" src="@/assets/schedule.png" alt="시간표"/>
             <h2>오늘의 시간표</h2>
@@ -215,6 +215,7 @@ export default {
   position: absolute;
   left: 22%;
   top: 450px;
+  max-width: 750px;
   min-width: 750px;
   min-height: 300px;
   border-radius: 20px;
@@ -223,11 +224,12 @@ export default {
 
 #home #timetable {
   position: absolute;
+  top: 100px;
+  right: 0px;
+  margin-left: auto;
   margin-right: 35px;
   border-radius: 20px;
-  right: 0%;
-  top: 100px;
-  min-width: 300px;
+  max-width: 300px;
   min-height: 680px;
   border: 2px solid aqua;
 }
