@@ -23,24 +23,12 @@
           v-for="(item, index) in items"
           v-bind:key="index"
         >
-          <router-link id="notice" to="/notice" v-if="index % 6 === 0"
-            >📕 {{ item.name }}</router-link
-          >
-          <router-link to="/notice" v-else-if="index % 6 === 1"
-            >📗 {{ item.name }}</router-link
-          >
-          <router-link to="/notice" v-else-if="index % 6 === 2"
-            >📘 {{ item.name }}</router-link
-          >
-          <router-link to="/notice" v-else-if="index % 6 === 3"
-            >📔 {{ item.name }}</router-link
-          >
-          <router-link to="/notice" v-else-if="index % 6 === 4"
-            >📙 {{ item.name }}</router-link
-          >
-          <router-link to="/notice" v-else-if="index % 6 === 5"
-            >📒 {{ item.name }}</router-link
-          >
+          <a href="/notice" v-if="index % 6 === 0">📕 {{ item.name }}</a>
+          <a href="/notice" v-else-if="index % 6 === 1">📗 {{ item.name }}</a>
+          <a href="/notice" v-else-if="index % 6 === 2">📘 {{ item.name }}</a>
+          <a href="/notice" v-else-if="index % 6 === 3">📔 {{ item.name }}</a>
+          <a href="/notice" v-else-if="index % 6 === 4">📙 {{ item.name }}</a>
+          <a href="/notice" v-else-if="index % 6 === 5">📒 {{ item.name }}</a>
         </b-list-group-item>
       </b-list-group>
     </div>
@@ -63,8 +51,6 @@ export default {
         { name: "공지사항 5" },
         { name: "공지사항 6" },
         { name: "공지사항 7" },
-        { name: "공지사항 8" },
-        { name: "공지사항 9" },
       ],
     };
   },
@@ -81,6 +67,25 @@ export default {
 </script>
 
 <style>
+a {
+  font-size: 120%;
+}
+
+a:link {
+  color: red;
+  text-decoration: none;
+}
+
+a:visited {
+  color: black;
+  text-decoration: none;
+}
+
+a:hover {
+  color: rgb(255, 207, 94);
+  text-decoration: underline;
+}
+
 #listForm {
   max-width: 900px;
   min-width: 900px;
