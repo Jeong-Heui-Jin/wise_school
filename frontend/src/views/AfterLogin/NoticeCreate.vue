@@ -6,6 +6,20 @@
     <h1 id="noticeCreateTitle">공지사항 작성</h1>
 
     <div id="createForm">
+      <h2 id="title">제목</h2>
+      <div id="titleName">8월 급식 안내 및 메뉴표</div>
+      <h2 id="content">내용</h2>
+      <div id="contentText" v-if="contents">
+        {{ contents }}
+        <!-- 8월 1일부터 31일 까지 급식표가 첨부되어 있습니다. 메뉴 확인
+        부탁드립니다. 또한 급식비가 인상되어 기존 130,000원의 급식비가
+        1,300,000원으로 변경되었으니 참고 부탁드립니다. -->
+      </div>
+      <h2 id="fileName">파일 첨부</h2>
+      <div id="fileUpload">
+        8월 급식 안내문.docx <button id="fileUploadBtn">파일첨부</button>
+      </div>
+
       <h3>
         <button id="cancelBtn">취소</button>
         <button id="saveBtn">저장</button>
@@ -19,6 +33,15 @@ import NavSideBar from "@/components/NavSideBarTeacher.vue";
 import NavBar from "@/components/NavBar.vue";
 export default {
   name: "NoticeCreate",
+  data() {
+    return {
+      contents: `8월 1일부터 31일 까지 급식표가 첨부되어 있습니다.
+        메뉴 확인 부탁드립니다.
+
+        또한 급식비가 인상되어 기존 130,000원의 급식비가
+        1,300,000원으로 변경되었으니 참고 부탁드립니다.`,
+    };
+  },
   components: {
     NavSideBar,
     NavBar,
@@ -35,7 +58,7 @@ export default {
   border-radius: 12px;
 
   color: red;
-  background-color: #f5a8a8;
+  background-color: #fcb6b6;
 
   min-width: 11%;
 }
@@ -47,8 +70,8 @@ export default {
 
   border-radius: 12px;
 
-  color: rgb(45, 45, 255);
-  background-color: #9a9cff;
+  color: rgb(38, 38, 255);
+  background-color: #a8aafd;
 
   min-width: 11%;
 }
@@ -62,12 +85,87 @@ export default {
   position: absolute;
 
   min-width: 70%;
-  min-height: 550px;
+  min-height: 75%;
 
   top: 112px;
   left: 25%;
 
-  background-color: rgb(157, 230, 157);
+  background-color: rgb(154, 201, 154);
   border-radius: 10px;
+  /* z-index: 1; */
+
+  font-size: 160%;
+}
+
+#createForm #title {
+  position: absolute;
+  left: 10%;
+  top: 120px;
+}
+
+#createForm #titleName {
+  position: absolute;
+  left: 30%;
+  top: 120px;
+
+  min-width: 60%;
+
+  background-color: rgb(248, 236, 196);
+  border-radius: 10px;
+  /* z-index: 0; */
+}
+
+#content {
+  position: absolute;
+  left: 10%;
+  top: 220px;
+}
+
+#contentText {
+  position: absolute;
+  left: 30%;
+  top: 220px;
+
+  max-width: 60%;
+  min-width: 60%;
+  min-height: 40%;
+
+  padding: 10px;
+
+  background-color: rgb(248, 236, 196);
+  border-radius: 10px;
+}
+
+#fileName {
+  position: absolute;
+  left: 10%;
+  top: 560px;
+}
+
+#fileUpload {
+  position: absolute;
+  left: 30%;
+  top: 560px;
+
+  max-width: 60%;
+  min-width: 60%;
+
+  background-color: rgb(248, 236, 196);
+  border-radius: 13px;
+
+  text-align: left;
+  padding-left: 15px;
+}
+
+#fileUploadBtn {
+  position: absolute;
+  left: 85%;
+
+  min-width: 14%;
+
+  background-color: rgb(187, 187, 187);
+  border-radius: 13px;
+
+  font-size: 80%;
 }
 </style>
