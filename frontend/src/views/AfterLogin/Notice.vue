@@ -1,52 +1,48 @@
 <template>
-  <div
-    class="fixed-top d-flex align-items-center justify-content-center"
-    style="bottom: 0; overflow-y: auto; font-family: 'Jua', sans-serif"
-    variant="light"
-  >
+  <div style="font-family: 'Jua', sans-serif" variant="light">
     <NavSideBar />
     <NavBar />
-    <div id="backgroundForm">
-      <div id="listForm">
+
+    <h1 id="noticeTitle">공지사항</h1>
+
+    <div id="listForm">
+      <b-list-group>
         <b-list-group>
-          <b-list-group id="textNotice">
-            <div>
-              <span id="noticeTitle" style="text-align: left">공지사항</span
-              ><button
-                id="noticeButton"
-                style="text-align: right"
-                @click="goNoticeCreate()"
-              >
-                공지사항 작성
-              </button>
-            </div>
-          </b-list-group>
-          <b-list-group-item
-            id="textNotice"
-            v-for="(item, index) in items"
-            v-bind:key="index"
-          >
-            <router-link id="notice" to="/notice" v-if="index % 6 === 0"
-              >📕 {{ item.name }}</router-link
+          <div>
+            <button
+              id="noticeButton"
+              style="text-align: right"
+              @click="goNoticeCreate()"
             >
-            <router-link to="/notice" v-else-if="index % 6 === 1"
-              >📗 {{ item.name }}</router-link
-            >
-            <router-link to="/notice" v-else-if="index % 6 === 2"
-              >📘 {{ item.name }}</router-link
-            >
-            <router-link to="/notice" v-else-if="index % 6 === 3"
-              >📔 {{ item.name }}</router-link
-            >
-            <router-link to="/notice" v-else-if="index % 6 === 4"
-              >📙 {{ item.name }}</router-link
-            >
-            <router-link to="/notice" v-else-if="index % 6 === 5"
-              >📒 {{ item.name }}</router-link
-            >
-          </b-list-group-item>
+              공지사항 작성
+            </button>
+          </div>
         </b-list-group>
-      </div>
+        <b-list-group-item
+          id="textNotice"
+          v-for="(item, index) in items"
+          v-bind:key="index"
+        >
+          <router-link id="notice" to="/notice" v-if="index % 6 === 0"
+            >📕 {{ item.name }}</router-link
+          >
+          <router-link to="/notice" v-else-if="index % 6 === 1"
+            >📗 {{ item.name }}</router-link
+          >
+          <router-link to="/notice" v-else-if="index % 6 === 2"
+            >📘 {{ item.name }}</router-link
+          >
+          <router-link to="/notice" v-else-if="index % 6 === 3"
+            >📔 {{ item.name }}</router-link
+          >
+          <router-link to="/notice" v-else-if="index % 6 === 4"
+            >📙 {{ item.name }}</router-link
+          >
+          <router-link to="/notice" v-else-if="index % 6 === 5"
+            >📒 {{ item.name }}</router-link
+          >
+        </b-list-group-item>
+      </b-list-group>
     </div>
   </div>
 </template>
@@ -88,37 +84,39 @@ export default {
 #listForm {
   max-width: 900px;
   min-width: 900px;
-  max-height: 100%;
-  min-height: 100%;
+  max-height: 60%;
+  min-height: 60%;
   margin: 0px auto;
   border-radius: 10px;
-  padding: 100;
+  /* padding: 100; */
   background-color: white;
+}
+
+#listForm {
+  position: absolute;
+  top: 90px;
+  left: 22%;
 }
 
 #listForm #textNotice {
   text-align: left;
-  max-width: 800px;
+  /* margin: 0px auto; */
+  /* max-width: 800px; */
   min-width: 800px;
-  margin: 0px auto;
   border-radius: 10px;
-}
-
-#listForm #textNotice #notice {
   border: 1px solid;
+  margin-top: 20px;
 }
 
 #noticeTitle {
-  font-size: 200%;
-  display: inline-block;
+  position: absolute;
+  left: 22%;
 }
 
 #noticeButton {
-  display: flex;
-  align-items: center;
-  margin: 0px auto;
+  /* margin: 0px auto; */
   float: right;
   border-radius: 10px;
-  background-color: rgb(245, 183, 102);
+  background-color: rgb(193, 243, 187);
 }
 </style>
