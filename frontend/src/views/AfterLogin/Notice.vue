@@ -31,22 +31,22 @@
           v-for="(item, index) in items"
           v-bind:key="index"
         >
-          <a id="notice" href="/notice" v-if="index % 10 === 0"
+          <a id="notice" href="/notice" v-if="index % 6 === 0"
             >📕 {{ item.name }}</a
           >
-          <a id="notice" href="/notice" v-else-if="index % 10 === 1"
+          <a id="notice" href="/notice" v-else-if="index % 6 === 1"
             >📗 {{ item.name }}</a
           >
-          <a id="notice" href="/notice" v-else-if="index % 10 === 2"
+          <a id="notice" href="/notice" v-else-if="index % 6 === 2"
             >📘 {{ item.name }}</a
           >
-          <a id="notice" href="/notice" v-else-if="index % 10 === 3"
+          <a id="notice" href="/notice" v-else-if="index % 6 === 3"
             >📔 {{ item.name }}</a
           >
-          <a id="notice" href="/notice" v-else-if="index % 10 === 4"
+          <a id="notice" href="/notice" v-else-if="index % 6 === 4"
             >📙 {{ item.name }}</a
           >
-          <a id="notice" href="/notice" v-else-if="index % 10 === 5"
+          <a id="notice" href="/notice" v-else-if="index % 6 === 5"
             >📒 {{ item.name }}</a
           >
         </b-list-group-item>

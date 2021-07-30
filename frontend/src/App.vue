@@ -5,6 +5,15 @@
 </template>
 
 <script>
+window.onfocus=function() {
+
+}
+window.onload=function() {
+  window.focus();
+  window.moveTo(0, 0);
+  window.resizeTo(1280, 800);
+}
+
 import BeforeLogin from './components/BeforeLogin'
 
 export default {
