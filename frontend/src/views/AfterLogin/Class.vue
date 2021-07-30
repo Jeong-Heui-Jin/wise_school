@@ -116,10 +116,10 @@ export default {
 #class #teacher {
   position: absolute;
   top: 90px;
-  left: 22%;
+  left: 24%;
   background-color: #ccf0ef;
   border-radius: 30px;
-  min-width: 76%;
+  min-width: 70%;
   min-height: 200px;
   padding: 30px;
 }
