@@ -5,26 +5,22 @@
 
     <h1 id="noticeCreateTitle">공지사항 작성</h1>
 
-    <div id="createForm">
+    <b-form id="createForm">
       <h2 id="title">제목</h2>
-      <div id="titleName">8월 급식 안내 및 메뉴표</div>
+      <b-form-input id="titleName" size="lg"
+        >8월 급식 안내 및 메뉴표</b-form-input
+      >
       <h2 id="content">내용</h2>
-      <div id="contentText" v-if="contents">
-        {{ contents }}
-        <!-- 8월 1일부터 31일 까지 급식표가 첨부되어 있습니다. 메뉴 확인
-        부탁드립니다. 또한 급식비가 인상되어 기존 130,000원의 급식비가
-        1,300,000원으로 변경되었으니 참고 부탁드립니다. -->
-      </div>
+      <b-form-textarea id="contentText"> </b-form-textarea>
       <h2 id="fileName">파일 첨부</h2>
-      <div id="fileUpload">
-        8월 급식 안내문.docx <button id="fileUploadBtn">파일첨부</button>
-      </div>
+      <input type="file" accept="image/*" id="fileUpload" />
+      <!-- <button id="fileUploadBtn">파일첨부</button> -->
 
       <h3>
         <button id="cancelBtn">취소</button>
         <button id="saveBtn">저장</button>
       </h3>
-    </div>
+    </b-form>
   </div>
 </template>
 
@@ -106,9 +102,10 @@ export default {
 #createForm #titleName {
   position: absolute;
   left: 30%;
-  top: 120px;
+  top: 110px;
 
-  min-width: 60%;
+  width: 42vw;
+  font-size: 100%;
 
   background-color: rgb(248, 236, 196);
   border-radius: 10px;
@@ -131,6 +128,8 @@ export default {
   min-height: 40%;
 
   padding: 10px;
+
+  font-size: 80%;
 
   background-color: rgb(248, 236, 196);
   border-radius: 10px;
