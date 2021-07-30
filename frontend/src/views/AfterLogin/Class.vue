@@ -89,10 +89,13 @@ export default {
         } 
         return `
           <div id="card">
-          <h3>${li.name}</h3>
-          <img id="img" src=${img} alt="프로필"/>
-          <br/>
-          <button href="#" id="button">메시지 보내기</button>
+            <h3>${li.name}</h3>
+            <img id="img" src=${img} alt="프로필"/>
+            <br/>
+            <div class="d-flex" id="button-field">
+              <button href="#" id="student-button">학생정보</button>
+              <button href="#" id="message-button">메시지 보내기</button>
+            </div>
           </div>`;
       }).join("");
     });
@@ -134,7 +137,6 @@ export default {
   min-width: 120px;
   min-height: 50px;
   border: 0;
-
 }
 
 #class #teacher-form {
@@ -176,6 +178,8 @@ export default {
   margin: 30px;
   min-width: 200px;
   min-height: 200px;
+  border-radius: 15px;
+  padding: 10px;
 }
 
 #class #img {
@@ -184,10 +188,23 @@ export default {
   margin-bottom: 15px;
 }
 
-#class #button {
-  border-radius: 5px;
+/* #class #button-field {
+  
+} */
+
+#class #message-button {
+  border-radius: 10px;
   min-width: 60px;
   min-height: 30px;
   border: 0;
+  margin-left: 10px;
+}
+
+#class #student-button {
+  border-radius: 10px;
+  min-width: 60px;
+  min-height: 30px;
+  border: 0;
+  margin-left: 12px;
 }
 </style>
