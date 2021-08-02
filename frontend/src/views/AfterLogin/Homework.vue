@@ -3,13 +3,12 @@
     <NavSideBar />
     <NavBar />
 
-    <h1>숙제 검사</h1>
+    <h1 id="homeworkTitle">숙제 검사</h1>
 
     <!-- 설정 목록
     :hover -> 마우스 포인터를 어디 올렸는지 표시
-    :small -> table의 사이즈를 작게할 것인지
+    :small -> table의 사이즈를 작게할 것인지(false 처리)
     :borderless -> border 없앰
-    :items -> items에 있는 모든 데이터를 가져온다.
     -->
     <b-table
       id="homeworkForm"
@@ -19,14 +18,31 @@
       :items="items"
       :fields="fields"
     >
+      <!-- 번호 column -->
       <template #cell(index)="data">
         {{ data.index + 1 }}
       </template>
 
+      <!-- items column -->
       <template #cell(items)="data">
         {{ data.items }}
       </template>
     </b-table>
+
+    <!-- Homework Create Button -->
+    <button id="homeworkCreateBtn" @click="goHomeworkCreate()">
+      숙제 추가하기
+    </button>
+
+    <!-- Pagination -->
+    <div class="mt-3">
+      <b-pagination
+        id="paginationForm"
+        v-model="currentPage"
+        pills
+        :total-rows="rows"
+      ></b-pagination>
+    </div>
   </div>
 </template>
 
@@ -38,27 +54,50 @@ export default {
   name: "Homework",
   data() {
     return {
+      rows: 100,
+      currentPage: 1,
       fields: [
+        // Title name 변경
         { key: "index", label: "번호" },
-        { key: "homeworkTitle", label: "숙제 제목" },
-        { key: "endDate", label: "종료일" },
+        { key: "Title", label: "숙제 제목" },
+        { key: "EndTime", label: "종료일" },
         { key: "submitInfo", label: "제출" },
       ],
       items: [
         {
-          homeworkTitle: "수학익힘책 16쪽 풀기",
-          endDate: "7.19(월)",
+          Title: "수학익힘책 16쪽 풀기",
+          EndTime: "7.19(월)",
           submitInfo: "1/6",
         },
         {
-          homeworkTitle: "어린왕자 읽기",
-          endDate: "7.16(금)",
+          Title: "어린왕자 읽기",
+          EndTime: "7.16(금)",
           submitInfo: "4/6",
         },
         {
-          homeworkTitle: "수학익힘책 16쪽 풀기",
-          endDate: "7.16(금)",
+          Title: "알파벳 10번씩 쓰기",
+          EndTime: "7.16(금)",
           submitInfo: "3/6",
+        },
+        {
+          Title: "한자 15000번 쓰기",
+          EndTime: "7.15(목)",
+          submitInfo: "2/6",
+        },
+        {
+          Title: "기하와 벡터 3페이지 풀어오기",
+          EndTime: "7.14(수)",
+          submitInfo: "6/6",
+        },
+        {
+          Title: "만화책 3권 읽고 오기",
+          EndTime: "7.14(수)",
+          submitInfo: "6/6",
+        },
+        {
+          Title: "아이유 노래 1곡 듣기",
+          EndTime: "7.14(수)",
+          submitInfo: "6/6",
         },
       ],
     };
@@ -67,19 +106,47 @@ export default {
     NavSideBar,
     NavBar,
   },
+  methods: {
+    goHomeworkCreate: function () {
+      window.open("/homework_create", "_self");
+    },
+  },
 };
 </script>
 
 <style>
+#homeworkTitle {
+  position: absolute;
+  left: 22%;
+}
+
 #homeworkForm {
   position: absolute;
 
+  /* 최대 가로/세로 길이 설정 */
+  /* 너비는 최소/최대 길이 동일 설정 */
   max-width: 70%;
   min-width: 70%;
   max-height: 75%;
   /* min-height: 75%; */
 
-  top: 112px;
-  left: 25%;
+  top: 150px;
+  left: 22%;
+
+  /* font-size 증가 */
+  font-size: 130%;
+}
+
+#homeworkCreateBtn {
+  position: absolute;
+  top: 110px;
+  left: 1370px;
+}
+
+#paginationForm {
+  position: absolute;
+
+  left: 43%;
+  bottom: 10%;
 }
 </style>
