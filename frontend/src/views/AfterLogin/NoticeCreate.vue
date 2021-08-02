@@ -86,7 +86,7 @@ export default {
   top: 112px;
   left: 25%;
 
-  background-color: rgb(154, 201, 154);
+  background-color: #e0edd4;
   border-radius: 10px;
   /* z-index: 1; */
 
