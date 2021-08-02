@@ -4,6 +4,7 @@ from django.db.models.deletion import PROTECT
 
 
 class Message(models.Model):
+    # OneToOneField 고려
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=PROTECT)
     receiver = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=PROTECT)
     content = models.TextField()

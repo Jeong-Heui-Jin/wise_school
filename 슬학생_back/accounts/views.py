@@ -1,8 +1,11 @@
-from django.shortcuts import render
+from django.db.models import manager
+from accounts.models import Parents
+from django.shortcuts import get_object_or_404, render, get_list_or_404
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import UserSerializer
+from .serializers import ParentSerializer, ParentsListSerializer, UserSerializer, UserListSerializer, ServiceRequestSerializer
+from accounts import serializers ParentsListSerializer
 from django.contrib.auth import get_user_model
 from rest_auth.views import PasswordResetView
 from django.conntrib.auth.forms import SetPasswordForm
@@ -12,8 +15,13 @@ from django.conntrib.auth.forms import SetPasswordForm
 #     pass
 
 
-def service_request(reqeust):
-    pass
+# 신규 서비스 신청
+@api_view(['POST',])
+def service_request(request):
+    serializer = ServiceRequestSerializer(data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 def password_reset(request):
@@ -25,24 +33,55 @@ def password_reset(request):
     pass
 
 
-def info(request, username):
-    pass
+# 해당 사용자의 정보 조회/수정/삭제
+def info(request, user_id):
+    user = get_object_or_404(get_user_model(), pk=user_id)
+    if request.method == 'GET':
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+    # serializer = UserSerializer(user)
+    # return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = UserSerializer(user, data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data)
+
+    elif request.method == 'DELETE':
+        user.delete()
+        data = {
+            'delete': '삭제되었습니다.'
+        }
+        return Response(data, status=status.HTTP_204_NO_CONTENT)
 
 
-def parents(request, username):
-    pass
+# 해당 학생의 보호자들 목록 조회
+def parents(request, user_id):
+    parents_list = get_list_or_404(Parents, pk=user_id)
+    serializer = ParentsListSerializer(parents_list, many=True)
+    return Response(serializer.data)
 
 
+# 해당 학교의 선생님들 목록 조회
 def teachers(request, school_id):
-    pass
+    teachers_list = get_list_or_404(Parents, classroom_school_id=school_id)
+    serializer = UserListSerializer(teachers_list, many=True)
+    return Response(serializer.data)
 
 
+# 해당 학교의 학생들 목록 조회
 def students(request, school_id):
-    pass
+    students_list = get_list_or_404(get_user_model(), classroom_school_id=school_id)
+    serializer = UserListSerializer(students_list, many=True)
+    return Response(serializer.data)
 
 
-def student(request, username):
-    pass
+# 해당 학생의 상세 정보 조회
+# def student(request, user_id):
+#     student = get_object_or_404(get_user_model(), pk=user_id)
+#     serializer = UserSerializer(student)
+#     return Response(serializer.data)
 
 
 # @api_view(['POST'])

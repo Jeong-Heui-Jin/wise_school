@@ -12,8 +12,8 @@ urlpatterns = [
     # 학생/선생님
     path('login/', obtain_jwt_token),   # 로그인
     path('password-reset/', views.password_reset, name='password_reset'),   # 비밀번호 재설정 
-    path('<str:username>/info/', views.info, name='info'),   # 선생님/학생 정보
-    path('<str:username>/parents/', views.parents, name='parents'),   # 비상연락망
+    path('<str:user_id>/info/', views.info, name='info'),   # 선생님/학생 정보
+    path('<str:user_id>/parents/', views.parents, name='parents'),   # 비상연락망
     path('<int:school_id>/teachers/', views.teachers, name='teachers'),   # 선생님 계정 생성
     path('<int:school_id>/students/', views.students, name='students'),   # 전체 학생 목록
 
@@ -23,5 +23,5 @@ urlpatterns = [
     # path('reset-password/', include('django_rest_passwordreset.urls', namespace='password_reset')),
 
     # path('create-students/', views.create_students),   # 학생 계정 생성 (서비스측)
-    path('<str:username>/', views.student, name='student'),   # 학생 정보 관리 (관리자)
+    # path('<str:username>/', views.student, name='student'),   # 학생 정보 관리 (관리자)
 ]

@@ -1,55 +1,62 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, get_list_or_404
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from rest_framework.decorators import authentication_classes, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+# from rest_framework.decorators import authentication_classes, permission_classes
+# from rest_framework.permissions import IsAuthenticated
+# from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
-from .serializers import TodoSerializer
-from .models import Todo
+from accounts.serializers import UserListSerializer
+from .serializers import TimetableSerializer, TimetableDetailSerializer
+from django.contrib.auth import get_user_model
+from .models import Timetable, TimetableDetail
 
 
-@api_view(['GET', 'POST'])
-@authentication_classes([JSONWebTokenAuthentication])
-@permission_classes([IsAuthenticated])
-def todo_list_create(request):
+# 반 친구들 + 선생님 목록 조회
+@api_view(['GET',])
+# @authentication_classes([JSONWebTokenAuthentication])
+# @permission_classes([IsAuthenticated])
+def members(request, class_id):
+    class_members = get_list_or_404(get_user_model(), class_id=class_id)
+    serializer = UserListSerializer(class_members, many=True)
+    return Response(serializer.data)
+
+
+# 전체 시간표 생성
+@api_view(['POST',])
+def timetable_create(request, class_id):
+    serializer = TimetableSerializer(data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save(classroom=class_id)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+# 전체 시간표 조회 / 시간표 상세 생성
+@api_view(['GET', 'POST',])
+def timetable(request, timetable_id):
     if request.method == 'GET':
-        # todos = Todo.objects.all()
-        serializer = TodoSerializer(request.user.todos, many=True)
+        timetable = get_object_or_404(Timetable, pk=timetable_id)
+        serializer = TimetableSerializer(timetable)
         return Response(serializer.data)
-
     elif request.method == 'POST':
-        serializer = TodoSerializer(data=request.data)
+        serializer = TimetableDetailSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save(user=request.user)
+            serializer.save(timetable=timetable_id)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-
-
-@api_view(['PUT', 'DELETE'])
-@authentication_classes([JSONWebTokenAuthentication])
-@permission_classes([IsAuthenticated])
-def todo_update_delete(request, todo_pk):
-    todo = get_object_or_404(Todo, pk=todo_pk)
-
-    # 1. 해당 todo의 유저가 아닌 경우 todo를 수정하거나 삭제하지 못하게 설정
-    if not request.user.todos.filter(pk=todo_pk).exists():
-        return Response({'detail': '권한이 없습니다.'}, status=status.HTTP_403_FORBIDDEN)
-
+# 시간표 상세 수정/삭제
+@api_view(['PUT', 'DELETE',])
+def timetable_detail(request, timetabledetail_id):
+    detail = get_object_or_404(TimetableDetail, pk=timetabledetail_id)
 
     if request.method == 'PUT':
-        serializer = TodoSerializer(todo, data=request.data)
+        serializer = TimetableDetailSerializer(detail, data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data)
 
     elif request.method == 'DELETE':
-        todo.delete()
-        return Response({ 'id': todo_pk }, status=status.HTTP_204_NO_CONTENT)
-
-
-def members(request, class_id):
-    pass
+        detail.delete()
+        return Response({ 'id': timetabledetail_id }, status=status.HTTP_204_NO_CONTENT)

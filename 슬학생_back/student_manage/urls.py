@@ -4,9 +4,9 @@ from . import views
 app_name = 'student_manage'
 
 urlpatterns = [
-    path('<int:class_id>/<str:date>/attendance/', views.attendance_list),
-    path('<int:student_id>/<str:date>/attendance/', views.attendance_detail),
-    path('<int:student_id>/<str:date>/attendance-change/', views.attendance_change),
-    path('<int:student_id>/note/', views.note_list),
-    path('<int:student_id>/note/<int:note_id>/', views.note_detail),
+    path('attendance/<int:class_id>/<str:date>/', views.attendance_list),
+    path('attendance/detail/<int:student_id>/<str:date>/', views.attendance_detail),
+    path('attendance-change/<int:student_id>/<str:date>/', views.attendance_change),
+    path('note/<int:student_id>/', views.note_list),
+    path('note/<int:student_id>/<int:note_id>/', views.note_detail),
 ]
