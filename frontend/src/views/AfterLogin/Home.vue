@@ -42,7 +42,7 @@
         </ul>
       </div>
       <!-- 오늘의 시간표 -->
-      <div id="timetable" class="fixed-top">
+      <div id="timetable-form" class="fixed-top">
         <div class="d-flex justify-content-left" id="home-title">
             <img id="img" src="@/assets/schedule.png" alt="시간표"/>
             <h2>오늘의 시간표</h2>
@@ -222,7 +222,7 @@ export default {
   background-color: #ffecd5;
 }
 
-#home #timetable {
+#home #timetable-form {
   position: absolute;
   top: 100px;
   right: 0px;
