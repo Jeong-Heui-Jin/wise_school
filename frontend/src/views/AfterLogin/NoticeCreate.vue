@@ -46,7 +46,7 @@ export default {
 </script>
 
 <style>
-#cancelBtn {
+#createForm #cancelBtn {
   position: absolute;
   top: 90%;
   left: 36%;
@@ -59,7 +59,7 @@ export default {
   min-width: 11%;
 }
 
-#saveBtn {
+#createForm #saveBtn {
   position: absolute;
   top: 90%;
   left: 53%;
@@ -73,7 +73,7 @@ export default {
 }
 
 #noticeCreateTitle {
-  position: absolute;
+  position: fixed;
   left: 22%;
 }
 
