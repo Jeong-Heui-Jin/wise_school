@@ -4,10 +4,10 @@
     <NavSideBar />
     <NavBar />
 
-    <h1 id="homeworkTitle">숙제 작성</h1>
+    <h1 id="homeworkTitle">숙제 수정</h1>
 
     <!-- 작성 Form -->
-    <b-form id="noticeCreateForm">
+    <b-form id="noticeChangeForm">
       <!-- 제목 -->
       <h2 id="title">제목</h2>
       <b-form-input id="titleName"></b-form-input>
@@ -28,7 +28,7 @@ import NavSideBar from "@/components/NavSideBarTeacher.vue";
 import NavBar from "@/components/NavBar.vue";
 
 export default {
-  name: "HomeworkCreate",
+  name: "HomeworkChange",
   components: {
     NavSideBar,
     NavBar,
@@ -42,7 +42,7 @@ export default {
   left: 22%;
 }
 
-#noticeCreateForm {
+#noticeChangeForm {
   position: fixed;
 
   width: 1100px;
@@ -57,13 +57,13 @@ export default {
   font-size: 160%;
 }
 
-#noticeCreateForm #title {
+#noticeChangeForm #title {
   position: absolute;
   left: 100px;
   top: 70px;
 }
 
-#noticeCreateForm #titleName {
+#noticeChangeForm #titleName {
   position: absolute;
   left: 250px;
   top: 60px;
@@ -75,13 +75,13 @@ export default {
   border-radius: 10px;
 }
 
-#noticeCreateForm #content {
+#noticeChangeForm #content {
   position: absolute;
   left: 100px;
   top: 220px;
 }
 
-#noticeCreateForm #contentText {
+#noticeChangeForm #contentText {
   position: absolute;
   left: 250px;
   top: 220px;
@@ -99,7 +99,7 @@ export default {
   border-radius: 10px;
 }
 
-#noticeCreateForm #cancelBtn {
+#noticeChangeForm #cancelBtn {
   position: absolute;
   top: 90%;
   left: 36%;
@@ -112,7 +112,7 @@ export default {
   min-width: 11%;
 }
 
-#noticeCreateForm #saveBtn {
+#noticeChangeForm #saveBtn {
   position: absolute;
   top: 90%;
   left: 53%;
