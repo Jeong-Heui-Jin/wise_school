@@ -26,6 +26,7 @@ export default({
 <style>
 #nav-bar {
     max-height: 40px;
+    width: 100%;
 }
 
 #nav-bar #right-side {
