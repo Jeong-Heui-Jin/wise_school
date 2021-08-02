@@ -9,6 +9,7 @@ import Class from '../views/AfterLogin/Class'
 import Timetable from '../views/AfterLogin/Timetable'
 import Homework from '../views/AfterLogin/Homework'
 import HomeworkCreate from '../views/AfterLogin/HomeworkCreate'
+import HomeworkView from '../views/AfterLogin/HomeworkView'
 import HomeworkChange from '../views/AfterLogin/HomeworkChange'
 import Notice from '../views/AfterLogin/Notice'
 import NoticeCreate from '../views/AfterLogin/NoticeCreate'
@@ -68,6 +69,11 @@ const routes = [
     path: '/homework_create',
     name: 'HomeworkCreate',
     component: HomeworkCreate,
+  },
+  {
+    path: '/homework_view',
+    name: 'HomeworkView',
+    component: HomeworkView,
   },
   {
     path: '/homework_change',
