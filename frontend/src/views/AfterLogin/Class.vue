@@ -110,7 +110,7 @@ export default {
 <style>
 #title {
   position: absolute;
-  left: 22%;
+  left: 350px;
 }
 
 #class #teacher {

@@ -2,22 +2,34 @@
   <div style="font-family: 'Jua', sans-serif;">
     <NavSideBar/>
     <NavBar/>
-    <h1 id="title">시간표</h1>
-    <b-container class="bv-example-row">
-      <b-row id="timetable">
-        <b-col> </b-col>
-        <b-col>월</b-col>
-        <b-col>화</b-col>
-        <b-col>수</b-col>
-        <b-col>목</b-col>
-        <b-col>금</b-col>
-        <div></div>
-        <b-col>1교시</b-col>
-        <b-col>국어</b-col>
-        <b-col>수학</b-col>
-        <b-col>사회</b-col>
-        <b-col>과학</b-col>
-        <b-col>영어</b-col>
+    <!-- 페이지 제목 -->
+    <h1 id="title"> {{ timetable.Title }}</h1>
+    <b-container id="timetable">
+      <!-- 요일 -->
+      <b-row id="period" >
+        <b-col id="subject" style="padding-bottom: 20px;"> </b-col>
+        <b-col id="subject" style="padding-bottom: 20px;">월</b-col>
+        <b-col id="subject" style="padding-bottom: 20px;">화</b-col>
+        <b-col id="subject" style="padding-bottom: 20px;">수</b-col>
+        <b-col id="subject" style="padding-bottom: 20px;">목</b-col>
+        <b-col id="subject" style="padding-bottom: 20px;">금</b-col>
+      </b-row>
+      <!-- 과목 -->
+      <b-row id="period" v-for="detail in timetableDetail" :key="detail.Period">
+        <b-col id="subject">
+          {{detail.Period}}교시
+          <div id="time" v-if="detail.Period === '1'">09:00 ~ 09:40</div>
+          <div id="time" v-else-if="detail.Period === '2'">09:50 ~ 10:30</div>
+          <div id="time" v-else-if="detail.Period === '3'">10:40 ~ 11:20</div>
+          <div id="time" v-else-if="detail.Period === '4'">11:30 ~ 12:10</div>
+          <div id="time" v-else-if="detail.Period === '5'">13:00 ~ 13:40</div>
+          <div id="time" v-else-if="detail.Period === '6'">13:50 ~ 14:30</div>
+        </b-col>
+        <b-col id="subject">{{detail.Monday}}</b-col>
+        <b-col id="subject">{{detail.Tuesday}}</b-col>
+        <b-col id="subject">{{detail.Wednesday}}</b-col>
+        <b-col id="subject">{{detail.Thursday}}</b-col>
+        <b-col id="subject">{{detail.Friday}}</b-col>
       </b-row>
     </b-container>
   </div>
@@ -29,6 +41,64 @@ import NavBar from '@/components/NavBar.vue'
 
 export default {
   name: 'Timetable',
+  data() {
+    return {
+      idx: 1,
+      timetable: { Title: '1학기 시간표' },
+      // 오름 차순 정렬 가정
+      timetableDetail : [
+        {Period : '1', Monday: '국어', Tuesday: '체육', Wednesday: '영어', Thursday: '사회', Friday: '수학'},
+        {Period : '2', Monday: '수학', Tuesday: '영어', Wednesday: '체육', Thursday: '국어', Friday: '과학'},
+        {Period : '3', Monday: '음악', Tuesday: '국어', Wednesday: '국어', Thursday: '수학', Friday: '도덕'},
+        {Period : '4', Monday: '과학', Tuesday: '과학', Wednesday: '음악', Thursday: '체육', Friday: '미술'},
+        {Period : '5', Monday: '사회', Tuesday: '사회', Wednesday: '창체', Thursday: '체육', Friday: '국어'},
+      ]
+    }
+  },
+  methods: {
+    intToRGB(i) {
+        var c = (i & 0x00FFFFFF)
+            .toString(16)
+            .toUpperCase();
+
+        return "00000".substring(0, 6 - c.length) + c;
+    }
+  },
+  mounted() {
+      var arr = [];
+      var color = ["lightblue", "lightcyan", "lightgoldenrodyellow", "lightseagreen", "lightyellow", "lightsalmon", "palegreen", "paleturquoise", "papayawhip", "lightpink"];
+      const subject = document.querySelectorAll('#subject');
+
+      for (var i = 0; i < this.timetableDetail.length; i++) {
+        if (!arr.find(e => e === this.timetableDetail[i].Monday)) {
+          arr.push(this.timetableDetail[i].Monday);
+        }
+        if(!arr.find(e => e === this.timetableDetail[i].Tuesday)) {
+          arr.push(this.timetableDetail[i].Tuesday);
+        }
+        if(!arr.find(e => e === this.timetableDetail[i].Wednesday)) {
+          arr.push(this.timetableDetail[i].Wednesday);
+        }
+        if(!arr.find(e => e === this.timetableDetail[i].Thursday)) {
+          arr.push(this.timetableDetail[i].Thursday);
+        }
+        if(!arr.find(e => e === this.timetableDetail[i].Friday)) {
+          arr.push(this.timetableDetail[i].Friday);
+        }
+      }
+      for (var err = 0; err < arr.length; err++) {
+        console.log(arr[err]);
+      } 
+      for (var sub = 0; sub < subject.length; sub++) {
+        for (var find = 0; find < arr.length; find++) {
+          if (subject[sub].textContent === arr[find]) {
+            subject[sub].style.backgroundColor = color[find];
+            console.log(color[find]);
+            break;
+          }
+        }
+      }
+  },
   components: {
     NavSideBar,
     NavBar
@@ -40,14 +110,22 @@ export default {
 #timetable {
   position: absolute;
   top: 90px;
-  left: 23%;
-  width: 1060px;
-  height: 650px;
-  background-color: aqua;
+  left: 350px;
+  width: 800px;
+  max-width: 800px;
+  min-width: 800px;
 }
 
-#timetable b-col {
-  
+#timetable #subject {
+  min-width: 40px;
+  font-size: 40px;
+  text-align: center;
+  padding-top: 20px;
+  border: 1px solid black;
+}
+
+#timetable #time {
+  font-size: 15px;
 }
 
 </style>
