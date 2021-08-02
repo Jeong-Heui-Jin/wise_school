@@ -10,38 +10,42 @@
     :small -> table의 사이즈를 작게할 것인지(false 처리)
     :borderless -> border 없앰
     -->
-    <b-table
-      id="homeworkForm"
-      :hover="true"
-      :small="false"
-      :borderless="true"
-      :items="items"
-      :fields="fields"
-    >
-      <!-- 번호 column -->
-      <template #cell(index)="data">
-        {{ data.index + 1 }}
-      </template>
 
-      <!-- items column -->
-      <template #cell(items)="data">
-        {{ data.items }}
-      </template>
-    </b-table>
+    <!-- table/button/pagination div -->
+    <div id="homeworkForm">
+      <b-table
+        id="homeworkTable"
+        :hover="true"
+        :small="false"
+        :borderless="true"
+        :items="items"
+        :fields="fields"
+      >
+        <!-- 번호 column -->
+        <template #cell(index)="data">
+          {{ data.index + 1 }}
+        </template>
 
-    <!-- Homework Create Button -->
-    <button id="homeworkCreateBtn" @click="goHomeworkCreate()">
-      숙제 추가하기
-    </button>
+        <!-- items column -->
+        <template #cell(items)="data">
+          {{ data.items }}
+        </template>
+      </b-table>
 
-    <!-- Pagination -->
-    <div class="mt-3">
-      <b-pagination
-        id="paginationForm"
-        v-model="currentPage"
-        pills
-        :total-rows="rows"
-      ></b-pagination>
+      <!-- Homework Create Button -->
+      <button id="homeworkCreateBtn" @click="goHomeworkCreate()">
+        숙제 추가하기
+      </button>
+
+      <!-- Pagination -->
+      <div class="mt-3">
+        <b-pagination
+          id="paginationForm"
+          v-model="currentPage"
+          pills
+          :total-rows="rows"
+        ></b-pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -121,32 +125,41 @@ export default {
 }
 
 #homeworkForm {
-  position: absolute;
+  position: fixed;
 
   /* 최대 가로/세로 길이 설정 */
   /* 너비는 최소/최대 길이 동일 설정 */
-  max-width: 70%;
-  min-width: 70%;
-  max-height: 75%;
+  width: 1100px;
+  height: 600px;
   /* min-height: 75%; */
 
-  top: 150px;
-  left: 22%;
+  top: 112px;
+  left: 370px;
 
   /* font-size 증가 */
   font-size: 130%;
 }
 
-#homeworkCreateBtn {
+#homeworkForm #homeworkTable {
   position: absolute;
-  top: 110px;
-  left: 1370px;
+  top: 60px;
 }
 
-#paginationForm {
+#homeworkForm #homeworkCreateBtn {
+  position: absolute;
+  top: 5px;
+  left: 900px;
+
+  min-width: 155px;
+
+  border-radius: 10px;
+  background-color: #dcffaa;
+}
+
+#homeworkForm #paginationForm {
   position: absolute;
 
-  left: 43%;
-  bottom: 10%;
+  left: 27%;
+  bottom: 5%;
 }
 </style>
