@@ -1,5 +1,6 @@
 <template>
   <div style="font-family: 'Jua', sans-serif" variant="light">
+    <!-- left/top navbar -->
     <NavSideBar />
     <NavBar />
 
