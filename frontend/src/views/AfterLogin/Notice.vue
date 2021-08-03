@@ -3,7 +3,7 @@
     <NavSideBar />
     <NavBar />
 
-    <h1 id="noticeTitle">공지사항</h1>
+    <h1 id="title">공지사항</h1>
 
     <div id="listForm">
       <b-list-group>
@@ -135,11 +135,13 @@ export default {
 }
 
 #listForm {
+  position: absolute;
+  left: 500px;
+  top: 90px;
   max-width: 900px;
   min-width: 900px;
   max-height: 60%;
   min-height: 60%;
-  margin: 0px auto;
   border-radius: 10px;
   /* padding: 100; */
   background-color: white;

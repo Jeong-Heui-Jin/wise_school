@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-navbar id="nav-bar" style="font-family: 'Jua', sans-serif;" class="fixed-top" toggleable="lg" variant="faded" type="light">
+        <b-navbar id="nav-bar" style="font-family: 'Jua', sans-serif;" toggleable="lg" variant="faded" type="light">
             <!-- Right aligned nav items -->
             <b-navbar-nav id="right-side" class="ml-auto">
                 <img id="logo" src="@/assets/alarm.png" alt="알람_로고" @click="print">

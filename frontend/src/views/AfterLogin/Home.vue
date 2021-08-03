@@ -23,6 +23,7 @@
           <div class="d-flex justify-content-left" id="home-title">
             <img id="img" src="@/assets/homework.png" alt="숙제"/>
             <p>숙제</p>
+            <button style="margin-left: auto; margin-right: 10px; font-size: 32px; border: 0px; background-color: #e0edd4;" @click="$router.push('/homework')">+</button>
             <!-- <p>+</p> -->
           </div>
           <ul id="list" v-for="homework in homeworks" :key="homework.title">
@@ -35,6 +36,7 @@
         <div class="d-flex justify-content-left" id="home-title">
             <img id="img" src="@/assets/alert.png" alt="공지사항"/>
             <p>공지사항</p>
+            <button style="margin-left: auto; margin-right: 10px; font-size: 32px; border: 0px; background-color: #ffecd5;" @click="$router.push('/notice')">+</button>
             <!-- <p>+</p> -->
         </div>
         <ul id="list" v-for="notice in notices" :key="notice.title">
@@ -230,6 +232,7 @@ export default {
   margin-right: 35px;
   border-radius: 20px;
   min-width: 300px;
+  max-width: 300px;
   min-height: 680px;
   border: 2px solid aqua;
 }
