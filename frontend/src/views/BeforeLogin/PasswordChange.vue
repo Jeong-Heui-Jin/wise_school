@@ -59,7 +59,12 @@ export default {
   },
   methods: {
     changePassword: function() {
-      window.open("/login", "_self");
+      if (this.validationNewPassword && this.validationCheckPassword) {
+        window.open("/login", "_self");
+      }
+      else {
+        alert("양식 변경 요청");
+      }
     }
   },
   computed: {
@@ -100,7 +105,7 @@ export default {
 
 <style>
 #changeForm {
-  max-width: 500px;
+  min-width: 500px;
   max-height: 250px;
   min-height: 250px;
   background-color: #ccf0ef;

@@ -4,21 +4,21 @@
     <NavSideBar />
     <NavBar />
 
-    <h1 id="homeworkTitle">숙제 작성</h1>
+    <h1 id="title">숙제 작성</h1>
 
     <!-- 작성 Form -->
     <b-form id="noticeCreateForm">
       <!-- 제목 -->
-      <h2 id="title">제목</h2>
+      <h2 id="sub-title" style="font-size: 32px;">제목</h2>
       <b-form-input id="titleName"></b-form-input>
 
       <!-- 내용 -->
-      <h2 id="content">내용</h2>
+      <h2 id="content" style="font-size: 32px;">내용</h2>
       <b-form-textarea id="contentText"></b-form-textarea>
 
       <!-- 취소/저장 버튼 -->
-      <button id="cancelBtn">취소</button>
       <button id="saveBtn">저장</button>
+      <button id="cancelBtn">취소</button>
     </b-form>
   </div>
 </template>
@@ -39,13 +39,13 @@ export default {
 <style>
 #homeworkTitle {
   position: absolute;
-  left: 22%;
+  left: 350px;
 }
 
 #noticeCreateForm {
-  position: fixed;
-
-  width: 1100px;
+  position: absolute;
+  left: 350px;
+  min-width: 1000px;
   height: 600px;
 
   top: 112px;
@@ -57,15 +57,15 @@ export default {
   font-size: 160%;
 }
 
-#noticeCreateForm #title {
+#noticeCreateForm #sub-title {
   position: absolute;
-  left: 100px;
+  left: 50px;
   top: 70px;
 }
 
 #noticeCreateForm #titleName {
   position: absolute;
-  left: 250px;
+  left: 180px;
   top: 60px;
 
   width: 700px;
@@ -77,14 +77,14 @@ export default {
 
 #noticeCreateForm #content {
   position: absolute;
-  left: 100px;
-  top: 220px;
+  left: 50px;
+  top: 180px;
 }
 
 #noticeCreateForm #contentText {
   position: absolute;
-  left: 250px;
-  top: 220px;
+  left: 180px;
+  top: 180px;
 
   max-width: 700px;
   min-width: 700px;
@@ -101,11 +101,11 @@ export default {
 
 #noticeCreateForm #cancelBtn {
   position: absolute;
-  top: 90%;
-  left: 36%;
+  top: 520px;
+  left: 600px;
 
   border-radius: 12px;
-
+  border: 0px;
   color: red;
   background-color: #fcb6b6;
 
@@ -114,11 +114,11 @@ export default {
 
 #noticeCreateForm #saveBtn {
   position: absolute;
-  top: 90%;
-  left: 53%;
+  top: 520px;
+  left: 300px;
 
   border-radius: 12px;
-
+  border: 0px;
   color: rgb(38, 38, 255);
   background-color: #a8aafd;
 

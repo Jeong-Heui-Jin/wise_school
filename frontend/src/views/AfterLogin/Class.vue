@@ -8,12 +8,12 @@
     <div id="teacher" class="d-flex">
       <img id="teacher-img" src="@/assets/owl.png" alt="프로필"/>
       <div id="teacher-form">
-        <h3 id="class-num">{{teacher.class}}</h3>
+        <h3 id="class-num" style="font-size: 24px;">{{teacher.class}}</h3>
         <div class="d-flex">
-          <h2 id="teacher-name">{{teacher.name}}</h2>
-          <h3 id="teacher-title">담임 선생님</h3>
+          <h2 id="teacher-name" style="font-size: 36px;">{{teacher.name}}</h2>
+          <h3 id="teacher-title" style="font-size: 30px;">담임 선생님</h3>
         </div>
-        <h3 id="call">전화 번호 : {{teacher.number}}</h3>
+        <h3 id="call" style="font-size: 30px;">전화 번호 : {{teacher.number}}</h3>
       </div>
       <button id="teacher-button" href="#">메시지 보내기</button>
     </div>
@@ -110,16 +110,19 @@ export default {
 <style>
 #title {
   position: absolute;
+  top: 30px;
   left: 350px;
+  font-size: 36px;
+  min-width: 200px;
 }
 
 #class #teacher {
   position: absolute;
   top: 90px;
-  left: 24%;
+  left: 360px;
   background-color: #ccf0ef;
   border-radius: 30px;
-  min-width: 70%;
+  min-width: 1000px;
   min-height: 200px;
   padding: 30px;
 }
@@ -132,7 +135,7 @@ export default {
 
 #class #teacher-button {
   position: absolute;
-  right: 10%;
+  left: 800px;
   border-radius: 10px;
   min-width: 120px;
   min-height: 50px;
@@ -170,8 +173,8 @@ export default {
 #class #content {
   position: absolute;
   top: 300px;
-  left: 22%;
-  min-width: 78%;
+  left: 350px;
+  min-width: 1200px;
 }
 
 #class #card {

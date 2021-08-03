@@ -3,7 +3,7 @@
     <NavSideBar />
     <NavBar />
 
-    <h1 id="homeworkTitle">숙제 검사</h1>
+    <h1 id="title">숙제 검사</h1>
 
     <!-- 설정 목록
     :hover -> 마우스 포인터를 어디 올렸는지 표시
@@ -129,12 +129,13 @@ export default {
 
   /* 최대 가로/세로 길이 설정 */
   /* 너비는 최소/최대 길이 동일 설정 */
-  width: 1100px;
+  max-width: 1000px;
+  min-width: 1000px;
   height: 600px;
   /* min-height: 75%; */
 
   top: 112px;
-  left: 370px;
+  left: 350px;
 
   /* font-size 증가 */
   font-size: 130%;
@@ -148,18 +149,18 @@ export default {
 #homeworkForm #homeworkCreateBtn {
   position: absolute;
   top: 5px;
-  left: 900px;
+  left: 800px;
 
   min-width: 155px;
 
   border-radius: 10px;
+  border: 0px;
   background-color: #dcffaa;
 }
 
 #homeworkForm #paginationForm {
   position: absolute;
-
-  left: 27%;
-  bottom: 5%;
+  left: 220px;
+  bottom: 50px;
 }
 </style>

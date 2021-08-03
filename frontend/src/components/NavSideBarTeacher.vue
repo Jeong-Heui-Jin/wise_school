@@ -1,7 +1,7 @@
 <template>
   <div style="font-family: 'Jua', sans-serif;" class="sidenav con w3-sidebar w3-bar-block fixed-top" aria-label="Sidebar with custom footer" no-header shadow>      
     <img class="navbar-logo" src="@/assets/슬학생_로고.png" alt="슬학생_로고">
-    <div style="margin-top:10%;">
+    <div style="margin-top:10%; font-size: 16px;">
       <router-link class="w3-bar-item w3-button tablink text-decoration-none" to="/home">홈</router-link><br>
       <router-link class="w3-bar-item w3-button text-decoration-none" to="/class">우리반 보기</router-link><br>
       <router-link class="w3-bar-item w3-button text-decoration-none" to="/timetable">시간표</router-link><br>

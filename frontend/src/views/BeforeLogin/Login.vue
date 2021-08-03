@@ -15,8 +15,6 @@
         placeholder="아이디"
         size="lg"
       ></b-form-input>
-
-
       <!-- 비밀번호 입력 폼 -->
       <b-form-input
         v-model="userPassword"
@@ -52,7 +50,12 @@ export default {
   methods: {
     login: function() {
       // 로그인 반환 결과 (0 : 관리자, 1 : 선생님, 2 : 학생)
-      window.open('/home')
+      if (this.userId === 'admin1234' && this.userPassword === '1q2w3e4r!') {
+        window.open('/home', '_self');
+      }
+      else {
+        alert('로그인 실패');
+      }
     }
   }
 };

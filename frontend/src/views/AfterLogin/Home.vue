@@ -14,7 +14,7 @@
         <div id="attend-class">
           <div class="d-flex justify-content-left" id="home-title">
             <img id="img" src="@/assets/blackboard.png" alt="수업참여"/>
-            <h2>수업 참여</h2>
+            <p>수업 참여</p>
           </div>
           <b-button id="class-btn" variant="warning">교실<br/>입장하기</b-button>
         </div>
@@ -22,7 +22,7 @@
         <div id="homework">
           <div class="d-flex justify-content-left" id="home-title">
             <img id="img" src="@/assets/homework.png" alt="숙제"/>
-            <h2>숙제</h2>
+            <p>숙제</p>
             <!-- <p>+</p> -->
           </div>
           <ul id="list" v-for="homework in homeworks" :key="homework.title">
@@ -34,7 +34,7 @@
       <div id="notes" class="fixed-top">
         <div class="d-flex justify-content-left" id="home-title">
             <img id="img" src="@/assets/alert.png" alt="공지사항"/>
-            <h2>공지사항</h2>
+            <p>공지사항</p>
             <!-- <p>+</p> -->
         </div>
         <ul id="list" v-for="notice in notices" :key="notice.title">
@@ -45,7 +45,7 @@
       <div id="timetable-form" class="fixed-top">
         <div class="d-flex justify-content-left" id="home-title">
             <img id="img" src="@/assets/schedule.png" alt="시간표"/>
-            <h2>오늘의 시간표</h2>
+            <p>오늘의 시간표</p>
         </div>
         <!-- 시간표 내용 -->
         <div id="timeschedule">
@@ -146,13 +146,13 @@ export default {
 <style>
 #home #date {
   position: absolute;
-  left: 22%;
+  left: 350px;
   top: 30px;
 }
 
 #home #top-2 {
   position: absolute;
-  left: 22%;
+  left: 330px;
   top: 100px;
 }
 
@@ -187,9 +187,10 @@ export default {
   margin-left: 15px;
 }
 
-#home-title h2{
+#home-title p{
   margin-left: 15px;
-  margin-top: 25px;
+  font-size: 32px;
+  margin-top: 15px;
 }
 
 /* #home-title p{
@@ -213,7 +214,7 @@ export default {
 
 #home #notes{
   position: absolute;
-  left: 22%;
+  left: 330px;
   top: 450px;
   max-width: 750px;
   min-width: 750px;
@@ -225,11 +226,10 @@ export default {
 #home #timetable-form {
   position: absolute;
   top: 100px;
-  right: 0px;
-  margin-left: auto;
+  left: 1100px;
   margin-right: 35px;
   border-radius: 20px;
-  max-width: 300px;
+  min-width: 300px;
   min-height: 680px;
   border: 2px solid aqua;
 }

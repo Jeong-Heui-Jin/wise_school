@@ -71,7 +71,7 @@
       <b-form-input
         v-model="userSchoolName"
         id="text"
-        placeholder="학교명"
+        placeholder="학교명(예시 : OO초등학교)"
         size="lg"
       ></b-form-input>
 
@@ -79,12 +79,12 @@
       <b-form-input
         v-model="userSchoolRegion"
         id="text"
-        placeholder="학교 지역"
+        placeholder="학교 지역(예시 : 서울 광진구/충북 서산)"
         size="lg"
       ></b-form-input>
 
       <b-row>
-        <b-button block variant="warning" id="requestBtn">서비스 신청</b-button>
+        <b-button block variant="warning" id="requestBtn" @click="requestService">서비스 신청</b-button>
       </b-row>
       <b-row id="link">
         <b-col id="linkBtn"><b-button variant="link" href="login">로그인</b-button></b-col>
@@ -108,6 +108,32 @@ export default {
       userSchoolName: "",
       userSchoolRegion: ""
     };
+  },
+  methods: {
+    requestService() {
+      if (!this.validationId) {
+        alert('아이디 양식 맞춰주세요');
+      }
+      else if (!this.validationPassword) {
+        alert('비밀번호 양식 맞춰주세요');
+      }
+      else if (!this.validationPasswordCheck) {
+        alert('비밀번호와 같은 값을 입력해주세요');
+      }
+      else if (!this.validationPhone) {
+        alert('전화번호 양식 맞춰주세요');
+      }
+      else if (this.userSchoolName.length === 0) {
+        alert('학교 명을 똑바로 입력해주세요')
+      }
+      else if (this.userSchoolRegion.length === 0) {
+        alert('학교 지역을 똑바로 입력해주세요')
+      }
+      else {
+        alert('서비스 접수 완료');
+        window.open('/login', '_self');
+      }
+    }
   },
   components: {
     Logo
