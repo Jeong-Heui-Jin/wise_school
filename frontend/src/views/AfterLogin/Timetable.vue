@@ -1,10 +1,10 @@
 <template>
-  <div style="font-family: 'Jua', sans-serif;">
+  <div id="timetable" style="font-family: 'Jua', sans-serif;">
     <NavSideBar/>
     <NavBar/>
     <!-- 페이지 제목 -->
     <h1 id="title"> {{ timetable.Title }}</h1>
-    <b-container id="timetable">
+    <b-container id="timetable-content">
       <!-- 요일 -->
       <b-row id="period" >
         <b-col id="subject" style="padding-bottom: 20px;"> </b-col>
@@ -32,6 +32,11 @@
         <b-col id="subject">{{detail.Friday}}</b-col>
       </b-row>
     </b-container>
+    <div id="button-form">
+      <button style="background-color: #74a7fe">수정하기</button>
+      <br/>
+      <button style="background-color: #ff8c82">삭제하기</button>
+    </div>
   </div>
 </template>
 
@@ -107,7 +112,7 @@ export default {
 </script>
 
 <style>
-#timetable {
+#timetable-content {
   position: absolute;
   top: 90px;
   left: 350px;
@@ -116,7 +121,7 @@ export default {
   min-width: 800px;
 }
 
-#timetable #subject {
+#timetable-content #subject {
   min-width: 40px;
   font-size: 40px;
   text-align: center;
@@ -124,8 +129,22 @@ export default {
   border: 1px solid black;
 }
 
-#timetable #time {
+#timetable-content #time {
   font-size: 15px;
 }
 
+#timetable #button-form {
+  position: absolute;
+  top: 90px;
+  left: 1200px;
+}
+
+#timetable #button-form button {
+  width: 130px;
+  height: 50px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  border: 0px;
+  font-size: 24px;
+}
 </style>
