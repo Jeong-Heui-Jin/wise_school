@@ -30,3 +30,10 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'password', 'name', 'usertype', 'phone', 'is_message', 'student_infos',)
+
+
+class ServiceRequestSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ServiceRequest
+        fields = '__all__'

@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view
 # from rest_framework.permissions import IsAuthenticated
 # from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
-from accounts.serializers import UserListSerializer
+from accounts.serializers import UserSerializer
 from .serializers import TimetableSerializer, TimetableDetailSerializer
 from django.contrib.auth import get_user_model
 from .models import Timetable, TimetableDetail
@@ -19,7 +19,7 @@ from .models import Timetable, TimetableDetail
 # @permission_classes([IsAuthenticated])
 def members(request, class_id):
     class_members = get_list_or_404(get_user_model(), class_id=class_id)
-    serializer = UserListSerializer(class_members, many=True)
+    serializer = UserSerializer(class_members, many=True)
     return Response(serializer.data)
 
 
