@@ -4,8 +4,7 @@ from django.shortcuts import get_object_or_404, render, get_list_or_404
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import ParentSerializer, ParentsListSerializer, UserSerializer, UserListSerializer, ServiceRequestSerializer
-from accounts import serializers ParentsListSerializer
+from .serializers import ParentSerializer, ParentsListSerializer, UserSerializer, UserSerializer, ServiceRequestSerializer
 from django.contrib.auth import get_user_model
 from rest_auth.views import PasswordResetView
 from django.conntrib.auth.forms import SetPasswordForm
@@ -23,6 +22,10 @@ def service_request(request):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+
+
+def user_confirm(request):
+    pass
 
 def password_reset(request):
     # if passwordForm.is_valid():
@@ -66,14 +69,14 @@ def parents(request, user_id):
 # 해당 학교의 선생님들 목록 조회
 def teachers(request, school_id):
     teachers_list = get_list_or_404(Parents, classroom_school_id=school_id)
-    serializer = UserListSerializer(teachers_list, many=True)
+    serializer = UserSerializer(teachers_list, many=True)
     return Response(serializer.data)
 
 
 # 해당 학교의 학생들 목록 조회
 def students(request, school_id):
     students_list = get_list_or_404(get_user_model(), classroom_school_id=school_id)
-    serializer = UserListSerializer(students_list, many=True)
+    serializer = UserSerializer(students_list, many=True)
     return Response(serializer.data)
 
 

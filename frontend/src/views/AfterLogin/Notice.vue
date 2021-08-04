@@ -62,7 +62,8 @@ export default {
   name: "Notice",
   data() {
     return {
-      // fields: [{ key: "name", label: "wa" }],
+      perPage: 7,
+      currentPage: 1,
       important_items: [
         { name: "중요 공지사항 1" },
         { name: "중요 공지사항 2" },
@@ -135,7 +136,7 @@ export default {
 }
 
 #listForm {
-  position: absolute;
+  position: fixed;
   left: 500px;
   top: 90px;
   max-width: 900px;
@@ -145,12 +146,6 @@ export default {
   border-radius: 10px;
   /* padding: 100; */
   background-color: white;
-}
-
-#listForm {
-  position: absolute;
-  top: 90px;
-  left: 22%;
 }
 
 #listForm #textNoticeImportant {

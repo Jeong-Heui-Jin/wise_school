@@ -11,7 +11,8 @@ class User(AbstractUser):
     usertype = models.IntegerField()           # 타입(관리자/선생님/학생)
     phone = models.CharField(max_length=50)    # 연락처
     # email = models.EmailField()                # 이메일
-    is_message = models.BooleanField()         # 메시지 체크 여부
+    is_message = models.BooleanField(default=False)         # 메시지 체크 여부
+    is_notification = models.BooleanField(default=False)    # 알림 체크 여부
     image = models.ImageField(blank=True, upload_to='profileimages/%Y%M%d')
     # image = ProcessedImageField(
     #     upload_to='postings/resize/%Y%m%d',
