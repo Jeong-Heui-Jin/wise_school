@@ -1,93 +1,98 @@
 <template>
-  <div id="class" style="font-family: 'Jua', sans-serif;">
-    <NavSideBar/>
-    <NavBar/>
+  <div id="class" style="font-family: 'Jua', sans-serif">
+    <NavSideBar />
+    <NavBar />
 
     <h1 id="title">우리반 친구들</h1>
 
     <div id="teacher" class="d-flex">
-      <img id="teacher-img" src="@/assets/owl.png" alt="프로필"/>
+      <img id="teacher-img" src="@/assets/owl.png" alt="프로필" />
       <div id="teacher-form">
-        <h3 id="class-num" style="font-size: 24px;">{{teacher.class}}</h3>
+        <h3 id="class-num" style="font-size: 24px">{{ teacher.class }}</h3>
         <div class="d-flex">
-          <h2 id="teacher-name" style="font-size: 36px;">{{teacher.name}}</h2>
-          <h3 id="teacher-title" style="font-size: 30px;">담임 선생님</h3>
+          <h2 id="teacher-name" style="font-size: 36px">{{ teacher.name }}</h2>
+          <h3 id="teacher-title" style="font-size: 30px">담임 선생님</h3>
         </div>
-        <h3 id="call" style="font-size: 30px;">전화 번호 : {{teacher.number}}</h3>
+        <h3 id="call" style="font-size: 30px">
+          전화 번호 : {{ teacher.number }}
+        </h3>
       </div>
       <button id="teacher-button" href="#">메시지 보내기</button>
     </div>
-    <div id="content" class="d-flex flex-wrap justify-content-start flex-row">
-    </div>
+    <div
+      id="content"
+      class="d-flex flex-wrap justify-content-start flex-row"
+    ></div>
   </div>
 </template>
 
 <script>
-import NavSideBar from '@/components/NavSideBarTeacher.vue'
-import NavBar from '@/components/NavBar.vue'
-import Whale from '@/assets/whale.png'
-import Beaver from '@/assets/beaver.png'
-import Cat from '@/assets/cat.png'
-import Elephant from '@/assets/elephant.png'
-import Frog from '@/assets/frog.png'
-import Koala from '@/assets/koala.png'
+import NavSideBar from "@/components/NavSideBarTeacher.vue";
+import NavBar from "@/components/NavBar.vue";
+import Whale from "@/assets/whale.png";
+import Beaver from "@/assets/beaver.png";
+import Cat from "@/assets/cat.png";
+import Elephant from "@/assets/elephant.png";
+import Frog from "@/assets/frog.png";
+import Koala from "@/assets/koala.png";
 // import Owl from '@/assets/owl.png'
-import Shark from '@/assets/shark.png'
-import Sheep from '@/assets/sheep.png'
-import Squirrel from '@/assets/squirrel.png'
+import Shark from "@/assets/shark.png";
+import Sheep from "@/assets/sheep.png";
+import Squirrel from "@/assets/squirrel.png";
 
 export default {
-  name: 'Class',
+  name: "Class",
   data() {
-    return{
+    return {
       teacher: {
-        name: '유재석',
-        number: '02-123-4567',
-        class: '2학년 2반'
+        name: "유재석",
+        number: "02-123-4567",
+        class: "2학년 2반",
       },
       students: [
-        {name: '김우진', number: '1234'}, 
-        {name: '목상원', number: '2341'}, 
-        {name: '정희진', number: '17'}, 
-        {name: '정명지', number: '45'}, 
-        {name: '조동윤', number: '984'}, 
-        {name: '기리보이', number: '123'}, 
-        {name: '산다라박', number: '3892'}, 
-        {name: '구창모', number: '1253'}, 
-        {name: '권지용', number: '8342'},
-        {name: '빈지노', number: '1943'}
-      ]
-    }
+        { name: "김우진", number: "1234" },
+        { name: "목상원", number: "2341" },
+        { name: "정희진", number: "17" },
+        { name: "정명지", number: "45" },
+        { name: "조동윤", number: "984" },
+        { name: "기리보이", number: "123" },
+        { name: "산다라박", number: "3892" },
+        { name: "구창모", number: "1253" },
+        { name: "권지용", number: "8342" },
+        { name: "빈지노", number: "1943" },
+      ],
+    };
   },
 
   created() {
     this.$nextTick(() => {
-      const cardBody = document.querySelector('#content');
+      const cardBody = document.querySelector("#content");
       // const imgName = "@/assets/whale.png"
 
-      cardBody.innerHTML = this.students.map((li) => {
-        var img;
+      cardBody.innerHTML = this.students
+        .map((li) => {
+          var img;
 
-        if (Number(li.number) % 9 === 0) {
-          img = Whale;
-        } else if (Number(li.number) % 9 === 1) {
-          img = Beaver;
-        } else if (Number(li.number) % 9 === 2) {
-          img = Cat;
-        } else if (Number(li.number) % 9 === 3) {
-          img = Elephant;
-        } else if (Number(li.number) % 9 === 4) {
-          img = Frog;
-        } else if (Number(li.number) % 9 === 5) {
-          img = Koala;
-        } else if (Number(li.number) % 9 === 6) {
-          img = Shark;
-        } else if (Number(li.number) % 9 === 7) {
-          img = Sheep;
-        } else {
-          img = Squirrel;
-        } 
-        return `
+          if (Number(li.number) % 9 === 0) {
+            img = Whale;
+          } else if (Number(li.number) % 9 === 1) {
+            img = Beaver;
+          } else if (Number(li.number) % 9 === 2) {
+            img = Cat;
+          } else if (Number(li.number) % 9 === 3) {
+            img = Elephant;
+          } else if (Number(li.number) % 9 === 4) {
+            img = Frog;
+          } else if (Number(li.number) % 9 === 5) {
+            img = Koala;
+          } else if (Number(li.number) % 9 === 6) {
+            img = Shark;
+          } else if (Number(li.number) % 9 === 7) {
+            img = Sheep;
+          } else {
+            img = Squirrel;
+          }
+          return `
           <div id="card">
             <h3>${li.name}</h3>
             <img id="img" src=${img} alt="프로필"/>
@@ -97,18 +102,19 @@ export default {
               <button href="#" id="message-button">메시지 보내기</button>
             </div>
           </div>`;
-      }).join("");
+        })
+        .join("");
     });
   },
   components: {
     NavSideBar,
-    NavBar
+    NavBar,
   },
-}
+};
 </script>
 
 <style>
-#title {
+#class #title {
   position: absolute;
   top: 30px;
   left: 350px;
@@ -192,7 +198,7 @@ export default {
 }
 
 /* #class #button-field {
-  
+
 } */
 
 #class #message-button {
