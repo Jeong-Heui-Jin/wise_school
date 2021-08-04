@@ -23,6 +23,10 @@ def service_request(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
+
+def user_confirm(request):
+    pass
+
 def password_reset(request):
     # if passwordForm.is_valid():
     #     password = passwordForm.cleaned_data['password']
