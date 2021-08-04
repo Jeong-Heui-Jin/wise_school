@@ -93,7 +93,7 @@ export default {
             <img id="img" src=${img} alt="프로필"/>
             <br/>
             <div class="d-flex" id="button-field">
-              <button href="#" id="student-button">학생정보</button>
+              <button onclick="window.open('/student_info/${li.number}', '_self')" id="student-button">학생정보</button>
               <button href="#" id="message-button">메시지 보내기</button>
             </div>
           </div>`;
