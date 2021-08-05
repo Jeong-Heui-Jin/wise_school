@@ -9,23 +9,32 @@
       <h1 id="homeworkTitle">숙제 작성</h1>
       <!-- 제목 -->
       <h2 id="sub-title" style="font-size: 32px">제목</h2>
-      <b-form-input id="titleName"></b-form-input>
+      <b-form-input id="titleName" v-model="createValue.title"></b-form-input>
 
       <h2 id="endTitle">마감일</h2>
-      <input type="date" id="endDate" name="trip-start" />
+      <input
+        type="date"
+        id="endDate"
+        name="trip-start"
+        v-model="createValue.deadline"
+      />
 
       <!-- 내용 -->
       <h2 id="content" style="font-size: 32px">내용</h2>
-      <b-form-textarea id="contentText"></b-form-textarea>
+      <b-form-textarea
+        id="contentText"
+        v-model="createValue.content"
+      ></b-form-textarea>
 
       <!-- 취소/저장 버튼 -->
-      <button id="saveBtn">저장</button>
+      <button id="saveBtn" @click="save">저장</button>
       <button id="cancelBtn">취소</button>
     </b-form>
   </div>
 </template>
 
 <script>
+import axios from "axios";
 import NavSideBar from "@/components/NavSideBarTeacher.vue";
 import NavBar from "@/components/NavBar.vue";
 
@@ -33,12 +42,35 @@ export default {
   name: "HomeworkCreate",
   data() {
     return {
-      value: "",
+      createValue: {
+        title: "",
+        deadline: "",
+        content: "",
+      },
     };
   },
   components: {
     NavSideBar,
     NavBar,
+  },
+  methods: {
+    save: function (event) {
+      event.preventDefault();
+      axios({
+        method: "post",
+        url: "http://i5a205.p.ssafy.io:8000/homework/list/",
+        data: this.createValue,
+      })
+        .then((res) => {
+          this.$router.push({
+            name: "HomeworkView",
+            params: { homework: res },
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
 };
 </script>
