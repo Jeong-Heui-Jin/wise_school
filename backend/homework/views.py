@@ -1,8 +1,9 @@
+# from backend import homework
 from django.shortcuts import get_object_or_404, get_list_or_404
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .models import Homework, SubmitHomework
+from .models import Homework, HomeworkFile, SubmitHomework
 from .serializers import HomeworkSerializer, SubmitHomeworkSerializer
 from homework import serializers
 
@@ -21,7 +22,13 @@ def homework_list(request):
     elif request.method == 'POST':
         serializer = HomeworkSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save(classroom=class_id)
+            homework = serializer.save(classroom=class_id)
+            image_list = request.FILES.getlist('image_path')
+            for image in image_list:
+                item = HomeworkFile.objects.create(homework=homework, image=image)
+                item.save()
+            # 사진파일까지 저장되도록 한 번 더 저장
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
