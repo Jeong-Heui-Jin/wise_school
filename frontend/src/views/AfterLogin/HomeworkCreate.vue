@@ -4,16 +4,18 @@
     <NavSideBar />
     <NavBar />
 
-    <h1 id="title">숙제 작성</h1>
-
     <!-- 작성 Form -->
     <b-form id="noticeCreateForm">
+      <h1 id="homeworkTitle">숙제 작성</h1>
       <!-- 제목 -->
-      <h2 id="sub-title" style="font-size: 32px;">제목</h2>
+      <h2 id="sub-title" style="font-size: 32px">제목</h2>
       <b-form-input id="titleName"></b-form-input>
 
+      <h2 id="endTitle">마감일</h2>
+      <input type="date" id="endDate" name="trip-start" />
+
       <!-- 내용 -->
-      <h2 id="content" style="font-size: 32px;">내용</h2>
+      <h2 id="content" style="font-size: 32px">내용</h2>
       <b-form-textarea id="contentText"></b-form-textarea>
 
       <!-- 취소/저장 버튼 -->
@@ -29,6 +31,11 @@ import NavBar from "@/components/NavBar.vue";
 
 export default {
   name: "HomeworkCreate",
+  data() {
+    return {
+      value: "",
+    };
+  },
   components: {
     NavSideBar,
     NavBar,
@@ -37,15 +44,10 @@ export default {
 </script>
 
 <style>
-#homeworkTitle {
-  position: absolute;
-  left: 350px;
-}
-
 #noticeCreateForm {
-  position: absolute;
-  left: 350px;
-  min-width: 1000px;
+  position: fixed;
+
+  width: 1100px;
   height: 600px;
 
   top: 112px;
@@ -57,15 +59,21 @@ export default {
   font-size: 160%;
 }
 
+#noticeCreateForm #homeworkTitle {
+  position: absolute;
+  top: -92px;
+  left: -20px;
+}
+
 #noticeCreateForm #sub-title {
   position: absolute;
-  left: 50px;
+  left: 100px;
   top: 70px;
 }
 
 #noticeCreateForm #titleName {
   position: absolute;
-  left: 180px;
+  left: 250px;
   top: 60px;
 
   width: 700px;
@@ -75,16 +83,34 @@ export default {
   border-radius: 10px;
 }
 
+#noticeCreateForm #endTitle {
+  position: absolute;
+  left: 100px;
+  top: 135px;
+}
+
+#noticeCreateForm #endDate {
+  position: absolute;
+  left: 250px;
+  top: 135px;
+
+  width: 700px;
+  font-size: 90%;
+
+  background-color: rgb(248, 236, 196);
+  border-radius: 10px;
+}
+
 #noticeCreateForm #content {
   position: absolute;
-  left: 50px;
-  top: 180px;
+  left: 100px;
+  top: 200px;
 }
 
 #noticeCreateForm #contentText {
   position: absolute;
-  left: 180px;
-  top: 180px;
+  left: 250px;
+  top: 200px;
 
   max-width: 700px;
   min-width: 700px;
@@ -101,8 +127,8 @@ export default {
 
 #noticeCreateForm #cancelBtn {
   position: absolute;
-  top: 520px;
-  left: 600px;
+  top: 550px;
+  left: 670px;
 
   border-radius: 12px;
   border: 0px;
@@ -114,8 +140,8 @@ export default {
 
 #noticeCreateForm #saveBtn {
   position: absolute;
-  top: 520px;
-  left: 300px;
+  top: 550px;
+  left: 330px;
 
   border-radius: 12px;
   border: 0px;
