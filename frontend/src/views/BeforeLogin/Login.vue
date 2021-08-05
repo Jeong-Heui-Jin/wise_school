@@ -15,6 +15,7 @@
         placeholder="아이디"
         size="lg"
       ></b-form-input>
+      <p style="color: red; text-align: left; padding: 0.2rem 0 0 3.2rem; margin: 0px;" id="error" v-if="isIdNull"> {{idMessage}} </p>
       <!-- 비밀번호 입력 폼 -->
       <b-form-input
         v-model="loginCredentials.password"
@@ -23,6 +24,7 @@
         placeholder="비밀번호"
         size="lg"
       ></b-form-input>
+      <p style="color: red; text-align: left; padding: 0.2rem 0 0 3.2rem; margin: 0px;" id="error" v-if="isPasswordNull"> {{passwordMessage}} </p>
       
       <b-button block variant="warning" id="loginBtn" @click="login">로그인</b-button>
       <b-row id="link">
@@ -46,6 +48,10 @@ export default {
         username: "",
         password: "",
       },
+      isIdNull:false,
+      isPasswordNull:false,
+      idMessage:"아이디를 입력해주세요",
+      passwordMessage:"비밀번호를 입력해주세요",
     };
   },
   components: {
@@ -54,6 +60,24 @@ export default {
   methods: {
     login: function(event) {
       event.preventDefault()
+
+      // 아이디 입력칸이 비어있으면 알림
+      if(!this.loginCredentials.username){
+        this.isIdNull=true;
+        this.isPasswordNull=false;
+        return;
+      } else {
+        this.isIdNull=false;
+
+        // 비밀번호 입력칸이 비어있으면 알림
+        if(!this.loginCredentials.password){
+          this.isPasswordNull=true;
+          return;
+        } else {
+          this.isPasswordNull = false;
+        }
+      }
+      
       axios({
         method: 'post',
         url: 'http://127.0.0.1:8000/accounts/login/',
@@ -67,6 +91,7 @@ export default {
         window.open('/home', '_self')
       })
       .catch(err => {
+        alert("로그인에 실패했습니다.")
         console.log(err)
       })
 
@@ -86,7 +111,7 @@ export default {
 #loginForm {
   max-width: 500px;
   min-width: 500px;
-  max-height: 250px;
+
   min-height: 250px;
   background-color: #ccf0ef;
   border-radius: 20px;
