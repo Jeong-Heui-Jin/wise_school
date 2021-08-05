@@ -6,7 +6,7 @@
                 <img id="logo" src="@/assets/alarm.png" alt="알람_로고" @click="print">
                 <img id="logo" src="@/assets/mail.png" alt="알람_로고">
                 <b-button id="button" variant="faded" type="light" size="lg">내 정보 보기</b-button>
-                <b-button id="button" variant="faded" type="light" size="lg">로그아웃</b-button>
+                <b-button id="button" variant="faded" type="light" size="lg" @click="logout">로그아웃</b-button>
             </b-navbar-nav>
         </b-navbar>
     </div>
@@ -17,7 +17,14 @@ export default({
     methods: {
         print() {
             console.log('alarm');
-        }
+        },
+        logout() {
+            // 로그아웃
+            if(localStorage.getItem('jwt')){
+                // 로컬에 저장된 토큰 삭제
+                localStorage.removeItem('jwt');
+            }
+        },
     }
 })
 </script>
