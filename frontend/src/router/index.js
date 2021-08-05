@@ -79,6 +79,7 @@ const routes = [
     path: '/homework_view',
     name: 'HomeworkView',
     component: HomeworkView,
+    props: true,
   },
   {
     path: '/homework_change',

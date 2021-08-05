@@ -37,6 +37,6 @@ class HomeworkSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Homework
-        fields = ('id', 'title', 'content', 'end')
+        fields = ('id', 'title', 'content', 'end',)
         # fields = ('id', 'title', 'content', 'end', 'file_set', 'submit_set', 'submit_count',)
         # read_only_fields = ('classroom',)

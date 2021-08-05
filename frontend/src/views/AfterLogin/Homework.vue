@@ -191,8 +191,9 @@ export default {
     goHomeworkCreate: function () {
       window.open("/homework_create", "_self");
     },
-    goHomeworkView: function (value) {
-      console.log(value);
+    goHomeworkView: function (homework) {
+      console.log(homework);
+      this.$router.push({ name: 'HomeworkView', params:{'homework':homework} })
       // router.push({
       //   path: "/homework_view",
       //   query: { title: this.items.Title, Content: this.items.Content },

@@ -12,7 +12,7 @@
       <!-- ID 입력 폼 -->
       <div>
       <b-form-input
-        v-model="userId"
+        v-model="username"
         :state="validationId"
         id="text"
         placeholder="아이디"
@@ -27,7 +27,7 @@
 
       <!-- 비밀번호 입력 폼 -->
       <b-form-input
-        v-model="userPassword"
+        v-model="password"
         :state="validationPassword"
         type="password"
         id="text"
@@ -41,7 +41,7 @@
 
       <!-- 비밀번호 확인 입력 폼 -->
       <b-form-input
-        v-model="userPasswordCheck"
+        v-model="password_confirmation"
         :state="validationPasswordCheck"
         type="password"
         id="text"
@@ -55,7 +55,7 @@
 
       <!-- 연락처 입력 폼 -->
       <b-form-input
-        v-model="userPhone"
+        v-model="phone"
         :state="validationPhone"
         type="tel"
         id="text"
@@ -69,7 +69,7 @@
 
       <!-- 학교명 입력 폼 -->
       <b-form-input
-        v-model="userSchoolName"
+        v-model="school_name"
         id="text"
         placeholder="학교명(예시 : OO초등학교)"
         size="lg"
@@ -77,7 +77,7 @@
 
       <!-- 학교 지역 입력 폼 -->
       <b-form-input
-        v-model="userSchoolRegion"
+        v-model="area"
         id="text"
         placeholder="학교 지역(예시 : 서울 광진구/충북 서산)"
         size="lg"
@@ -97,20 +97,24 @@
 
 <script>
 import Logo from "@/components/Logo"
+import axios from 'axios';
+
 export default {
   name: 'ServiceRequest',
   data() {
     return {
-      userId: "",
-      userPassword: "",
-      userPasswordCheck: "",
-      userPhone: "",
-      userSchoolName: "",
-      userSchoolRegion: ""
+      requestForm: {
+        username: "",
+        password: "",
+        password_confirmation: "",
+        phone: "",
+        school_name: "",
+        area: "",
+      }
     };
   },
   methods: {
-    requestService() {
+    requestService: function(event) {
       if (!this.validationId) {
         alert('아이디 양식 맞춰주세요');
       }
@@ -130,8 +134,21 @@ export default {
         alert('학교 지역을 똑바로 입력해주세요')
       }
       else {
-        alert('서비스 접수 완료');
-        window.open('/login', '_self');
+        event.preventDefault()
+        axios({
+          method: 'post',
+          url: 'http://127.0.0.1:8000/accounts/service-request/',
+          data: this.requestForm,
+        })
+        .then((res) => {
+          alert('서비스 접수 완료');
+          console.log(res)
+          // window.open('/login', '_self');
+          this.$router.push({ name: 'Login' })
+        })
+        .catch(err => {
+          console.log(err)
+        })
       }
     }
   },
@@ -140,14 +157,14 @@ export default {
   },
   computed: {
     validationId() {
-      if (this.userId.length < 7) return false;
-      else if (this.userId.length > 16) return false;
+      if (this.username && this.username.length < 7) return false;
+      else if (this.username.length > 16) return false;
       else {
-        for (var i = 0; i < this.userId.length; i++) {
+        for (var i = 0; i < this.username.length; i++) {
           if (
             !(
-              (this.userId[i] >= "a" && this.userId[i] <= "z") ||
-              (this.userId[i] >= "0" && this.userId[i] <= "9")
+              (this.username[i] >= "a" && this.username[i] <= "z") ||
+              (this.username[i] >= "0" && this.username[i] <= "9")
             )
           )
             return false;
@@ -156,21 +173,21 @@ export default {
       }
     },
     validationPassword() {
-      if (this.userPassword.length < 7) return false;
+      if (this.password && this.password.length < 7) return false;
       else {
-        for (var i = 0; i < this.userPassword.length; i++) {
+        for (var i = 0; i < this.password.length; i++) {
           if (
             !(
-              (this.userPassword[i] >= "a" && this.userPassword[i] <= "z") ||
-              (this.userPassword[i] >= "0" && this.userPassword[i] <= "9") ||
-              (this.userPassword[i] === "!") ||
-              (this.userPassword[i] === "@") ||
-              (this.userPassword[i] === "#") ||
-              (this.userPassword[i] === "$") ||
-              (this.userPassword[i] === "%") ||
-              (this.userPassword[i] === "^") ||
-              (this.userPassword[i] === "&") ||
-              (this.userPassword[i] === "*")
+              (this.password[i] >= "a" && this.password[i] <= "z") ||
+              (this.password[i] >= "0" && this.password[i] <= "9") ||
+              (this.password[i] === "!") ||
+              (this.password[i] === "@") ||
+              (this.password[i] === "#") ||
+              (this.password[i] === "$") ||
+              (this.password[i] === "%") ||
+              (this.password[i] === "^") ||
+              (this.password[i] === "&") ||
+              (this.password[i] === "*")
             )
           )
             return false;
@@ -179,23 +196,23 @@ export default {
       }
     },
     validationPasswordCheck() {
-      if (this.userPassword === this.userPasswordCheck)
+      if (this.password === this.password_confirmation)
       {
-        if (this.userPassword.length < 7) return false;
+        if (this.password && this.password.length < 7) return false;
         else {
-          for (var i = 0; i < this.userPassword.length; i++) {
+          for (var i = 0; i < this.password.length; i++) {
             if (
               !(
-                (this.userPassword[i] >= "a" && this.userPassword[i] <= "z") ||
-                (this.userPassword[i] >= "0" && this.userPassword[i] <= "9") ||
-                (this.userPassword[i] === "!") ||
-                (this.userPassword[i] === "@") ||
-                (this.userPassword[i] === "#") ||
-                (this.userPassword[i] === "$") ||
-                (this.userPassword[i] === "%") ||
-                (this.userPassword[i] === "^") ||
-                (this.userPassword[i] === "&") ||
-                (this.userPassword[i] === "*")
+                (this.password[i] >= "a" && this.password[i] <= "z") ||
+                (this.password[i] >= "0" && this.password[i] <= "9") ||
+                (this.password[i] === "!") ||
+                (this.password[i] === "@") ||
+                (this.password[i] === "#") ||
+                (this.password[i] === "$") ||
+                (this.password[i] === "%") ||
+                (this.password[i] === "^") ||
+                (this.password[i] === "&") ||
+                (this.password[i] === "*")
               )
             )
               return false;
@@ -207,14 +224,14 @@ export default {
         return false;
     },
     validationPhone() {
-      if (this.userPhone.length !== 13)
+      if (this.phone && this.phone.length !== 13)
         return false;
-      for (var i = 0; i < this.userPhone.length; i++) {
+      for (var i = 0; i < this.phone.length; i++) {
         if (i == 3 || i == 8) {
-          if (this.userPhone[i] !== '-')
+          if (this.phone[i] !== '-')
             return false;
           else {
-            if (this.userPhone[i] < 0 || this.userPhone[i] > 9)
+            if (this.phone[i] < 0 || this.phone[i] > 9)
               return false;
           }
         }

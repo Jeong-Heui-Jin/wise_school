@@ -4,11 +4,15 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .models import Homework, HomeworkFile, SubmitHomework
+from classroom.models import Classroom
 from .serializers import HomeworkSerializer, SubmitHomeworkSerializer
+from accounts.serializers import UserSerializer
 from homework import serializers
 from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from django.http import JsonResponse
+from django.contrib.auth import get_user_model
 
 
 # 전체 숙제 조회 / (선생님) 새로운 숙제 생성
@@ -16,18 +20,16 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 @authentication_classes([JSONWebTokenAuthentication])
 @permission_classes([IsAuthenticated])
 def homework_list(request):
-    # return Response(request.data)
-    user = request.user
-    class_id = user.classroom.id
-
+    classroom_id = int(request.user.classroom.id)
+    classroom = get_object_or_404(Classroom, pk=classroom_id)
     if request.method == 'GET':
-        homeworks = get_list_or_404(Homework, classroom=class_id)
+        homeworks = get_list_or_404(Homework, classroom=classroom)
         serializer = HomeworkSerializer(homeworks, many=True)
-        return Response(serializer.data)
+        return Response(serializer.initial_data)
     elif request.method == 'POST':
         serializer = HomeworkSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save(classroom=user.classroom)
+            serializer.save(classroom=classroom)
             # image_list = request.FILES.getlist('image_path')
             # for image in image_list:
             #     item = HomeworkFile.objects.create(homework=homework, image=image)

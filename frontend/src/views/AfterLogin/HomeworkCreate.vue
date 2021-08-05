@@ -16,7 +16,7 @@
         type="date"
         id="endDate"
         name="trip-start"
-        v-model="createValue.deadline"
+        v-model="createValue.end"
       />
 
       <!-- 내용 -->
@@ -40,11 +40,11 @@ import NavBar from "@/components/NavBar.vue";
 
 export default {
   name: "HomeworkCreate",
-  data() {
+  data: function() {
     return {
       createValue: {
         title: "",
-        deadline: "",
+        end: "",
         content: "",
       },
     };
@@ -54,14 +54,24 @@ export default {
     NavBar,
   },
   methods: {
+    setToken: function () {
+      const token = localStorage.getItem('jwt')
+      const config = {
+        Authorization: `JWT ${token}`
+      }
+      return config
+    },
     save: function (event) {
       event.preventDefault();
       axios({
         method: "post",
-        url: "http://i5a205.p.ssafy.io:8000/homework/list/",
+        // url: "http://i5a205.p.ssafy.io:8000/homework/list/",
+        url: 'http://127.0.0.1:8000/homework/list/',
+        headers: this.setToken(),
         data: this.createValue,
       })
         .then((res) => {
+          console.log(res)
           this.$router.push({
             name: "HomeworkView",
             params: { homework: res },
