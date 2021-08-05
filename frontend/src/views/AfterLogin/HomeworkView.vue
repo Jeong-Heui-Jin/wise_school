@@ -4,21 +4,25 @@
     <NavSideBar />
     <NavBar />
 
-    <h1 id="homeworkTitle">숙제 보기</h1>
-
     <!-- 작성 Form -->
     <b-form id="noticeViewForm">
+      <h1 id="homeworkTitle">숙제 보기</h1>
       <!-- 제목 -->
-      <h2 id="title">제목</h2>
-      <b-form-input id="titleName"></b-form-input>
+      <h2 id="sub-title">제목</h2>
+      <b-form-input readonly id="titleName"></b-form-input>
+
+      <h2 id="endTitle">마감일</h2>
+      <b-form-input readonly id="endDate"></b-form-input>
+      <!-- <input type="date" id="endDate" name="trip-start" /> -->
 
       <!-- 내용 -->
       <h2 id="content">내용</h2>
-      <b-form-textarea id="contentText"></b-form-textarea>
+      <b-form-textarea readonly id="contentText" plaintext></b-form-textarea>
 
-      <!-- 취소/저장 버튼 -->
+      <!-- 취소/수정/삭제 버튼 -->
       <button id="cancelBtn">취소</button>
       <button id="changeBtn">수정</button>
+      <button id="deleteBtn">삭제</button>
     </b-form>
   </div>
 </template>
@@ -37,11 +41,6 @@ export default {
 </script>
 
 <style>
-#homeworkTitle {
-  position: absolute;
-  left: 22%;
-}
-
 #noticeViewForm {
   position: fixed;
 
@@ -57,7 +56,13 @@ export default {
   font-size: 160%;
 }
 
-#noticeViewForm #title {
+#noticeViewForm #homeworkTitle {
+  position: absolute;
+  top: -92px;
+  left: -20px;
+}
+
+#noticeViewForm #sub-title {
   position: absolute;
   left: 100px;
   top: 70px;
@@ -75,16 +80,34 @@ export default {
   border-radius: 10px;
 }
 
+#noticeViewForm #endTitle {
+  position: absolute;
+  left: 100px;
+  top: 135px;
+}
+
+#noticeViewForm #endDate {
+  position: absolute;
+  left: 250px;
+  top: 135px;
+
+  width: 700px;
+  font-size: 90%;
+
+  background-color: rgb(248, 236, 196);
+  border-radius: 10px;
+}
+
 #noticeViewForm #content {
   position: absolute;
   left: 100px;
-  top: 220px;
+  top: 200px;
 }
 
 #noticeViewForm #contentText {
   position: absolute;
   left: 250px;
-  top: 220px;
+  top: 200px;
 
   max-width: 700px;
   min-width: 700px;
@@ -101,11 +124,11 @@ export default {
 
 #noticeViewForm #cancelBtn {
   position: absolute;
-  top: 90%;
-  left: 36%;
+  top: 550px;
+  left: 500px;
 
   border-radius: 12px;
-
+  border: 0px;
   color: red;
   background-color: #fcb6b6;
 
@@ -114,14 +137,31 @@ export default {
 
 #noticeViewForm #changeBtn {
   position: absolute;
-  top: 90%;
-  left: 53%;
+  top: 17px;
+  left: 965px;
 
-  border-radius: 12px;
+  border-radius: 7px;
+  border: 0px;
+  color: rgb(190, 140, 32);
+  background-color: rgb(249, 249, 252);
 
-  color: rgb(38, 38, 255);
-  background-color: #a8aafd;
+  font-size: 60%;
 
-  min-width: 11%;
+  min-width: 5%;
+}
+
+#noticeViewForm #deleteBtn {
+  position: absolute;
+  top: 17px;
+  left: 1025px;
+
+  border-radius: 7px;
+  border: 0px;
+  color: rgb(190, 140, 32);
+  background-color: rgb(249, 249, 252);
+
+  font-size: 60%;
+
+  min-width: 5%;
 }
 </style>
