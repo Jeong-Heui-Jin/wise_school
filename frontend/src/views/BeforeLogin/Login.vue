@@ -10,21 +10,21 @@
     >
       <!-- ID 입력 폼 -->
       <b-form-input
-        v-model="userId"
+        v-model="loginCredentials.username"
         id="textId"
         placeholder="아이디"
         size="lg"
       ></b-form-input>
       <!-- 비밀번호 입력 폼 -->
       <b-form-input
-        v-model="userPassword"
+        v-model="loginCredentials.password"
         type="password"
         id="textPassword"
         placeholder="비밀번호"
         size="lg"
       ></b-form-input>
       
-      <b-button block variant="warning" id="loginBtn" @click="login()">로그인</b-button>
+      <b-button block variant="warning" id="loginBtn" @click="login">로그인</b-button>
       <b-row id="link">
         <b-col id="linkBtn"><b-button variant="link" href="password_reset">비밀번호 변경</b-button></b-col>
         <b-col>|</b-col>
@@ -35,27 +35,47 @@
 </template>
 
 <script>
+import axios from 'axios'
 import Logo from "@/components/Logo.vue"
+
 export default {
   name: "Login",
   data() {
     return {
-      userId: "",
-      userPassword: "",
+      loginCredentials: {
+        username: "",
+        password: "",
+      },
     };
   },
   components: {
     Logo,
   },
   methods: {
-    login: function() {
+    login: function(event) {
+      event.preventDefault()
+      axios({
+        method: 'post',
+        url: 'http://127.0.0.1:8000/accounts/login/',
+        data: this.loginCredentials,
+      })
+      .then((res) => {
+        localStorage.setItem('jwt', res.data.token)
+        // console.log(res)
+        // this.$router.push({ name: 'Home' })
+        window.open('/home', '_self')
+      })
+      .catch(err => {
+        console.log(err)
+      })
+
       // 로그인 반환 결과 (0 : 관리자, 1 : 선생님, 2 : 학생)
-      if (this.userId === 'admin1234' && this.userPassword === '1q2w3e4r!') {
-        window.open('/home', '_self');
-      }
-      else {
-        alert('로그인 실패');
-      }
+      // if (this.userId === 'admin1234' && this.userPassword === '1q2w3e4r!') {
+      //   window.open('/home', '_self');
+      // }
+      // else {
+      //   alert('로그인 실패');
+      // }
     }
   }
 };

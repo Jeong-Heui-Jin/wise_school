@@ -32,6 +32,8 @@ INSTALLED_APPS = [
 
     'rest_framework',
 
+    'corsheaders',
+
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -39,6 +41,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -47,6 +50,16 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
+# 1. 특정 Origin만 선택적으로 허용
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8080",
+]
+
+# 2. 모든 Origin 허용
+# CORS_ALLOW_ALL_ORIGINS = True
+
 
 ROOT_URLCONF = 'SHS.urls'
 
