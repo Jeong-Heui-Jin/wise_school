@@ -10,7 +10,10 @@ from homework import serializers
 
 # 전체 숙제 조회 / (선생님) 새로운 숙제 생성
 @api_view(['GET', 'POST',])
-def homework_list(request, class_id):
+def homework_list(request):
+    user = request.user
+    class_id = user.classroom.id
+
     if request.method == 'GET':
         homeworks = get_list_or_404(Homework, classroom=class_id)
         serializer = HomeworkSerializer(homeworks, many=True)
