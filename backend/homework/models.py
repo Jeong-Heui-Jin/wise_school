@@ -9,7 +9,7 @@ class Homework(models.Model):
     classroom = models.ForeignKey('classroom.Classroom', on_delete=CASCADE)
     title = models.CharField(max_length=50)
     content = models.TextField()
-    registertime = models.DateTimeField()
+    registertime = models.DateTimeField(auto_now_add=True)
     end = models.DateTimeField()
     # image = ProcessedImageField(format='JPEG', options={'quality': 90})
 

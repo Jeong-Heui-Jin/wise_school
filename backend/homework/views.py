@@ -6,12 +6,17 @@ from rest_framework.decorators import api_view
 from .models import Homework, HomeworkFile, SubmitHomework
 from .serializers import HomeworkSerializer, SubmitHomeworkSerializer
 from homework import serializers
-
+from rest_framework.decorators import authentication_classes, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 
 # 전체 숙제 조회 / (선생님) 새로운 숙제 생성
 @api_view(['GET', 'POST',])
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
 def homework_list(request):
+    # return Response(request.data)
     user = request.user
     class_id = user.classroom.id
 
@@ -22,13 +27,13 @@ def homework_list(request):
     elif request.method == 'POST':
         serializer = HomeworkSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            homework = serializer.save(classroom=class_id)
-            image_list = request.FILES.getlist('image_path')
-            for image in image_list:
-                item = HomeworkFile.objects.create(homework=homework, image=image)
-                item.save()
+            serializer.save(classroom=user.classroom)
+            # image_list = request.FILES.getlist('image_path')
+            # for image in image_list:
+            #     item = HomeworkFile.objects.create(homework=homework, image=image)
+            #     item.save()
             # 사진파일까지 저장되도록 한 번 더 저장
-            serializer.save()
+            # serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
