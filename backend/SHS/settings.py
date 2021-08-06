@@ -14,12 +14,13 @@ SECRET_KEY = 'django-insecure-4prxmt)+(!3*a)k(4t@1#hj2&6487hf4ght81%2cquge!$ne_#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'classroom',
     'accounts',
     'student_manage',
@@ -32,7 +33,6 @@ INSTALLED_APPS = [
 
     'rest_framework',
 
-    'corsheaders',
 
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -55,10 +55,13 @@ MIDDLEWARE = [
 # 1. 특정 Origin만 선택적으로 허용
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
+    "http://i5a205.p.ssafy.io:8081",
+    "http://i5a205.p.ssafy.io:8080",
 ]
 
 # 2. 모든 Origin 허용
 # CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 
 
 ROOT_URLCONF = 'SHS.urls'
