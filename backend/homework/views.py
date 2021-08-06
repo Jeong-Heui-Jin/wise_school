@@ -25,7 +25,7 @@ def homework_list(request):
     if request.method == 'GET':
         homeworks = get_list_or_404(Homework, classroom=classroom)
         serializer = HomeworkSerializer(homeworks, many=True)
-        return Response(serializer.initial_data)
+        return Response(serializer.data)
     elif request.method == 'POST':
         serializer = HomeworkSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
