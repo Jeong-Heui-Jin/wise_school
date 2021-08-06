@@ -41,7 +41,9 @@
       </b-form-invalid-feedback>
 
       <!-- 비밀번호 검증 문자 -->
-      <b-button block variant="warning" id="changeBtn" @click="changePassword()">비밀번호 변경</b-button>
+      <b-button block variant="warning" id="changeBtn" @click="changePassword()"
+        >비밀번호 변경</b-button
+      >
     </b-form>
   </div>
 </template>
@@ -58,18 +60,18 @@ export default {
     Logo,
   },
   methods: {
-    changePassword: function() {
+    changePassword: function () {
       if (this.validationNewPassword && this.validationCheckPassword) {
         window.open("/login", "_self");
-      }
-      else {
+      } else {
         alert("양식 변경 요청");
       }
-    }
+    },
   },
   computed: {
     validationNewPassword() {
       if (7 <= this.newPassword.length && this.newPassword.length <= 16) {
+        var is_vaild = true;
         for (var i = 0; i < this.newPassword.length; ++i) {
           if (
             ("a" <= this.newPassword[i] && this.newPassword[i] <= "z") ||
@@ -83,8 +85,15 @@ export default {
             this.newPassword[i] === "&" ||
             this.newPassword[i] === "*"
           ) {
-            return true;
+            continue;
+          } else {
+            is_vaild = false;
+            break;
           }
+        }
+        if (is_vaild) {
+          return true;
+        } else {
           return false;
         }
       }
@@ -92,9 +101,9 @@ export default {
     },
     validationCheckPassword() {
       if (this.newPassword === this.checkPassword) {
-        if (this.newPassword.length < 7 || 16 < this.newPassword.length) {
-          return false;
-        }
+        // if (this.newPassword.length < 7 || 16 < this.newPassword.length) {
+        //   return false;
+        // }
         return true;
       }
       return false;
