@@ -84,7 +84,6 @@ export default {
         data: this.loginCredentials,
       })
       .then((res) => {
-        console.log(res)
         localStorage.setItem('jwt', res.data.token)
         // console.log(res)
         // this.$router.push({ name: 'Home' })
