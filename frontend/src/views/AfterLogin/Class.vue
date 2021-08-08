@@ -43,7 +43,7 @@ import Squirrel from "@/assets/squirrel.png";
 
 export default {
   name: "Class",
-  data() {
+  data: function () {
     return {
       teacher: {
         name: "유재석",
@@ -66,15 +66,22 @@ export default {
   },
 
   methods: {
+    setToken: function () {
+      const token = localStorage.getItem('jwt')
+      const config = {
+        Authorization: `JWT ${token}`
+      }
+      return config
+    },
     getMembers: function () {
       axios({
         method: "get",
         // url: "http://i5a205.p.ssafy.io:8081/homework/list/",
-        url: 'http://127.0.0.1:8000/classroom/members/1/',
-        // headers: this.setToken(),
+        url: 'http://127.0.0.1:8000/accounts/class-members/',
+        headers: this.setToken(),
       })
         .then((res) => {
-          console.log(res)
+          console.log(res.data)
           // this.items = res.data
         })
         .catch((err) => {

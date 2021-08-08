@@ -27,7 +27,7 @@
       ></b-form-textarea>
 
       <!-- 취소/저장 버튼 -->
-      <button id="saveBtn" @click="save">저장</button>
+      <button id="saveBtn" @click="homeworkCreate">저장</button>
       <button id="cancelBtn">취소</button>
     </b-form>
   </div>
@@ -37,9 +37,14 @@
 import axios from "axios";
 import NavSideBar from "@/components/NavSideBarTeacher.vue";
 import NavBar from "@/components/NavBar.vue";
+import { mapState } from 'vuex';
 
 export default {
   name: "HomeworkCreate",
+  components: {
+    NavSideBar,
+    NavBar,
+  },
   data: function() {
     return {
       createValue: {
@@ -49,25 +54,17 @@ export default {
       },
     };
   },
-  components: {
-    NavSideBar,
-    NavBar,
-  },
   methods: {
     setToken: function () {
-      const token = localStorage.getItem('jwt')
-      const config = {
-        Authorization: `JWT ${token}`
-      }
-      return config
+      this.$store.dispatch('setToken')
     },
-    save: function (event) {
+    homeworkCreate: function (event) {
       event.preventDefault();
       axios({
         method: "post",
         // url: "http://i5a205.p.ssafy.io:8000/homework/list/",
         url: 'http://127.0.0.1:8000/homework/list/',
-        headers: this.setToken(),
+        headers: this.headers,
         data: this.createValue,
       })
         .then((res) => {
@@ -82,6 +79,14 @@ export default {
         });
     },
   },
+  computed: {
+    ...mapState([
+      'headers'
+    ]),
+  },
+  created: function() {
+    this.setToken()
+  }
 };
 </script>
 

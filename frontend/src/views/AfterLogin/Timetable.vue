@@ -41,11 +41,17 @@
 </template>
 
 <script>
+import axios from "axios";
 import NavSideBar from '@/components/NavSideBarTeacher.vue'
 import NavBar from '@/components/NavBar.vue'
+// import { mapState } from 'vuex';
 
 export default {
   name: 'Timetable',
+  components: {
+    NavSideBar,
+    NavBar
+  },
   data() {
     return {
       idx: 1,
@@ -61,6 +67,21 @@ export default {
     }
   },
   methods: {
+    getTimetable: function () {
+      axios({
+        method: "get",
+        // url: "http://i5a205.p.ssafy.io:8000/homework/list/",
+        url: 'http://127.0.0.1:8000/classroom/timetable/1/',
+        // headers: this.headers,
+        // data: this.createValue,
+      })
+        .then((res) => {
+          console.log(res)
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     intToRGB(i) {
         var c = (i & 0x00FFFFFF)
             .toString(16)
@@ -92,22 +113,21 @@ export default {
         }
       }
       for (var err = 0; err < arr.length; err++) {
-        console.log(arr[err]);
+        // console.log(arr[err]);
       } 
       for (var sub = 0; sub < subject.length; sub++) {
         for (var find = 0; find < arr.length; find++) {
           if (subject[sub].textContent === arr[find]) {
             subject[sub].style.backgroundColor = color[find];
-            console.log(color[find]);
+            // console.log(color[find]);
             break;
           }
         }
       }
   },
-  components: {
-    NavSideBar,
-    NavBar
-  },
+  created: function() {
+    this.getTimetable()
+  }
 }
 </script>
 

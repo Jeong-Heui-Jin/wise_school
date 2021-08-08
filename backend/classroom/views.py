@@ -16,24 +16,15 @@ from .models import Timetable, TimetableDetail, Classroom
 
 User = get_user_model()
 
-# 반 친구들 + 선생님 목록 조회
-@api_view(['GET',])
-# @authentication_classes([JSONWebTokenAuthentication])
-# @permission_classes([IsAuthenticated])
-def members(request, class_id):
-    classroom = get_object_or_404(Classroom, pk=class_id)
-    class_members = User.objects.filter(classroom=classroom)
-    # class_members = get_list_or_404(User, classroom=classroom)
-    serializer = UserSerializer(class_members, many=True)
-    return Response(serializer.data)
 
 
 # 전체 시간표 생성
 @api_view(['POST',])
-def timetable_create(request, class_id):
+def timetable_create(request):
+    classroom = request.user.classroom
     serializer = TimetableSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
-        serializer.save(classroom=class_id)
+        serializer.save(classroom=classroom)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 

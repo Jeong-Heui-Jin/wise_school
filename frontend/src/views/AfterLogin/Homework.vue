@@ -47,6 +47,7 @@
 import axios from "axios";
 import NavSideBar from "@/components/NavSideBarTeacher.vue";
 import NavBar from "@/components/NavBar.vue";
+import { mapState } from 'vuex'
 
 export default {
   name: "Homework",
@@ -69,118 +70,6 @@ export default {
         //   // submitInfo: "1/6",
         //   content: "수학익힘책 16쪽 풀기",
         // },
-        // {
-        //   homework_id: "16",
-        //   title: "어린왕자 읽기",
-        //   end: "7.16(금)",
-        //   // submitInfo: "4/6",
-        //   content: "어린왕자 읽기",
-        // },
-        // {
-        //   homework_id: "15",
-        //   title: "알파벳 10번씩 쓰기",
-        //   end: "7.16(금)",
-        //   // submitInfo: "3/6",
-        //   content: "알파벳 10번씩 쓰기",
-        // },
-        // {
-        //   homework_id: "14",
-        //   title: "한자 15000번 쓰기",
-        //   end: "7.15(목)",
-        //   // submitInfo: "2/6",
-        //   content: "수학익힘책 16쪽 풀기",
-        // },
-        // {
-        //   homework_id: "13",
-        //   title: "기하와 벡터 3페이지 풀어오기",
-        //   end: "7.14(수)",
-        //   // submitInfo: "6/6",
-        //   content: "수학익힘책 16쪽 풀기",
-        // },
-        // {
-        //   homework_id: "12",
-        //   title: "만화책 3권 읽고 오기",
-        //   end: "7.14(수)",
-        //   // submitInfo: "6/6",
-        //   content: "수학익힘책 16쪽 풀기",
-        // },
-        // {
-        //   homework_id: "11",
-        //   title: "아이유 노래 1곡 듣기",
-        //   end: "7.14(수)",
-        //   // submitInfo: "6/6",
-        //   content: "수학익힘책 16쪽 풀기",
-        // },
-        // {
-        //   homework_id: "10",
-        //   title: "숙제 10",
-        //   end: "7.13(수)",
-        //   // submitInfo: "6/6",
-        //   content: "수학익힘책 16쪽 풀기",
-        // },
-        // {
-        //   homework_id: "9",
-        //   title: "숙제 9",
-        //   end: "7.13(수)",
-        //   // submitInfo: "6/6",
-        //   content: "수학익힘책 16쪽 풀기",
-        // },
-        // {
-        //   homework_id: "8",
-        //   title: "숙제 8",
-        //   end: "7.13(수)",
-        //   // submitInfo: "6/6",
-        //   content: "수학익힘책 16쪽 풀기",
-        // },
-        // {
-        //   homework_id: "7",
-        //   title: "숙제 7",
-        //   end: "7.13(수)",
-        //   // submitInfo: "6/6",
-        //   content: "수학익힘책 16쪽 풀기",
-        // },
-        // {
-        //   homework_id: "6",
-        //   title: "숙제 6",
-        //   end: "7.13(수)",
-        //   // submitInfo: "6/6",
-        //   content: "수학익힘책 16쪽 풀기",
-        // },
-        // {
-        //   homework_id: "5",
-        //   title: "숙제 5",
-        //   end: "7.13(수)",
-        //   // submitInfo: "6/6",
-        //   content: "수학익힘책 16쪽 풀기",
-        // },
-        // {
-        //   homework_id: "4",
-        //   title: "숙제 4",
-        //   end: "7.13(수)",
-        //   // submitInfo: "6/6",
-        //   content: "수학익힘책 16쪽 풀기",
-        // },
-        // {
-        //   homework_id: "3",
-        //   title: "숙제 3",
-        //   end: "7.13(수)",
-        //   // submitInfo: "6/6",
-        //   content: "수학익힘책 16쪽 풀기",
-        // },
-        // {
-        //   homework_id: "2",
-        //   title: "숙제 2",
-        //   end: "7.13(수)",
-        //   // submitInfo: "6/6",
-        //   content: "수학익힘책 16쪽 풀기",
-        // },
-        // {
-        //   homework_id: "1",
-        //   title: "숙제 1",
-        //   end: "7.13(수)",
-        //   // submitInfo: "6/6",
-        //   content: "수학익힘책 16쪽 풀기",
-        // },
       ],
     };
   },
@@ -190,18 +79,14 @@ export default {
   },
   methods: {
     setToken: function () {
-      const token = localStorage.getItem('jwt')
-      const config = {
-        Authorization: `JWT ${token}`
-      }
-      return config
+      this.$store.dispatch('setToken')
     },
     getHomeworkList: function () {
       axios({
         method: "get",
         // url: "http://i5a205.p.ssafy.io:8081/homework/list/",
         url: 'http://127.0.0.1:8000/homework/list/',
-        headers: this.setToken(),
+        headers: this.headers,
       })
         .then((res) => {
           // console.log(res)
@@ -229,8 +114,12 @@ export default {
     rows() {
       return this.items.length;
     },
+    ...mapState([
+      'headers'
+    ]),
   },
   created: function() {
+    this.setToken()
     this.getHomeworkList()
   }
 };

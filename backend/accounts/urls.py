@@ -16,11 +16,12 @@ urlpatterns = [
     path('password-reset/', views.password_reset, name='password_reset'),   # 비밀번호 재설정
     path('change-password/', views.change_password, name='change_password'),
 
+    path('class-members/', views.class_members, name='class_members'),
     path('info/<int:user_id>/', views.info, name='info'),   # 선생님/학생 정보
     path('parents/<int:user_id>/', views.parents_list, name='parents_list'),   # 비상연락망 목록
     path('parents/detail/<int:parent_id>/', views.parent_detail, name='parent_detail'),   # 비상연락망 상세보기
-    path('teachers/<int:school_id>/', views.teachers, name='teachers'),   # 전체 선생님 목록
-    path('students/<int:school_id>/', views.students, name='students'),   # 전체 학생 목록
+    path('teachers/', views.teachers, name='teachers'),   # 전체 선생님 목록
+    path('students/', views.students, name='students'),   # 전체 학생 목록
     path('signup/', views.signup, name='signup'),
 
     # path('create-students/<int:school_id>/', views.create_students),   # 학생 계정 생성 (서비스측)

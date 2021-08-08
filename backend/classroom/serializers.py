@@ -1,6 +1,5 @@
 from accounts.views import Parents
 from .models import Timetable, TimetableDetail
-from django.db.models import fields
 from rest_framework import serializers
 # from django.contrib.auth import get_user_model
 
@@ -24,11 +23,11 @@ class TimetableDetailSerializer(serializers.ModelSerializer):
 
 
 class TimetableSerializer(serializers.ModelSerializer):
-    timetabledetail_set = TimetableDetailSerializer(many=True)
+    timetabledetail_set = TimetableDetailSerializer(many=True, read_only=True)
 
     class Meta:
         model = Timetable
-        fields = ('id', 'title',)
+        fields = ('id', 'title', 'timetabledetail_set',)
         read_only_fields = ('classroom',)
 
 
