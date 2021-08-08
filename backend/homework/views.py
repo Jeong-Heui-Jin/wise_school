@@ -23,7 +23,7 @@ def homework_list(request):
     classroom_id = int(request.user.classroom.id)
     classroom = get_object_or_404(Classroom, pk=classroom_id)
     if request.method == 'GET':
-        homeworks = get_list_or_404(Homework, classroom=classroom)
+        homeworks = get_list_or_404(Homework, classroom=classroom)[::-1]
         serializer = HomeworkSerializer(homeworks, many=True)
         return Response(serializer.data)
     elif request.method == 'POST':

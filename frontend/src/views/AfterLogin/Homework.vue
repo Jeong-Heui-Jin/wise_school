@@ -44,142 +44,143 @@
 </template>
 
 <script>
+import axios from "axios";
 import NavSideBar from "@/components/NavSideBarTeacher.vue";
 import NavBar from "@/components/NavBar.vue";
 
 export default {
   name: "Homework",
-  data() {
+  data: function() {
     return {
       perPage: 8,
       currentPage: 1,
       fields: [
         // Title name 변경
-        { key: "homework_id", label: "번호" },
+        { key: "id", label: "번호" },
         { key: "title", label: "숙제 제목" },
-        { key: "endTime", label: "종료일" },
-        { key: "submitInfo", label: "제출" },
+        { key: "end", label: "종료일" },
+        // { key: "submitInfo", label: "제출" },
       ],
       items: [
-        {
-          homework_id: "17",
-          title: "수학익힘책 16쪽 풀기",
-          endTime: "7.19(월)",
-          submitInfo: "1/6",
-          Content: "수학익힘책 16쪽 풀기",
-        },
-        {
-          homework_id: "16",
-          title: "어린왕자 읽기",
-          endTime: "7.16(금)",
-          submitInfo: "4/6",
-          Content: "어린왕자 읽기",
-        },
-        {
-          homework_id: "15",
-          title: "알파벳 10번씩 쓰기",
-          endTime: "7.16(금)",
-          submitInfo: "3/6",
-          Content: "알파벳 10번씩 쓰기",
-        },
-        {
-          homework_id: "14",
-          title: "한자 15000번 쓰기",
-          endTime: "7.15(목)",
-          submitInfo: "2/6",
-          Content: "수학익힘책 16쪽 풀기",
-        },
-        {
-          homework_id: "13",
-          title: "기하와 벡터 3페이지 풀어오기",
-          endTime: "7.14(수)",
-          submitInfo: "6/6",
-          Content: "수학익힘책 16쪽 풀기",
-        },
-        {
-          homework_id: "12",
-          title: "만화책 3권 읽고 오기",
-          endTime: "7.14(수)",
-          submitInfo: "6/6",
-          Content: "수학익힘책 16쪽 풀기",
-        },
-        {
-          homework_id: "11",
-          title: "아이유 노래 1곡 듣기",
-          endTime: "7.14(수)",
-          submitInfo: "6/6",
-          Content: "수학익힘책 16쪽 풀기",
-        },
-        {
-          homework_id: "10",
-          title: "숙제 10",
-          endTime: "7.13(수)",
-          submitInfo: "6/6",
-          Content: "수학익힘책 16쪽 풀기",
-        },
-        {
-          homework_id: "9",
-          title: "숙제 9",
-          endTime: "7.13(수)",
-          submitInfo: "6/6",
-          Content: "수학익힘책 16쪽 풀기",
-        },
-        {
-          homework_id: "8",
-          title: "숙제 8",
-          endTime: "7.13(수)",
-          submitInfo: "6/6",
-          Content: "수학익힘책 16쪽 풀기",
-        },
-        {
-          homework_id: "7",
-          title: "숙제 7",
-          endTime: "7.13(수)",
-          submitInfo: "6/6",
-          Content: "수학익힘책 16쪽 풀기",
-        },
-        {
-          homework_id: "6",
-          title: "숙제 6",
-          endTime: "7.13(수)",
-          submitInfo: "6/6",
-          Content: "수학익힘책 16쪽 풀기",
-        },
-        {
-          homework_id: "5",
-          title: "숙제 5",
-          endTime: "7.13(수)",
-          submitInfo: "6/6",
-          Content: "수학익힘책 16쪽 풀기",
-        },
-        {
-          homework_id: "4",
-          title: "숙제 4",
-          endTime: "7.13(수)",
-          submitInfo: "6/6",
-          Content: "수학익힘책 16쪽 풀기",
-        },
-        {
-          homework_id: "3",
-          title: "숙제 3",
-          endTime: "7.13(수)",
-          submitInfo: "6/6",
-          Content: "수학익힘책 16쪽 풀기",
-        },
-        {
-          homework_id: "2",
-          title: "숙제 2",
-          endTime: "7.13(수)",
-          submitInfo: "6/6",
-          Content: "수학익힘책 16쪽 풀기",
-        },
-        {
-          homework_id: "1",
-          title: "숙제 1",
-          endTime: "7.13(수)",
-          submitInfo: "6/6",
-          Content: "수학익힘책 16쪽 풀기",
-        },
+        // {
+        //   homework_id: "17",
+        //   title: "수학익힘책 16쪽 풀기",
+        //   end: "7.19(월)",
+        //   // submitInfo: "1/6",
+        //   content: "수학익힘책 16쪽 풀기",
+        // },
+        // {
+        //   homework_id: "16",
+        //   title: "어린왕자 읽기",
+        //   end: "7.16(금)",
+        //   // submitInfo: "4/6",
+        //   content: "어린왕자 읽기",
+        // },
+        // {
+        //   homework_id: "15",
+        //   title: "알파벳 10번씩 쓰기",
+        //   end: "7.16(금)",
+        //   // submitInfo: "3/6",
+        //   content: "알파벳 10번씩 쓰기",
+        // },
+        // {
+        //   homework_id: "14",
+        //   title: "한자 15000번 쓰기",
+        //   end: "7.15(목)",
+        //   // submitInfo: "2/6",
+        //   content: "수학익힘책 16쪽 풀기",
+        // },
+        // {
+        //   homework_id: "13",
+        //   title: "기하와 벡터 3페이지 풀어오기",
+        //   end: "7.14(수)",
+        //   // submitInfo: "6/6",
+        //   content: "수학익힘책 16쪽 풀기",
+        // },
+        // {
+        //   homework_id: "12",
+        //   title: "만화책 3권 읽고 오기",
+        //   end: "7.14(수)",
+        //   // submitInfo: "6/6",
+        //   content: "수학익힘책 16쪽 풀기",
+        // },
+        // {
+        //   homework_id: "11",
+        //   title: "아이유 노래 1곡 듣기",
+        //   end: "7.14(수)",
+        //   // submitInfo: "6/6",
+        //   content: "수학익힘책 16쪽 풀기",
+        // },
+        // {
+        //   homework_id: "10",
+        //   title: "숙제 10",
+        //   end: "7.13(수)",
+        //   // submitInfo: "6/6",
+        //   content: "수학익힘책 16쪽 풀기",
+        // },
+        // {
+        //   homework_id: "9",
+        //   title: "숙제 9",
+        //   end: "7.13(수)",
+        //   // submitInfo: "6/6",
+        //   content: "수학익힘책 16쪽 풀기",
+        // },
+        // {
+        //   homework_id: "8",
+        //   title: "숙제 8",
+        //   end: "7.13(수)",
+        //   // submitInfo: "6/6",
+        //   content: "수학익힘책 16쪽 풀기",
+        // },
+        // {
+        //   homework_id: "7",
+        //   title: "숙제 7",
+        //   end: "7.13(수)",
+        //   // submitInfo: "6/6",
+        //   content: "수학익힘책 16쪽 풀기",
+        // },
+        // {
+        //   homework_id: "6",
+        //   title: "숙제 6",
+        //   end: "7.13(수)",
+        //   // submitInfo: "6/6",
+        //   content: "수학익힘책 16쪽 풀기",
+        // },
+        // {
+        //   homework_id: "5",
+        //   title: "숙제 5",
+        //   end: "7.13(수)",
+        //   // submitInfo: "6/6",
+        //   content: "수학익힘책 16쪽 풀기",
+        // },
+        // {
+        //   homework_id: "4",
+        //   title: "숙제 4",
+        //   end: "7.13(수)",
+        //   // submitInfo: "6/6",
+        //   content: "수학익힘책 16쪽 풀기",
+        // },
+        // {
+        //   homework_id: "3",
+        //   title: "숙제 3",
+        //   end: "7.13(수)",
+        //   // submitInfo: "6/6",
+        //   content: "수학익힘책 16쪽 풀기",
+        // },
+        // {
+        //   homework_id: "2",
+        //   title: "숙제 2",
+        //   end: "7.13(수)",
+        //   // submitInfo: "6/6",
+        //   content: "수학익힘책 16쪽 풀기",
+        // },
+        // {
+        //   homework_id: "1",
+        //   title: "숙제 1",
+        //   end: "7.13(수)",
+        //   // submitInfo: "6/6",
+        //   content: "수학익힘책 16쪽 풀기",
+        // },
       ],
     };
   },
@@ -188,12 +189,34 @@ export default {
     NavBar,
   },
   methods: {
+    setToken: function () {
+      const token = localStorage.getItem('jwt')
+      const config = {
+        Authorization: `JWT ${token}`
+      }
+      return config
+    },
+    getHomeworkList: function () {
+      axios({
+        method: "get",
+        // url: "http://i5a205.p.ssafy.io:8081/homework/list/",
+        url: 'http://127.0.0.1:8000/homework/list/',
+        headers: this.setToken(),
+      })
+        .then((res) => {
+          // console.log(res)
+          this.items = res.data
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     goHomeworkCreate: function () {
       window.open("/homework_create", "_self");
     },
     goHomeworkView: function (homework) {
       console.log(homework);
-      this.$router.push({ name: 'HomeworkView', params:{'homework':homework} })
+      this.$router.push({ name: 'HomeworkView', params:homework })
       // router.push({
       //   path: "/homework_view",
       //   query: { title: this.items.Title, Content: this.items.Content },
@@ -207,6 +230,9 @@ export default {
       return this.items.length;
     },
   },
+  created: function() {
+    this.getHomeworkList()
+  }
 };
 </script>
 

@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404, get_list_or_404
 from rest_framework import status
 from rest_framework.response import Response
@@ -9,16 +10,20 @@ from rest_framework.decorators import api_view
 
 from accounts.serializers import UserSerializer
 from .serializers import TimetableSerializer, TimetableDetailSerializer
-from django.contrib.auth import get_user_model
-from .models import Timetable, TimetableDetail
+# from django.contrib.auth import get_user_model
+# from accounts.models import User
+from .models import Timetable, TimetableDetail, Classroom
 
+User = get_user_model()
 
 # 반 친구들 + 선생님 목록 조회
 @api_view(['GET',])
 # @authentication_classes([JSONWebTokenAuthentication])
 # @permission_classes([IsAuthenticated])
 def members(request, class_id):
-    class_members = get_list_or_404(get_user_model(), class_id=class_id)
+    classroom = get_object_or_404(Classroom, pk=class_id)
+    class_members = User.objects.filter(classroom=classroom)
+    # class_members = get_list_or_404(User, classroom=classroom)
     serializer = UserSerializer(class_members, many=True)
     return Response(serializer.data)
 

@@ -56,4 +56,5 @@ class SignupSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ('username', 'password', 'usertype', 'classroom_id')
+        fields = ('username', 'password', 'usertype',)
+        read_only_fields = ('classroom',)

@@ -1,7 +1,7 @@
 from django.db.models import manager
 from django.http.response import JsonResponse
 from .models import User, Parents
-from classroom.models import School
+from classroom.models import School, Classroom
 from django.shortcuts import get_object_or_404, get_list_or_404
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -151,24 +151,17 @@ def create_student(request, school_id):
 
 @api_view(['POST'])
 def signup(request):
-	#1-1. Client에서 온 데이터를 받아서
-    # id = request.data.get('id')
     password = request.data.get('password')
-    password_confirmation = request.data.get('passwordConfirmation')
     class_id = request.data.get('class_id')
-		
-	#1-2. 패스워드 일치 여부 체크
-    if password != password_confirmation:
-        return Response({'error': '비밀번호가 일치하지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
-		
-	#2. UserSerializer를 통해 데이터 직렬화
+    room = get_object_or_404(Classroom, pk=class_id)
+
     serializer = SignupSerializer(data=request.data)
     
-	#3. validation 작업 진행 -> password도 같이 직렬화 진행
     if serializer.is_valid(raise_exception=True):
         user = serializer.save()
-        #4. 비밀번호 해싱 후 
-        user.set_password(request.data.get('password'))
-        user.save(class_id=class_id)
-        # password는 직렬화 과정에는 포함 되지만 → 표현(response)할 때는 나타나지 않는다.
+        
+        user.set_password(password)
+        user.classroom = room
+        user.save()
+    
         return Response(serializer.data, status=status.HTTP_201_CREATED)

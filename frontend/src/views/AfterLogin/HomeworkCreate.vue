@@ -13,7 +13,7 @@
 
       <h2 id="endTitle">마감일</h2>
       <input
-        type="date"
+        type="datetime-local"
         id="endDate"
         name="trip-start"
         v-model="createValue.end"

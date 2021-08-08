@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import NavSideBar from "@/components/NavSideBarTeacher.vue";
 import NavBar from "@/components/NavBar.vue";
 import Whale from "@/assets/whale.png";
@@ -64,7 +65,25 @@ export default {
     };
   },
 
-  created() {
+  methods: {
+    getMembers: function () {
+      axios({
+        method: "get",
+        // url: "http://i5a205.p.ssafy.io:8081/homework/list/",
+        url: 'http://127.0.0.1:8000/classroom/members/1/',
+        // headers: this.setToken(),
+      })
+        .then((res) => {
+          console.log(res)
+          // this.items = res.data
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  },
+
+  created: function() {
     this.$nextTick(() => {
       const cardBody = document.querySelector("#content");
       // const imgName = "@/assets/whale.png"
@@ -104,7 +123,8 @@ export default {
           </div>`;
         })
         .join("");
-    });
+    })
+    this.getMembers()
   },
   components: {
     NavSideBar,
