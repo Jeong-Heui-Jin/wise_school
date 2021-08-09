@@ -10,8 +10,12 @@
       <b-form-input id="titleName" size="lg"
         >8월 급식 안내 및 메뉴표</b-form-input
       >
+
+      <!-- 내용 -->
       <h2 id="content">내용</h2>
       <b-form-textarea id="contentText"> </b-form-textarea>
+
+      <!-- 파일 첨부 -->
       <h2 id="fileName">파일 첨부</h2>
       <input type="file" accept="image/*" id="fileUpload" />
       <!-- <button id="fileUploadBtn">파일첨부</button> -->
