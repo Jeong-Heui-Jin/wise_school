@@ -7,6 +7,7 @@
     <!-- 작성 Form -->
     <b-form id="noticeCreateForm">
       <h1 id="homeworkTitle">숙제 작성</h1>
+
       <!-- 제목 -->
       <h2 id="sub-title" style="font-size: 32px">제목</h2>
       <b-form-input id="titleName" v-model="createValue.title"></b-form-input>
@@ -26,6 +27,10 @@
         v-model="createValue.content"
       ></b-form-textarea>
 
+      <!-- 파일 업로드 -->
+      <h2 id="fileUploadTitle" style="font-size: 32px">파일 첨부</h2>
+      <input type="file" accept="image/*" id="fileUploadText" />
+
       <!-- 취소/저장 버튼 -->
       <button id="saveBtn" @click="homeworkCreate">저장</button>
       <button id="cancelBtn">취소</button>
@@ -37,7 +42,7 @@
 import axios from "axios";
 import NavSideBar from "@/components/NavSideBarTeacher.vue";
 import NavBar from "@/components/NavBar.vue";
-import { mapState } from 'vuex';
+import { mapState } from "vuex";
 
 export default {
   name: "HomeworkCreate",
@@ -45,7 +50,7 @@ export default {
     NavSideBar,
     NavBar,
   },
-  data: function() {
+  data: function () {
     return {
       createValue: {
         title: "",
@@ -56,19 +61,19 @@ export default {
   },
   methods: {
     setToken: function () {
-      this.$store.dispatch('setToken')
+      this.$store.dispatch("setToken");
     },
     homeworkCreate: function (event) {
       event.preventDefault();
       axios({
         method: "post",
-        // url: "http://i5a205.p.ssafy.io:8000/homework/list/",
-        url: 'http://127.0.0.1:8000/homework/list/',
+        url: "http://i5a205.p.ssafy.io:8000/homework/list/",
+        // url: "http://127.0.0.1:8000/homework/list/",
         headers: this.headers,
         data: this.createValue,
       })
         .then((res) => {
-          console.log(res)
+          console.log(res);
           this.$router.push({
             name: "HomeworkView",
             params: { homework: res },
@@ -80,13 +85,11 @@ export default {
     },
   },
   computed: {
-    ...mapState([
-      'headers'
-    ]),
+    ...mapState(["headers"]),
   },
-  created: function() {
-    this.setToken()
-  }
+  created: function () {
+    this.setToken();
+  },
 };
 </script>
 
@@ -161,8 +164,8 @@ export default {
 
   max-width: 700px;
   min-width: 700px;
-  max-height: 300px;
-  min-height: 300px;
+  max-height: 220px;
+  min-height: 220px;
 
   padding: 10px;
 
@@ -170,6 +173,28 @@ export default {
 
   background-color: rgb(248, 236, 196);
   border-radius: 10px;
+}
+
+#noticeCreateForm #fileUploadTitle {
+  position: absolute;
+  left: 100px;
+  top: 445px;
+  background-color: transparent;
+}
+
+#noticeCreateForm #fileUploadText {
+  position: absolute;
+  left: 250px;
+  top: 440px;
+
+  max-width: 700px;
+  min-width: 700px;
+
+  background-color: rgb(248, 236, 196);
+  border-radius: 13px;
+
+  text-align: left;
+  padding-left: 15px;
 }
 
 #noticeCreateForm #cancelBtn {
