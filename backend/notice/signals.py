@@ -1,6 +1,5 @@
 # from django.db.models.signals import post_save
 # from django.dispatch import receiver
-# from django.conf import settings
 # from .models import Notice, Notification
 # from homework.models import Homework
 # from .serializers import NotificationSerializer
@@ -34,4 +33,4 @@
 #             # 알림 받은 학생의 is_notification값은 True로 바꿔주기
 #             student.info.is_notification = True
 #             student.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#     return Response(serializer.data, status=status.HTTP_201_CREATED)

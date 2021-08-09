@@ -74,7 +74,7 @@ export default {
       axios({
         method: "get",
         // url: "http://i5a205.p.ssafy.io:8000/homework/list/",
-        url: 'http://127.0.0.1:8000/classroom/timetable/',
+        url: 'http://i5a205.p.ssafy.io:8000/classroom/timetable/',
         headers: this.headers,
         // data: this.createValue,
       })

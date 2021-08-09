@@ -1,9 +1,11 @@
 from django.shortcuts import get_object_or_404, get_list_or_404
+from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .models import Notice, NoticeFile, Notification
 from .serializers import NoticeSerializer, NoticeListSerializer, NotificationSerializer
+from django.db.models import Q
 
 from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -13,18 +15,37 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 # 해당 반의 공지사항 목록 조회 / 새 공지사항 작성
 @api_view(['GET', 'POST',])
-@authentication_classes([JSONWebTokenAuthentication])
-@permission_classes([IsAuthenticated])
+# @authentication_classes([JSONWebTokenAuthentication])
+# @permission_classes([IsAuthenticated])
 def notice(request):
-    classroom = request.user.classroom
+    user = get_object_or_404(get_user_model(), pk=request.data.get('user_id'))
+    classroom = user.classroom
+
+    # classroom = request.user.classroom
     if request.method == 'GET':
         notices = get_list_or_404(Notice, classroom=classroom)
         serializer = NoticeListSerializer(notices, many=True)
         return Response(serializer.data)
+
     elif request.method == 'POST':
         serializer = NoticeSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save(classroom=classroom, teacher=request.user)
+            serializer.save(classroom=classroom, teacher=user)
+            # serializer.save(classroom=classroom, teacher=request.user)
+
+            students = get_user_model().objects.filter(Q(classroom=classroom) & Q(usertype=2))
+            notification = Notification()
+            notification.classroom = classroom
+            notification.content = '공지사항(' + serializer.title + ')이 추가되었습니다.'
+            for student in students:
+                notification.student = student
+                notify = NotificationSerializer(data=notification)
+                if notify.is_valid(raise_exception=True):
+                    notify.save()
+                    # 알림 받은 학생의 is_notification값은 True로 바꿔주기
+                    student.info.is_notification = True
+                    student.save()
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
