@@ -9,7 +9,7 @@
       <h1 id="homeworkTitle">숙제 보기</h1>
       <!-- 제목 -->
       <h2 id="sub-title">제목</h2>
-      <b-form-input readonly id="titleName">{{ $route.params.title }}</b-form-input>
+      <b-form-input readonly id="titleName"></b-form-input>
 
       <h2 id="endTitle">마감일</h2>
       <b-form-input readonly id="endDate"></b-form-input>
@@ -28,8 +28,10 @@
 </template>
 
 <script>
+import axios from "axios";
 import NavSideBar from "@/components/NavSideBarTeacher.vue";
 import NavBar from "@/components/NavBar.vue";
+import { mapState } from 'vuex'
 
 export default {
   name: "HomeworkView",
@@ -37,6 +39,39 @@ export default {
     NavSideBar,
     NavBar,
   },
+  data: function() {
+    return {
+
+    }
+  },
+  methods: {
+    setToken: function () {
+      this.$store.dispatch('setToken')
+    },
+    getHomeworkDetail: function () {
+      axios({
+          method: "get",
+          // url: "http://i5a205.p.ssafy.io:8081/homework/list/",
+          url: 'http://127.0.0.1:8000/homework/detail/12/',
+          headers: this.headers,
+      })
+        .then((res) => {
+        console.log(res.data)
+        })
+        .catch((err) => {
+        console.log(err);
+        });
+    },
+  },
+  computed: {
+    ...mapState([
+        'headers'
+    ]),
+  },
+  created: function() {
+    this.setToken()
+    this.getHomeworkDetail()
+  }
 };
 </script>
 

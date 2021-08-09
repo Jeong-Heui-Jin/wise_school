@@ -56,8 +56,11 @@
 </template>
 
 <script>
+import axios from "axios";
 import NavSideBar from "@/components/NavSideBarTeacher.vue";
 import NavBar from "@/components/NavBar.vue";
+import { mapState } from 'vuex'
+
 export default {
   name: "Notice",
   data() {
@@ -86,10 +89,36 @@ export default {
     NavBar,
   },
   methods: {
+    setToken: function () {
+      this.$store.dispatch('setToken')
+    },
+    getNoticeList: function () {
+      axios({
+        method: "get",
+        // url: "http://i5a205.p.ssafy.io:8081/homework/list/",
+        url: 'http://127.0.0.1:8000/notice/',
+        headers: this.headers,
+      })
+        .then((res) => {
+          console.log(res.data)
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     goNoticeCreate: function () {
       window.open("/notice_create", "_self");
     },
   },
+  computed: {
+    ...mapState([
+      'headers'
+    ]),
+  },
+  created: function() {
+    this.setToken()
+    this.getNoticeList()
+  }
 };
 </script>
 

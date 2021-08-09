@@ -58,8 +58,10 @@
 </template>
 
 <script>
+import axios from "axios";
 import NavSideBar from "@/components/NavSideBarTeacher.vue";
 import NavBar from "@/components/NavBar.vue";
+import { mapState } from 'vuex'
 
 export default {
     name: "StudentInfo",
@@ -87,6 +89,23 @@ export default {
         studentAddress.value = this.student.Address;
     },
     methods: {
+        setToken: function () {
+            this.$store.dispatch('setToken')
+        },
+        getNoticeList: function () {
+        axios({
+            method: "get",
+            // url: "http://i5a205.p.ssafy.io:8081/homework/list/",
+            url: 'http://127.0.0.1:8000/accounts/info/2',
+            headers: this.headers,
+        })
+            .then((res) => {
+            console.log(res.data)
+            })
+            .catch((err) => {
+            console.log(err);
+            });
+        },
         infoRecovery() {
             const studentName = document.querySelector('#student-name');
             const studentNumber = document.querySelector('#student-number');
@@ -157,7 +176,16 @@ export default {
                 `);
             }
         }
-    }
+    },
+    computed: {
+        ...mapState([
+            'headers'
+        ]),
+        },
+        created: function() {
+            this.setToken()
+            this.getNoticeList()
+        }
 };
 </script>
 

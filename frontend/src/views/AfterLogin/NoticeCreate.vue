@@ -25,23 +25,57 @@
 </template>
 
 <script>
+import axios from "axios";
 import NavSideBar from "@/components/NavSideBarTeacher.vue";
 import NavBar from "@/components/NavBar.vue";
+import { mapState } from 'vuex'
+
 export default {
   name: "NoticeCreate",
-  data() {
+  data: function () {
     return {
       contents: `8월 1일부터 31일 까지 급식표가 첨부되어 있습니다.
         메뉴 확인 부탁드립니다.
 
         또한 급식비가 인상되어 기존 130,000원의 급식비가
         1,300,000원으로 변경되었으니 참고 부탁드립니다.`,
+      createValue: {
+        
+      }
     };
   },
   components: {
     NavSideBar,
     NavBar,
   },
+  methods: {
+    setToken: function () {
+      this.$store.dispatch('setToken')
+    },
+    noticeCreate: function () {
+      axios({
+        method: "post",
+        // url: "http://i5a205.p.ssafy.io:8081/homework/list/",
+        url: 'http://127.0.0.1:8000/notice/',
+        headers: this.headers,
+        data: this.createValue,
+      })
+        .then((res) => {
+          console.log(res.data)
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+  },
+  computed: {
+    ...mapState([
+      'headers'
+    ]),
+  },
+  created: function() {
+    this.setToken()
+  }
 };
 </script>
 
