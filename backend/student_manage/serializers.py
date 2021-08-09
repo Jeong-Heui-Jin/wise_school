@@ -11,6 +11,14 @@ class NoteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Note
+        fields = ('id', 'content', 'registertime',)
+        read_only_fields = ('student', 'teacher',)
+
+
+class NoteListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Note
         fields = '__all__'
 
 
@@ -18,13 +26,21 @@ class AttendanceChangeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AttendanceChange
-        fields = '__all__'
+        fields = ('id', 'reason', 'image', 'registertime',)
+        read_only_fields = ('attendance',)
 
 
 class AttendanceSerializer(serializers.ModelSerializer):
-    change_set = AttendanceChangeSerializer(many=True, read_only=True)
 
     class Meta:
         model = Attendance
-        fields = ('id', 'reason', 'path', 'registertime', 'original_filename', 'filename', 'change_set',)
-        read_only_fields = ('attendance',)
+        fields = ('id', 'status', 'registertime',)
+        read_only_fields = ('student', 'classroom',)
+
+
+class AttendanceListSerializer(serializers.ModelSerializer):
+    attendancechange = AttendanceChangeSerializer(read_only=True)
+
+    class Meta:
+        model = Attendance
+        fields = '__all__'
