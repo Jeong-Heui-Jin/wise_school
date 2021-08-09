@@ -141,7 +141,7 @@ export default {
 </script>
 
 <style>
-#class #title {
+#title {
   position: absolute;
   top: 30px;
   left: 350px;

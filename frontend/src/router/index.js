@@ -16,6 +16,7 @@ import NoticeCreate from '../views/AfterLogin/NoticeCreate'
 import Attendance from '../views/AfterLogin/Attendance'
 import Attitude from '../views/AfterLogin/Attitude'
 import StudentInfo from '../views/AfterLogin/StudentInfo'
+import TimetableChange from '../views/AfterLogin/TimetableChange'
 
 
 Vue.use(VueRouter)
@@ -64,6 +65,11 @@ const routes = [
     path: '/timetable',
     name: 'Timetable',
     component: Timetable,
+  },
+  {
+    path: '/timetable_change',
+    name: 'TimetableChange',
+    component: TimetableChange
   },
   {
     path: '/homework',
