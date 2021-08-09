@@ -166,10 +166,87 @@ a:hover .demo-logo {
 	display: inline-block;
 }
 
-#floatMenu {
-	position: fixed;
-	right: 10rem;
-	bottom: 10rem;
+.rotate-menu {
+	transform: rotate(45deg);
+}
+
+.menu-wrapper {
+	position:absolute;
+	display: flex;
+	flex-direction: column;
+	right: 5rem;
+	bottom: 5rem;
+	width: 56px;
+	/* height: 56px;
+	background-color: violet; */
+	align-items: center;
+}
+
+.menu {
+	position: absolute;
+	width: 40px;
+	height: 40px;
+	border-radius: 100%;
+	transition: transform 0.2s;
+	background-color: #f8cb03;
+	box-shadow: 0px 5px 10px -4px #4d4d4d;
+	font-size: 50px;
+	text-align: center;
+	line-height: 40px;
+	color: black;
+}
+
+.menu:hover {
+	background-color: #f1f1f1;
+}
+
+.menu-hide {
+	transform: scale(0);
+}
+
+.menu-opener {
+	position: absolute;
+	bottom: 0px;
+	width: 56px;
+	height: 56px;
+	border-radius: 100%;
+	font-size: 50px;
+}
+
+#menu-opener-shadow {
+	box-shadow: 0px 5px 10px -3px #4d4d4d;
+	font-size: 50px;
+	text-align: center;
+	line-height: 56px;
+	color: #2e75b6;
+}
+
+#menu-more {
+	background-color: #C7EBEA;
+	transition-duration: 0.5s;
+}
+
+#menu-more:hover{
+	background-color: #1abd61;
+	color: white
+}
+
+#menu-exit {
+	bottom: 80px;
+	transition-delay: 0.02s;
+	background-image: url("resources/images/opened-door-aperture.png");
+	background-repeat: no-repeat;
+	background-size: 30px;
+	background-position: center;
+}
+
+#menu-student-list {
+	bottom: 136px;
+}
+
+#menu-other {
+	bottom: 192px;
+	transition-delay: 0.04s;
 }
 
 #buttonLeaveSession {

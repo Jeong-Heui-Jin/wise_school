@@ -33,9 +33,18 @@
 				<user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
 			</div>
 		</div>
-		<div id=floatMenu>
-			<input class="btn btn-large btn-danger" type="button" id="buttonLeaveSession" @click="leaveSession" value="Leave session">
+		<div class="menu-wrapper">
+			<div class="menu-opener" id="menu-opener-shadow" @click="showMenus">
+				<!-- 그림자효과 -->
+				<div class="menu-opener" id="menu-more">+</div>
+			</div>
+			<div class="menu-hide menu" id="menu-student-list">+</div>
+			<div class="menu-hide menu" id="menu-other">+</div>
+			<!-- 나가기 버튼 -->
+			<div class="menu-hide menu" id="menu-exit" @click="leaveSession"></div>
+			<!-- <input v-if="menu" class="btn btn-large btn-danger" type="button" id="buttonLeaveSession" @click="leaveSession" value="Leave session"> -->
 		</div>
+		
 	</div>
 </template>
 
@@ -71,6 +80,8 @@ export default {
 			mySessionId: '0110121',
 			// 사용자 이름 (조싸피)
 			myUserName: 'SSAFY' + Math.floor(Math.random() * 100),
+			// 메뉴 오픈상태
+			menu: false,
 		}
 	},
 
@@ -211,6 +222,14 @@ export default {
 					.catch(error => reject(error.response));
 			});
 		},
+
+		showMenus () {
+			const more = document.getElementById("menu-more");
+			const menus = document.getElementsByClassName("menu");
+
+			more.classList.toggle("rotate-menu");
+			menus.forEach(menu => menu.classList.toggle("menu-hide"));
+		}
 	},
 
 	created() {
