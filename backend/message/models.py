@@ -8,4 +8,4 @@ class Message(models.Model):
     receiver = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=PROTECT, related_name='message_receiver')
     message = models.TextField()
     sendtime = models.DateTimeField(auto_now_add=True)
-    is_checked = models.BooleanField(default=True)
+    is_checked = models.BooleanField(default=False)

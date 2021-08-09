@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, get_list_or_404
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import ParentSerializer, UserSerializer, UserListSerializer, ServiceRequestSerializer, SignupSerializer
+from .serializers import ParentSerializer, StudentInfoSerializer, UserSerializer, UserListSerializer, ServiceRequestSerializer, SignupSerializer
 from django.contrib.auth import get_user_model
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
@@ -188,5 +188,10 @@ def signup(request):
         user.set_password(password)
         user.classroom = room
         user.save()
+
+        if user.usertype == 2:
+            info = StudentInfoSerializer(data={})
+            if info.is_valid(raise_exception=True):
+                info.save(student=user)
     
         return Response(serializer.data, status=status.HTTP_201_CREATED)

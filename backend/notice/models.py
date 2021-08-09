@@ -22,6 +22,6 @@ class NoticeFile(models.Model):
 
 class Notification(models.Model):
     classroom = models.ForeignKey('classroom.Classroom', on_delete=models.CASCADE)
-    student = models.ManyToManyField(settings.AUTH_USER_MODEL)
+    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     content = models.TextField()
     registertime = models.DateTimeField(auto_now_add=True)

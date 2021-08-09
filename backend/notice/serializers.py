@@ -34,5 +34,5 @@ class NotificationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Notification
-        fields = ('id', 'classroom', 'student', 'content', 'registertime',)
-        # read_only_fields = ('attendance',)
+        fields = ('id', 'classroom', 'content', 'registertime',)
+        read_only_fields = ('student',)

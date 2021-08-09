@@ -1,10 +1,13 @@
 from django.shortcuts import get_object_or_404, get_list_or_404
+from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .models import Homework, SubmitHomework
 from classroom.models import Classroom
 from .serializers import HomeworkSerializer, SubmitHomeworkSerializer
+from notice.serializers import NotificationSerializer
+from django.db.models import Q
 
 from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -33,6 +36,24 @@ def homework_list(request):
             #     item.save()
             # 사진파일까지 저장되도록 한 번 더 저장
             # serializer.save()
+
+            # 해당 반의 학생들 명단
+            students = get_user_model().objects.filter(Q(classroom=classroom) & Q(usertype=2))
+
+            data = {
+                'classroom': classroom.id,
+                'content': '숙제(' + request.data.get('title') + ')이 추가되었습니다.',
+            }
+
+            # 각 학생들마다 notification 추가해줌
+            for student in students:
+                notify = NotificationSerializer(data=data)
+                if notify.is_valid(raise_exception=True):
+                    notify.save(student=student)
+                    # 알림 받은 학생의 is_notification값은 True로 바꿔주기
+                    student.info.is_notification = True
+                    student.info.save()
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 

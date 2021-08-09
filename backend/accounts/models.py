@@ -23,8 +23,8 @@ class User(AbstractUser):
 
 class StudentInfo(models.Model):
     student = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name='info')
-    number = models.IntegerField()
-    address = models.CharField(max_length=100)
+    number = models.IntegerField(blank=True, null=True)
+    address = models.CharField(max_length=100, blank=True, null=True)
     is_notification = models.BooleanField(default=False)
 
 
