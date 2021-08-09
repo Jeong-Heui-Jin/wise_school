@@ -96,7 +96,7 @@ export default {
       axios({
         method: "get",
         // url: "http://i5a205.p.ssafy.io:8081/homework/list/",
-        url: 'http://127.0.0.1:8000/notice/',
+        url: 'http://i5a205.p.ssafy.io:8000/notice/',
         headers: this.headers,
       })
         .then((res) => {
