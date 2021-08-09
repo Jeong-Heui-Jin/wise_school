@@ -33,9 +33,7 @@
       </b-row>
     </b-container>
     <div id="button-form">
-      <button style="background-color: #74a7fe">수정하기</button>
-      <br/>
-      <button style="background-color: #ff8c82">삭제하기</button>
+      <button style="background-color: #74a7fe" @click="$router.push('/timetable_change')">수정하기</button>
     </div>
   </div>
 </template>
@@ -88,7 +86,7 @@ export default {
             .toUpperCase();
 
         return "00000".substring(0, 6 - c.length) + c;
-    }
+    },
   },
   mounted() {
       var arr = [];
