@@ -3,21 +3,28 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .models import Notice, NoticeFile, Notification
-from .serializers import NoticeSerializer, NoticeFileSerializer, NotificationSerializer
+from .serializers import NoticeSerializer, NoticeListSerializer, NotificationSerializer
+
+from rest_framework.decorators import authentication_classes, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 
 
 # 해당 반의 공지사항 목록 조회 / 새 공지사항 작성
 @api_view(['GET', 'POST',])
-def notice_list(request, class_id):
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
+def notice(request):
+    classroom = request.user.classroom
     if request.method == 'GET':
-        notices = get_list_or_404(Notice, classroom=class_id)
-        serializer = NoticeSerializer(notices, many=True)
+        notices = get_list_or_404(Notice, classroom=classroom)
+        serializer = NoticeListSerializer(notices, many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
         serializer = NoticeSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save(classroom=class_id)
+            serializer.save(classroom=classroom, teacher=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -46,7 +53,7 @@ def notice_detail(request, notice_id):
 # 해당 학생의 알림 목록 조회 / 새 알림 생성 / 해당 학생의 알림 전체 삭제
 # 알림 목록 조회시 해당 학생의 is_notification값 False로 바꿔주기
 @api_view(['GET', 'POST', 'DELETE',])
-def notification_list(request, user_id):
+def notification(request, user_id):
     if request.method == 'GET':
         notifications = get_list_or_404(Notification, student=user_id)
         serializer = NotificationSerializer(notifications, many=True)

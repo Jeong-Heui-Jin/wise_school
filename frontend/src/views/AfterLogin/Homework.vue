@@ -101,7 +101,7 @@ export default {
     },
     goHomeworkView: function (homework) {
       console.log(homework);
-      this.$router.push({ name: 'HomeworkView', params:homework })
+      this.$router.push({ name: 'HomeworkView'})
       // router.push({
       //   path: "/homework_view",
       //   query: { title: this.items.Title, Content: this.items.Content },

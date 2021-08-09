@@ -91,11 +91,11 @@ def submit_detail(request, submithomework_id):
 @permission_classes([IsAuthenticated])
 def submit(request):
     if request.method == 'GET':
-        submits = get_list_or_404(SubmitHomework, user=request.user)
+        submits = get_list_or_404(SubmitHomework, student=request.user)
         serializer = SubmitHomeworkSerializer(submits, many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
         serializer = SubmitHomeworkSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save(user=request.user)
+            serializer.save(student=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
