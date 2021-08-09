@@ -44,7 +44,7 @@
 import axios from "axios";
 import NavSideBar from '@/components/NavSideBarTeacher.vue'
 import NavBar from '@/components/NavBar.vue'
-// import { mapState } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   name: 'Timetable',
@@ -67,16 +67,19 @@ export default {
     }
   },
   methods: {
+    setToken: function () {
+      this.$store.dispatch('setToken')
+    },
     getTimetable: function () {
       axios({
         method: "get",
         // url: "http://i5a205.p.ssafy.io:8000/homework/list/",
-        url: 'http://127.0.0.1:8000/classroom/timetable/1/',
-        // headers: this.headers,
+        url: 'http://127.0.0.1:8000/classroom/timetable/',
+        headers: this.headers,
         // data: this.createValue,
       })
         .then((res) => {
-          console.log(res)
+          console.log(res.data)
         })
         .catch((err) => {
           console.log(err);
@@ -125,7 +128,13 @@ export default {
         }
       }
   },
+  computed: {
+    ...mapState([
+      'headers'
+    ]),
+  },
   created: function() {
+    this.setToken()
     this.getTimetable()
   }
 }

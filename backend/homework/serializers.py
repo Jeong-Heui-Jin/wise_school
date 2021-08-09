@@ -32,8 +32,8 @@ class HomeworkFileSerializer(serializers.ModelSerializer):
 
 class HomeworkSerializer(serializers.ModelSerializer):
     # file_set = HomeworkFileSerializer(many=True, read_only=True)
-    # submit_set = SubmitHomeworkSerializer(many=True, read_only=True)
-    # submit_count = serializers.IntegerField(source='submit_set.count', read_only=True)
+    # submithomework_set = SubmitHomeworkSerializer(many=True, read_only=True)
+    # submithomework_count = serializers.IntegerField(source='submithomework_set.count', read_only=True)
 
     class Meta:
         model = Homework

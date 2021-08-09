@@ -21,12 +21,12 @@ class Classroom(models.Model):
 
 
 class Timetable(models.Model):
-    classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, related_name='timetables')
+    classroom = models.OneToOneField(Classroom, on_delete=models.CASCADE)
     title = models.CharField(max_length=20)
 
 
 class TimetableDetail(models.Model):
-    timetable = models.ForeignKey(Timetable, on_delete=models.CASCADE, related_name='timetable_details')
+    timetable = models.ForeignKey(Timetable, on_delete=models.CASCADE, related_name='details')
     period = models.IntegerField()
     mon = models.TextField(blank=True)
     tue = models.TextField(blank=True)

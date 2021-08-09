@@ -101,7 +101,18 @@ export default {
       // else {
       //   alert('로그인 실패');
       // }
-    }
+    },
+
+    isLogin: function() {
+      // 로그인 되어있다면
+      if(localStorage.getItem('jwt')){
+          // 로컬에 저장된 토큰 삭제
+          window.open('/home', '_self');
+      }
+    },
+  },
+  created: function() {
+    this.isLogin()
   }
 };
 </script>
