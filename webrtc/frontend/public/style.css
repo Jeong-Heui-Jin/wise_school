@@ -166,6 +166,12 @@ a:hover .demo-logo {
 	display: inline-block;
 }
 
+#floatMenu {
+	position: fixed;
+	right: 10rem;
+	bottom: 10rem;
+}
+
 #buttonLeaveSession {
 	float: right;
 	margin-top: 20px;

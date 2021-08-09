@@ -1,6 +1,6 @@
 <template>
 	<div id="main-container" class="container">
-		<div id="join" v-if="!session">
+		<!-- <div id="join" v-if="!session">
 			<div id="img-div"><img src="resources/images/openvidu_grey_bg_transp_cropped.png" /></div>
 			<div id="join-dialog" class="jumbotron vertical-center">
 				<h1>Join a video session</h1>
@@ -18,20 +18,23 @@
 					</p>
 				</div>
 			</div>
-		</div>
+		</div> -->
 
 		<div id="session" v-if="session">
 			<div id="session-header">
 				<h1 id="session-title">{{ mySessionId }}</h1>
-				<input class="btn btn-large btn-danger" type="button" id="buttonLeaveSession" @click="leaveSession" value="Leave session">
+				
 			</div>
-			<div id="main-video" class="col-md-6">
+			<!-- <div id="main-video" class="col-md-6">
 				<user-video :stream-manager="mainStreamManager"/>
-			</div>
+			</div> -->
 			<div id="video-container" class="col-md-6">
 				<user-video :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
 				<user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
 			</div>
+		</div>
+		<div id=floatMenu>
+			<input class="btn btn-large btn-danger" type="button" id="buttonLeaveSession" @click="leaveSession" value="Leave session">
 		</div>
 	</div>
 </template>
@@ -64,8 +67,10 @@ export default {
 			publisher: undefined,
 			subscribers: [],
 
-			mySessionId: 'SessionA',
-			myUserName: 'Participant' + Math.floor(Math.random() * 100),
+			// 학급코드 (X반)
+			mySessionId: '0110121',
+			// 사용자 이름 (조싸피)
+			myUserName: 'SSAFY' + Math.floor(Math.random() * 100),
 		}
 	},
 
@@ -206,6 +211,11 @@ export default {
 					.catch(error => reject(error.response));
 			});
 		},
+	},
+
+	created() {
+		// 페이지 실행 시 바로 연결설정 시작.
+		this.joinSession()
 	}
 }
 </script>
