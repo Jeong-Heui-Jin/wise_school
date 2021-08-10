@@ -84,8 +84,7 @@ export default {
     getHomeworkList: function () {
       axios({
         method: "get",
-        // url: "http://i5a205.p.ssafy.io:8081/homework/list/",
-        url: "http://i5a205.p.ssafy.io:8000/homework/list/",
+        url: 'http://i5a205.p.ssafy.io:8000/homework/list/',
         headers: this.headers,
       })
         .then((res) => {
@@ -106,7 +105,7 @@ export default {
               temp.substring(14, 16) +
               "분";
           }
-        })
+      })
         .catch((err) => {
           console.log(err);
         });
@@ -115,8 +114,8 @@ export default {
       window.open("/homework_create", "_self");
     },
     goHomeworkView: function (homework) {
-      console.log(homework);
-      this.$router.push({ name: "HomeworkView" });
+      this.$store.dispatch('selectHomework', homework);
+      this.$router.push({ name: 'HomeworkView'})
       // router.push({
       //   path: "/homework_view",
       //   query: { title: this.items.Title, Content: this.items.Content },

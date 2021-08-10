@@ -76,13 +76,12 @@ export default {
     getMembers: function () {
       axios({
         method: "get",
-        // url: "http://i5a205.p.ssafy.io:8081/homework/list/",
         url: 'http://127.0.0.1:8000/accounts/class-members/',
         headers: this.setToken(),
       })
         .then((res) => {
           console.log(res.data)
-          // this.items = res.data
+          this.students = res.data
         })
         .catch((err) => {
           console.log(err);

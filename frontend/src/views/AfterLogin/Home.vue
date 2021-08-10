@@ -59,13 +59,21 @@
 </template>
 
 <script>
+import axios from "axios";
 import NavSideBarAdmin from '@/components/NavSideBarAdmin.vue'
 import NavSideBarTeacher from '@/components/NavSideBarTeacher.vue'
 import NavSideBarStudent from '@/components/NavSideBarStudent.vue'
 import NavBar from '@/components/NavBar.vue'
+import { mapState } from 'vuex'
 
 export default {
   name: 'Home',
+  components: {
+    NavSideBarAdmin,
+    NavSideBarTeacher,
+    NavSideBarStudent,
+    NavBar
+  },
   data() {
     return {
       authority: '1',
@@ -74,18 +82,18 @@ export default {
       day: 0,
       date: '',
       homeworks: [
-        {title: '수학 익힘책 16쪽~23쪽'},
-        {title: '<어린왕자>읽기'},
-        {title: '알파벳 10번씩 쓰기'},
-        {title: '한자 15,000번씩 쓰기'},
-        {title: '줄넘기 연습하기'}
+        // {title: '수학 익힘책 16쪽~23쪽'},
+        // {title: '<어린왕자>읽기'},
+        // {title: '알파벳 10번씩 쓰기'},
+        // {title: '한자 15,000번씩 쓰기'},
+        // {title: '줄넘기 연습하기'}
       ],
       notices: [
-        {title: '8월 급식메뉴 알림판'},
-        {title: '7/20 가정통신문'},
-        {title: '7/21 가정통신문'},
-        {title: '공지공지'},
-        {title: '사항사항'}
+        // {title: '8월 급식메뉴 알림판'},
+        // {title: '7/20 가정통신문'},
+        // {title: '7/21 가정통신문'},
+        // {title: '공지공지'},
+        // {title: '사항사항'}
       ],
       timeschedules: [
         {subject: '국어', book: '말하기/듣기/쓰기', time:'09:00 ~ 09:50'},
@@ -96,7 +104,40 @@ export default {
       ]
     }
   },
+  methods: {
+    getNow: function () {
+      const arr=['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+
+      const today = new Date();
+      this.year = today.getFullYear();
+      this.month = today.getMonth() + 1;
+      this.day = arr[today.getDay()];
+      this.date = today.getDate();
+    },
+    setToken: function () {
+      this.$store.dispatch('setToken')
+    },
+    getList: function () {
+      axios({
+        method: "get",
+        // url: 'http://i5a205.p.ssafy.io:8000/classroom/home/',
+        url: 'http://127.0.0.1:8000/classroom/home/',
+        headers: this.headers,
+      })
+        .then((res) => {
+          console.log(res.data)
+          this.homeworks = res.data.homeworks
+          this.notices = res.data.notices
+          this.timetable = res.data.timetable
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+  },
   created() {
+    this.setToken();
+    this.getList();
     this.getNow();
     this.$nextTick(() => {
       const timeBody = document.querySelector('#timeschedule');
@@ -123,24 +164,11 @@ export default {
   mounted() {
     // console.log(this.$route.params.authority);
     // this.authority = this.$route.params.authority;
-    
   },
-  methods: {
-    getNow() {
-      const arr=['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
-
-      const today = new Date();
-      this.year = today.getFullYear();
-      this.month = today.getMonth() + 1;
-      this.day = arr[today.getDay()];
-      this.date = today.getDate();
-    }
-  },
-  components: {
-    NavSideBarAdmin,
-    NavSideBarTeacher,
-    NavSideBarStudent,
-    NavBar
+  computed: {
+    ...mapState([
+      'headers'
+    ]),
   },
 }
 </script>
