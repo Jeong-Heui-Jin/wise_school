@@ -47,11 +47,11 @@
 import axios from "axios";
 import NavSideBar from "@/components/NavSideBarTeacher.vue";
 import NavBar from "@/components/NavBar.vue";
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 
 export default {
   name: "Homework",
-  data: function() {
+  data: function () {
     return {
       perPage: 8,
       currentPage: 1,
@@ -79,18 +79,33 @@ export default {
   },
   methods: {
     setToken: function () {
-      this.$store.dispatch('setToken')
+      this.$store.dispatch("setToken");
     },
     getHomeworkList: function () {
       axios({
         method: "get",
         // url: "http://i5a205.p.ssafy.io:8081/homework/list/",
-        url: 'http://i5a205.p.ssafy.io:8000/homework/list/',
+        url: "http://i5a205.p.ssafy.io:8000/homework/list/",
         headers: this.headers,
       })
         .then((res) => {
-          // console.log(res)
-          this.items = res.data
+          this.items = res.data;
+
+          // 모든 items의 end 데이터를 가공한다.
+          for (let i = 0; i < this.items.length; ++i) {
+            var temp = this.items[i].end;
+            console.log(temp);
+
+            this.items[i].end =
+              temp.substring(5, 7) +
+              "월 " +
+              temp.substring(8, 10) +
+              "일 " +
+              temp.substring(11, 13) +
+              "시 " +
+              temp.substring(14, 16) +
+              "분";
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -101,7 +116,7 @@ export default {
     },
     goHomeworkView: function (homework) {
       console.log(homework);
-      this.$router.push({ name: 'HomeworkView'})
+      this.$router.push({ name: "HomeworkView" });
       // router.push({
       //   path: "/homework_view",
       //   query: { title: this.items.Title, Content: this.items.Content },
@@ -114,14 +129,12 @@ export default {
     rows() {
       return this.items.length;
     },
-    ...mapState([
-      'headers'
-    ]),
+    ...mapState(["headers"]),
   },
-  created: function() {
-    this.setToken()
-    this.getHomeworkList()
-  }
+  created: function () {
+    this.setToken();
+    this.getHomeworkList();
+  },
 };
 </script>
 
