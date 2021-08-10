@@ -39,7 +39,10 @@
 				<div class="menu-opener" id="menu-more">+</div>
 			</div>
 			<div class="menu-hide menu" id="menu-student-list" @click="showStudents"></div>
-			<div class="menu-hide menu" id="menu-other">+</div>
+
+			<!-- 화면공유 -->
+			<div class="menu-hide menu" id="menu-other" @click="startScreenSharing">+</div>
+
 			<!-- 나가기 버튼 -->
 			<div class="menu-hide menu" id="menu-exit" @click="leaveSession"></div>
 			<!-- <input v-if="menu" class="btn btn-large btn-danger" type="button" id="buttonLeaveSession" @click="leaveSession" value="Leave session"> -->
@@ -66,6 +69,10 @@
 			<!-- <div class="student-wrapper1"></div>
 			<div class="student-wrapper2"></div>
 			<div class="student-wrapper3"></div> -->
+		</div>
+
+		<div style="width:1280px; height:720px; background-color:grey" v-if="isScreenShared">
+			<video autoplay id="videos" style="width:1280px; height:720px" ></video>
 		</div>
 	</div>
 	
@@ -95,8 +102,10 @@ export default {
 		return {
 			OV: undefined,
 			session: undefined,
+			sessionScreen: undefined,
 			mainStreamManager: undefined,
 			publisher: undefined,
+			// sharingPublisher: undefined,
 			subscribers: [],
 
 			// 학급코드 (X반)
@@ -105,6 +114,8 @@ export default {
 			myUserName: 'SSAFY' + Math.floor(Math.random() * 100),
 			// 메뉴 오픈상태
 			menu: false,
+			// 화면공유 상태
+			isScreenShared: false,
 		}
 	},
 
@@ -298,6 +309,49 @@ export default {
 			})
 			.catch(error => {
 				console.error(error);
+			});
+		},
+
+		startScreenSharing (connection) { // eslint-disable-line no-unused-vars
+			this.OV = new OpenVidu();
+			this.OV.setAdvancedConfiguration(
+				{ screenShareChromeExtension: "https://chrome.google.com/webstore/detail/EXTENSION_NAME/EXTENSION_ID" }
+			);
+			this.sessionScreen = this.OV.initSession();
+
+			// var mySessionId = document.getElementById("sessionId").value;
+			var mySessionId = this.mySessionId;
+			this.getToken(mySessionId).then(token => {
+				this.sessionScreen.connect(token).then(() => {
+					// var publisher = this.OV.initPublisher("html-element-id", { videoSource: "screen" });
+					var sharingPublisher = this.OV.initPublisher("videos", {
+						videoSource: "screen",
+						resolution: "1280x720"
+					});
+					sharingPublisher.once('accessAllowed', () => {
+						try {
+							this.isScreenShared=true;
+							
+							sharingPublisher.stream.getMediaStream().getVideoTracks()[0].addEventListener('ended', () => {
+								console.log('User pressed the "Stop sharing" button');
+								this.isScreenShared=false;
+							});
+							// console.log(sharingPublisher);
+							this.sessionScreen.publish(sharingPublisher);
+						} catch (error) {
+							console.error('Error applying constraints: ', error);
+						}
+					});
+
+					sharingPublisher.once('accessDenied', (event) => { // eslint-disable-line no-unused-vars
+						console.warn('ScreenShare: Access Denied');
+					});
+
+				}).catch((error => {
+
+					console.warn('There was an error connecting to the session:', error.code, error.message);
+
+				}));
 			});
 		}
 	},
