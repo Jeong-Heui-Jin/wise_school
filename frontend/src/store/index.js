@@ -9,7 +9,6 @@ export default new Vuex.Store({
     headers: null,
     selected_homework: null,
     selected_notice: null,
-    selected_notice: null,
   },
   mutations: {
     SET_TOKEN: function (state, config) {

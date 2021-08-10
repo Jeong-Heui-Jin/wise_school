@@ -18,8 +18,7 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 @authentication_classes([JSONWebTokenAuthentication])
 @permission_classes([IsAuthenticated])
 def notice(request):
-    user = get_object_or_404(get_user_model(), pk=request.data.get('user_id'))
-    classroom = user.classroom
+    classroom = request.user.classroom
 
     # classroom = request.user.classroom
     if request.method == 'GET':
