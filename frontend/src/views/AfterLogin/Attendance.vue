@@ -20,7 +20,7 @@ export default {
   },
   data: function() {
     return {
-
+      attendances: {},
     }
   },
   methods: {
@@ -34,8 +34,8 @@ export default {
         headers: this.headers,
       })
         .then((res) => {
-          console.log(res.data)
-          // this.items = res.data
+          // console.log(res.data)
+          this.attendances = res.data
         })
         .catch((err) => {
           console.log(err);

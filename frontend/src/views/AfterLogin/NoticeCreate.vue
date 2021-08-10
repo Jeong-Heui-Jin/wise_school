@@ -59,13 +59,14 @@ export default {
     noticeCreate: function () {
       axios({
         method: "post",
-        // url: "http://i5a205.p.ssafy.io:8081/homework/list/",
         url: 'http://i5a205.p.ssafy.io:8000/notice/',
         headers: this.headers,
         data: this.createValue,
       })
         .then((res) => {
-          console.log(res.data)
+          // console.log(res.data)
+          this.$store.dispatch('selectNotice', res.data)
+          // window.open("/notice_view", "_self");
         })
         .catch((err) => {
           console.log(err);
