@@ -33,19 +33,42 @@
 				<user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
 			</div>
 		</div>
-		<div class="menu-wrapper">
+		<div class="menu-wrapper" id="menu-wrapper">
 			<div class="menu-opener" id="menu-opener-shadow" @click="showMenus">
 				<!-- 그림자효과 -->
 				<div class="menu-opener" id="menu-more">+</div>
 			</div>
-			<div class="menu-hide menu" id="menu-student-list">+</div>
+			<div class="menu-hide menu" id="menu-student-list" @click="showStudents"></div>
 			<div class="menu-hide menu" id="menu-other">+</div>
 			<!-- 나가기 버튼 -->
 			<div class="menu-hide menu" id="menu-exit" @click="leaveSession"></div>
 			<!-- <input v-if="menu" class="btn btn-large btn-danger" type="button" id="buttonLeaveSession" @click="leaveSession" value="Leave session"> -->
 		</div>
-		
+		<div class="student-hide" id="student-wrapper">
+			<div class="student">
+				<div class="student-profile"></div>
+				<div class="student-name">박명수</div>
+				<div class="student-function-wrapper">
+					<div class="student-function" id="student-mute"></div>
+					<div class="student-function" id="student-cam"></div>
+					<div class="student-function" id="student-alert"></div>
+				</div>
+			</div>
+			<div class="student" v-for="sub in subscribers" :key="sub.stream.connection.connectionId">
+				<div class="student-profile"></div>
+				<div class="student-name"> {{ JSON.parse(sub.stream.connection.data).clientData }} </div>
+				<div class="student-function-wrapper">
+					<div class="student-function" id="student-mute" @click="muteStudent(sub.stream.connection)"></div>
+					<div class="student-function" id="student-cam"></div>
+					<div class="student-function" id="student-alert" @click="alertStudent(sub.stream.connection)"></div>
+				</div>
+			</div>
+			<!-- <div class="student-wrapper1"></div>
+			<div class="student-wrapper2"></div>
+			<div class="student-wrapper3"></div> -->
+		</div>
 	</div>
+	
 </template>
 
 <script>
@@ -108,6 +131,11 @@ export default {
 					this.subscribers.splice(index, 1);
 				}
 			});
+
+			// On alert from teacher to you
+			this.session.on('signal:alert', (msg)=>{
+				console.log(msg.data)
+			})
 
 			// --- Connect to the session with a valid user token ---
 
@@ -223,17 +251,59 @@ export default {
 			});
 		},
 
+		openMenu () {
+			const menus = document.getElementsByClassName("menu");
+			menus.forEach(menu => menu.classList.toggle("menu-hide"));
+		},
+
 		showMenus () {
 			const more = document.getElementById("menu-more");
-			const menus = document.getElementsByClassName("menu");
-
 			more.classList.toggle("rotate-menu");
-			menus.forEach(menu => menu.classList.toggle("menu-hide"));
+			this.openMenu();
+		},
+
+		showStudents () {
+			var students = []
+			this.subscribers.forEach(student=>{
+				console.log(student.stream.connection.data["clientData"])
+			});
+			students
+			// console.log('Me:')
+			console.log(JSON.parse(this.publisher.stream.connection.data))
+			this.showMenus()
+			const studentList = document.getElementById("student-wrapper")
+			console.log(studentList.classList);
+			// 학생 목록 창 열기
+			studentList.classList.toggle("student-hide");
+			// 왼쪽으로 메뉴 밈
+			document.getElementById("menu-wrapper").classList.toggle("menu-move")
+		},
+
+		muteStudent (connection) {
+			const studentConnectionId = connection.connectionId;
+			const studentName = JSON.parse(connection.data).clientData;
+
+			console.log(studentConnectionId, studentName);
+		},
+		
+		alertStudent (connection) {
+			const studentName = JSON.parse(connection.data).clientData;
+			this.session.signal({
+				data: `야 ${studentName} 집중해!!!!`,  // Any string (optional)
+				to: [connection],                     // Array of Connection objects (optional. Broadcast to everyone if empty)
+				type: 'alert'             // The type of message (optional)
+			})
+			.then(() => {
+				console.log('alert successfully sent');
+			})
+			.catch(error => {
+				console.error(error);
+			});
 		}
 	},
 
 	created() {
-		// 페이지 실행 시 바로 연결설정 시작.
+		// 접속 시 바로 연결설정 시작.
 		this.joinSession()
 	}
 }
