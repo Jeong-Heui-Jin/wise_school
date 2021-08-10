@@ -24,8 +24,10 @@
 </template>
 
 <script>
+import axios from "axios";
 import NavSideBar from "@/components/NavSideBarTeacher.vue";
 import NavBar from "@/components/NavBar.vue";
+import { mapState } from 'vuex'
 
 export default {
   name: "HomeworkChange",
@@ -33,6 +35,45 @@ export default {
     NavSideBar,
     NavBar,
   },
+  data: function() {
+    return {
+      homework: {
+        'title':this.selected_homework.title,
+        'content':this.selected_homework.content,
+        'end':this.selected_homework.end,
+      }
+    }
+  },
+  methods: {
+    setToken: function () {
+      this.$store.dispatch('setToken')
+    },
+    homeworkChange: function () {
+      const homework_id = this.selected_homework.id
+      axios({
+          method: "put",
+          url: `http://i5a205.p.ssafy.io:8000/homework/detail/${homework_id}/`,
+          headers: this.headers,
+          data: this.homework,
+      })
+        .then((res) => {
+        console.log(res.data)
+        })
+        .catch((err) => {
+        console.log(err);
+        });
+    },
+  },
+  computed: {
+    ...mapState([
+        'headers',
+        'selected_homework',
+    ]),
+  },
+  created: function() {
+    this.setToken()
+    this.getHomeworkDetail()
+  }
 };
 </script>
 

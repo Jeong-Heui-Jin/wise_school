@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .models import Homework, SubmitHomework
 from classroom.models import Classroom
-from .serializers import HomeworkSerializer, SubmitHomeworkSerializer
+from .serializers import HomeworkSerializer, HomeworkListSerializer, SubmitHomeworkSerializer
 from notice.serializers import NotificationSerializer
 from django.db.models import Q
 
@@ -23,8 +23,8 @@ def homework_list(request):
     classroom_id = int(request.user.classroom.id)
     classroom = get_object_or_404(Classroom, pk=classroom_id)
     if request.method == 'GET':
-        homeworks = get_list_or_404(Homework, classroom=classroom)[::-1]
-        serializer = HomeworkSerializer(homeworks, many=True)
+        homeworks = Homework.objects.filter(classroom=classroom).order_by('-pk')
+        serializer = HomeworkListSerializer(homeworks, many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
         serializer = HomeworkSerializer(data=request.data)
@@ -65,7 +65,7 @@ def homework_detail(request, homework_id):
     homework = get_object_or_404(Homework, pk=homework_id)
 
     if request.method == 'GET':
-        serializer = HomeworkSerializer(homework)
+        serializer = HomeworkListSerializer(homework)
         return Response(serializer.data)
 
     elif request.method == 'PUT':

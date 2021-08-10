@@ -23,7 +23,7 @@ def notice(request):
 
     # classroom = request.user.classroom
     if request.method == 'GET':
-        notices = get_list_or_404(Notice, classroom=classroom)
+        notices = Notice.objects.filter(classroom=classroom)
         serializer = NoticeListSerializer(notices, many=True)
         return Response(serializer.data)
 

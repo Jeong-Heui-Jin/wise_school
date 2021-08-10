@@ -31,11 +31,18 @@ class HomeworkFileSerializer(serializers.ModelSerializer):
 
 
 class HomeworkSerializer(serializers.ModelSerializer):
-    # file_set = HomeworkFileSerializer(many=True, read_only=True)
-    # submithomework_set = SubmitHomeworkSerializer(many=True, read_only=True)
-    # submithomework_count = serializers.IntegerField(source='submithomework_set.count', read_only=True)
 
     class Meta:
         model = Homework
         fields = '__all__'
         read_only_fields = ('classroom',)
+
+
+class HomeworkListSerializer(serializers.ModelSerializer):
+    homeworkfile_set = HomeworkFileSerializer(many=True, read_only=True)
+    submithomework_set = SubmitHomeworkSerializer(many=True, read_only=True)
+    submithomework_count = serializers.IntegerField(source='submithomework_set.count', read_only=True)
+
+    class Meta:
+        model = Homework
+        fields = '__all__'

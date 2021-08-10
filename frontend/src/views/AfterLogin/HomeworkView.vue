@@ -41,7 +41,7 @@ export default {
   },
   data: function() {
     return {
-
+      homework: {}
     }
   },
   methods: {
@@ -49,14 +49,14 @@ export default {
       this.$store.dispatch('setToken')
     },
     getHomeworkDetail: function () {
+      const homework_id = this.selected_homework.id
       axios({
           method: "get",
-          // url: "http://i5a205.p.ssafy.io:8081/homework/list/",
-          url: 'http://i5a205.p.ssafy.io:8000/homework/detail/12/',
+          url: `http://i5a205.p.ssafy.io:8000/homework/detail/${homework_id}/`,
           headers: this.headers,
       })
         .then((res) => {
-        console.log(res.data)
+        this.homework = res.data
         })
         .catch((err) => {
         console.log(err);
@@ -65,7 +65,8 @@ export default {
   },
   computed: {
     ...mapState([
-        'headers'
+        'headers',
+        'selected_homework'
     ]),
   },
   created: function() {

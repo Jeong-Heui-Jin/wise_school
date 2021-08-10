@@ -95,7 +95,6 @@ export default {
     getNoticeList: function () {
       axios({
         method: "get",
-        // url: "http://i5a205.p.ssafy.io:8081/homework/list/",
         url: 'http://i5a205.p.ssafy.io:8000/notice/',
         headers: this.headers,
       })
@@ -109,6 +108,10 @@ export default {
     goNoticeCreate: function () {
       window.open("/notice_create", "_self");
     },
+    goNoticeView: function () {
+      this.$store.dispatch('selectNotice')
+      // window.open("/notice_view", "_self")
+    }
   },
   computed: {
     ...mapState([
