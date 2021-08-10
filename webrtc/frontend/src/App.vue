@@ -71,9 +71,9 @@
 			<div class="student-wrapper3"></div> -->
 		</div>
 
-		<div style="width:1280px; height:720px; background-color:grey" v-if="isScreenShared">
-			<video autoplay id="videos" style="width:1280px; height:720px" ></video>
-		</div>
+		<!-- <div id="videos" style="width:1280px; height:720px; background-color:grey" v-if="isScreenShared">
+			<video autoplay style="width:1280px; height:720px" ></video>
+		</div> -->
 	</div>
 	
 </template>
@@ -102,11 +102,15 @@ export default {
 		return {
 			OV: undefined,
 			session: undefined,
-			sessionScreen: undefined,
 			mainStreamManager: undefined,
 			publisher: undefined,
-			// sharingPublisher: undefined,
 			subscribers: [],
+
+			// 화면 공유
+			OVForScreenShare: undefined,
+			sessionForScreenShare: undefined,
+			mainStreamManager2: undefined,
+			sharingPublisher: undefined,
 
 			// 학급코드 (X반)
 			mySessionId: '0110121',
@@ -312,40 +316,52 @@ export default {
 			});
 		},
 
-		startScreenSharing (connection) { // eslint-disable-line no-unused-vars
-			this.OV = new OpenVidu();
-			this.OV.setAdvancedConfiguration(
-				{ screenShareChromeExtension: "https://chrome.google.com/webstore/detail/EXTENSION_NAME/EXTENSION_ID" }
-			);
-			this.sessionScreen = this.OV.initSession();
+		startScreenSharing () {
+			this.OVForScreenShare = new OpenVidu();
+			// this.OV.setAdvancedConfiguration(
+			// 	{ screenShareChromeExtension: "https://chrome.google.com/webstore/detail/EXTENSION_NAME/EXTENSION_ID" }
+			// );
+			this.sessionForScreenShare = this.OV.initSession();
 
-			// var mySessionId = document.getElementById("sessionId").value;
 			var mySessionId = this.mySessionId;
 			this.getToken(mySessionId).then(token => {
-				this.sessionScreen.connect(token).then(() => {
-					// var publisher = this.OV.initPublisher("html-element-id", { videoSource: "screen" });
-					var sharingPublisher = this.OV.initPublisher("videos", {
+				this.sessionForScreenShare.connect(token, { clientData: this.myUserName })
+				.then(() => {
+					let publisher = this.OVForScreenShare.initPublisher("videos", {
+						audioSource: undefined,
 						videoSource: "screen",
-						resolution: "1280x720"
+						publishAudio: true,      
+                        publishVideo: true,  
+						resolution: "1280x720",
+						frameRate: 30,           
+                        insertMode: 'APPEND',    
+                        mirror: false        
 					});
-					sharingPublisher.once('accessAllowed', () => {
+					// publisher.once('accessAllowed', () => {
+                    //     publisher.stream.getMediaStream().getVideoTracks()[0].addEventListener('ended', this.leaveSessionForScreenSharing)        
+                    // });
+					publisher.once('accessAllowed', () => {
 						try {
 							this.isScreenShared=true;
-							
-							sharingPublisher.stream.getMediaStream().getVideoTracks()[0].addEventListener('ended', () => {
+							publisher.stream.getMediaStream().getVideoTracks()[0].addEventListener('ended', () => {
 								console.log('User pressed the "Stop sharing" button');
+								this.leaveSessionForScreenSharing()
 								this.isScreenShared=false;
 							});
-							// console.log(sharingPublisher);
-							this.sessionScreen.publish(sharingPublisher);
+                            // this.sessionScreen.publish(this.sharingPublisher);						
 						} catch (error) {
 							console.error('Error applying constraints: ', error);
 						}
 					});
 
-					sharingPublisher.once('accessDenied', (event) => { // eslint-disable-line no-unused-vars
+					publisher.once('accessDenied', () => { 
 						console.warn('ScreenShare: Access Denied');
 					});
+
+					this.mainStreamManager2 = publisher;
+                    this.sharingPublisher = publisher;
+
+                    this.sessionForScreenShare.publish(this.sharingPublisher);
 
 				}).catch((error => {
 
@@ -353,7 +369,21 @@ export default {
 
 				}));
 			});
+
+			window.addEventListener('beforeunload', this.leaveSessionForScreenSharing)
+		},
+
+		leaveSessionForScreenSharing () {
+			if (this.sessionForScreenShare) this.sessionForScreenShare.disconnect();
+
+            this.sessionForScreenShare = undefined;
+            this.mainStreamManager2 = undefined;
+            this.sharingPublisher = undefined;
+            this.OVForScreenShare = undefined;
+
+            window.removeEventListener('beforeunload', this.leaveSessionForScreenSharing);
 		}
+
 	},
 
 	created() {
