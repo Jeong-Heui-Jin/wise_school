@@ -71,9 +71,9 @@
 			<div class="student-wrapper3"></div> -->
 		</div>
 
-		<!-- <div id="videos" style="width:1280px; height:720px; background-color:grey" v-if="isScreenShared">
-			<video autoplay style="width:1280px; height:720px" ></video>
-		</div> -->
+		<div id="videos" style="width:1280px; height:720px;" v-if="isScreenShared">
+			<user-video v-for="sub in subscribers.slice(-1)" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+		</div>
 	</div>
 	
 </template>
@@ -318,19 +318,17 @@ export default {
 
 		startScreenSharing () {
 			this.OVForScreenShare = new OpenVidu();
-			// this.OV.setAdvancedConfiguration(
-			// 	{ screenShareChromeExtension: "https://chrome.google.com/webstore/detail/EXTENSION_NAME/EXTENSION_ID" }
-			// );
-			this.sessionForScreenShare = this.OV.initSession();
+			this.OVForScreenShare.setAdvancedConfiguration(
+				{ screenShareChromeExtension: "https://chrome.google.com/webstore/detail/EXTENSION_NAME/EXTENSION_ID" }
+			);
+			this.sessionForScreenShare = this.OVForScreenShare.initSession();
 
 			var mySessionId = this.mySessionId;
 			this.getToken(mySessionId).then(token => {
 				this.sessionForScreenShare.connect(token, { clientData: this.myUserName })
 				.then(() => {
 					let publisher = this.OVForScreenShare.initPublisher("videos", {
-						audioSource: undefined,
-						videoSource: "screen",
-						publishAudio: true,      
+						videoSource: "screen",      
                         publishVideo: true,  
 						resolution: "1280x720",
 						frameRate: 30,           
@@ -342,6 +340,7 @@ export default {
                     // });
 					publisher.once('accessAllowed', () => {
 						try {
+							console.log(this.subscribers);
 							this.isScreenShared=true;
 							publisher.stream.getMediaStream().getVideoTracks()[0].addEventListener('ended', () => {
 								console.log('User pressed the "Stop sharing" button');
