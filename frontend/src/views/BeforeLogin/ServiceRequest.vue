@@ -157,14 +157,14 @@ export default {
   },
   computed: {
     validationId() {
-      if (this.username && this.username.length < 7) return false;
-      else if (this.username.length > 16) return false;
+      if (this.requestForm.username.length < 7) return false;
+      else if (this.requestForm.username.length > 16) return false;
       else {
-        for (var i = 0; i < this.username.length; i++) {
+        for (var i = 0; i < this.requestForm.username.length; i++) {
           if (
             !(
-              (this.username[i] >= "a" && this.username[i] <= "z") ||
-              (this.username[i] >= "0" && this.username[i] <= "9")
+              (this.requestForm.username[i] >= "a" && this.requestForm.username[i] <= "z") ||
+              (this.requestForm.username[i] >= "0" && this.requestForm.username[i] <= "9")
             )
           )
             return false;
@@ -173,21 +173,21 @@ export default {
       }
     },
     validationPassword() {
-      if (this.password && this.password.length < 7) return false;
+      if (this.requestForm.password.length < 7) return false;
       else {
-        for (var i = 0; i < this.password.length; i++) {
+        for (var i = 0; i < this.requestForm.password.length; i++) {
           if (
             !(
-              (this.password[i] >= "a" && this.password[i] <= "z") ||
-              (this.password[i] >= "0" && this.password[i] <= "9") ||
-              (this.password[i] === "!") ||
-              (this.password[i] === "@") ||
-              (this.password[i] === "#") ||
-              (this.password[i] === "$") ||
-              (this.password[i] === "%") ||
-              (this.password[i] === "^") ||
-              (this.password[i] === "&") ||
-              (this.password[i] === "*")
+              (this.requestForm.password[i] >= "a" && this.requestForm.password[i] <= "z") ||
+              (this.requestForm.password[i] >= "0" && this.requestForm.password[i] <= "9") ||
+              (this.requestForm.password[i] === "!") ||
+              (this.requestForm.password[i] === "@") ||
+              (this.requestForm.password[i] === "#") ||
+              (this.requestForm.password[i] === "$") ||
+              (this.requestForm.password[i] === "%") ||
+              (this.requestForm.password[i] === "^") ||
+              (this.requestForm.password[i] === "&") ||
+              (this.requestForm.password[i] === "*")
             )
           )
             return false;
@@ -196,23 +196,23 @@ export default {
       }
     },
     validationPasswordCheck() {
-      if (this.password === this.password_confirmation)
+      if (this.requestForm.password === this.requestForm.password_confirmation)
       {
-        if (this.password && this.password.length < 7) return false;
+        if (this.requestForm.password.length < 7) return false;
         else {
-          for (var i = 0; i < this.password.length; i++) {
+          for (var i = 0; i < this.requestForm.password.length; i++) {
             if (
               !(
-                (this.password[i] >= "a" && this.password[i] <= "z") ||
-                (this.password[i] >= "0" && this.password[i] <= "9") ||
-                (this.password[i] === "!") ||
-                (this.password[i] === "@") ||
-                (this.password[i] === "#") ||
-                (this.password[i] === "$") ||
-                (this.password[i] === "%") ||
-                (this.password[i] === "^") ||
-                (this.password[i] === "&") ||
-                (this.password[i] === "*")
+                (this.requestForm.password[i] >= "a" && this.requestForm.password[i] <= "z") ||
+                (this.requestForm.password[i] >= "0" && this.requestForm.password[i] <= "9") ||
+                (this.requestForm.password[i] === "!") ||
+                (this.requestForm.password[i] === "@") ||
+                (this.requestForm.password[i] === "#") ||
+                (this.requestForm.password[i] === "$") ||
+                (this.requestForm.password[i] === "%") ||
+                (this.requestForm.password[i] === "^") ||
+                (this.requestForm.password[i] === "&") ||
+                (this.requestForm.password[i] === "*")
               )
             )
               return false;
@@ -224,14 +224,14 @@ export default {
         return false;
     },
     validationPhone() {
-      if (this.phone && this.phone.length !== 13)
+      if (this.requestForm.phone.length !== 13)
         return false;
-      for (var i = 0; i < this.phone.length; i++) {
+      for (var i = 0; i < this.requestForm.phone.length; i++) {
         if (i == 3 || i == 8) {
-          if (this.phone[i] !== '-')
+          if (this.requestForm.phone[i] !== '-')
             return false;
           else {
-            if (this.phone[i] < 0 || this.phone[i] > 9)
+            if (this.requestForm.phone[i] < 0 || this.requestForm.phone[i] > 9)
               return false;
           }
         }

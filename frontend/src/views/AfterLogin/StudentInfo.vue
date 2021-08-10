@@ -40,16 +40,25 @@
                         <b-col cols="3">이름</b-col>
                         <b-col cols="3">연락처</b-col>
                     </b-row>
-                    <div id="parent-info" v-for="parent in parents" :key="parent.Relation">
+                    <div id="parent-info" v-if="parents.length >= 1">
                         <b-row>
-                            <b-col><input style="min-width:120px; max-width:120px; margin-right: 20px;" v-model="parent.Relation"/></b-col>
-                            <b-col><input style="min-width:160px; max-width:160px; margin-right: 20px;" v-model="parent.Name"/></b-col>
-                            <b-col><input style="min-width:200px; max-width:200px; margin-right: 30px;" v-model="parent.Phone"/></b-col>
-                            <b-col><button type="button" style="min-width: 80px; min-height: 35px; border: 0px; border-radius: 10px;" @click="parentInfoDelete"> 삭제 </button></b-col>
+                            <b-col cols="2"><input style="min-width:120px; max-width:120px;"/></b-col>
+                            <b-col cols="3"><input style="min-width:160px; max-width:160px;"/></b-col>
+                            <b-col cols="3"><input style="min-width:200px; max-width:200px;"/></b-col>
+                            <b-col cols="1"><button id="parents-1-update" type="button" style="min-width: 80px; min-height: 35px; border: 0px; border-radius: 10px; margin-right: 10px;" @click="parentInfoUpdate"> 수정 </button></b-col>
+                            <b-col cols="1"><button id="parents-1-delete" type="button" style="min-width: 80px; min-height: 35px; border: 0px; border-radius: 10px; margin-left: 10px;" @click="parentInfoDelete"> 삭제 </button></b-col>
+                        </b-row>
+                    </div>
+                    <div id="parent-info" v-if="parents.length >= 2">
+                        <b-row>
+                            <b-col cols="2"><input style="min-width:120px; max-width:120px;"/></b-col>
+                            <b-col cols="3"><input style="min-width:160px; max-width:160px;"/></b-col>
+                            <b-col cols="3"><input style="min-width:200px; max-width:200px;"/></b-col>
+                            <b-col cols="1"><button id="parents-2-update" type="button" style="min-width: 80px; min-height: 35px; border: 0px; border-radius: 10px; margin-right: 10px;" @click="parentInfoUpdate"> 수정 </button></b-col>
+                            <b-col cols="1"><button id="parents-2-delete" type="button" style="min-width: 80px; min-height: 35px; border: 0px; border-radius: 10px; margin-left: 10px;" @click="parentInfoDelete"> 삭제 </button></b-col>
                         </b-row>
                     </div>
                 </div>
-                <button type="button" style="min-width: 80px; min-height: 35px; border: 0px; border-radius: 10px; margin-top: 10px; margin-left: 330px;" @click="parentInfoUpdate">수정</button>
                 <button type="button" style="min-width: 80px; min-height: 35px; border: 0px; border-radius: 10px; margin-top: 10px; margin-left: 10px;" @click="addForm">추가</button>
             </div>
         </div>
@@ -71,9 +80,9 @@ export default {
     },
     data() {
         return {
-            student: { Name: '목상원', Number: '16', Phone: '010-3542-8554', Address: '서울시 강남구 테헤란로 212' },
+            student: { ID: 1234, name: '목상원', number: '16', phone: '010-3542-8554', address: '서울시 강남구 테헤란로 212' },
             parents: [
-                { Relation: '어머니', Name: '김다정', Phone: '010-1234-5678' }
+                { ID: 123, student_id: 1234, relation: '어머니', name: '김다정', phone: '010-1234-5678' }
             ]
         }
     },
@@ -83,10 +92,18 @@ export default {
         const studentPhone = document.querySelector('#student-phone');
         const studentAddress = document.querySelector('#student-address');
 
-        studentName.value = this.student.Name;
-        studentNumber.value = this.student.Number;
-        studentPhone.value = this.student.Phone;
-        studentAddress.value = this.student.Address;
+        studentName.value = this.student.name;
+        studentNumber.value = this.student.number;
+        studentPhone.value = this.student.phone;
+        studentAddress.value = this.student.address;
+
+        const parentInfo = document.querySelectorAll('#parent-info');
+
+        for (var i = 0; i < this.parents.length; i++) {
+            parentInfo[i].children[0].children[0].children[0].value = this.parents[i].relation;
+            parentInfo[i].children[0].children[1].children[0].value = this.parents[i].name;
+            parentInfo[i].children[0].children[2].children[0].value = this.parents[i].phone;
+        }
     },
     methods: {
         setToken: function () {
@@ -95,7 +112,6 @@ export default {
         getNoticeList: function () {
         axios({
             method: "get",
-            // url: "http://i5a205.p.ssafy.io:8081/homework/list/",
             url: 'http://i5a205.p.ssafy.io:8000/accounts/info/2',
             headers: this.headers,
         })
@@ -106,74 +122,82 @@ export default {
             console.log(err);
             });
         },
+        // 기존의 정보로 되돌리기
         infoRecovery() {
             const studentName = document.querySelector('#student-name');
             const studentNumber = document.querySelector('#student-number');
             const studentPhone = document.querySelector('#student-phone');
             const studentAddress = document.querySelector('#student-address');
 
-            studentName.value = this.student.Name;
-            studentNumber.value = this.student.Number;
-            studentPhone.value = this.student.Phone;
-            studentAddress.value = this.student.Address;
+            studentName.value = this.student.name;
+            studentNumber.value = this.student.number;
+            studentPhone.value = this.student.phone;
+            studentAddress.value = this.student.address;
         },
+        // 학생 정보 수정 하기
         infoChange() {
-            // 실제로 페이지가 로드 될 때 다시 data 값을 가져오기 때문에 갱신되지 않음
-            // 백엔드와 연동해야 동작이 가능해짐
             const studentName = document.querySelector('#student-name');
             const studentNumber = document.querySelector('#student-number');
             const studentPhone = document.querySelector('#student-phone');
             const studentAddress = document.querySelector('#student-address');
 
-            this.student.Name = studentName.value;
-            this.student.Number = studentNumber.value;
-            this.student.Phone = studentPhone.value;
-            this.student.Address = studentAddress.value;
-            // alert('Connecting Backend...');
+            // POST BODY
+            let body = { Name: studentName.value, Number: studentNumber.value, Phone: studentPhone.value, Address: studentAddress.value };
+            console.log(body);
+            // axios POST
         },
         parentInfoDelete(e) {
-            // removeItem(e.currentTarget.parentElement.parentElement.children[0].children[0].value, this.parents.Relation)
-            // this.parents = this.parents.fillter(info => info.Relation !== e.currentTarget.parentElement.parentElement.children[0].children[0].value);
-            // for (var i = 0; i < this.parents.length; i++) {
-
-            //     if (this.parents[i].Relation === e.currentTarget.parentElement.parentElement.children[0].children[0].value) {
-            //         this.parents.this.parents[i]
-            //     }
-            // }
-            e.currentTarget.parentElement.parentElement.parentElement.removeChild(e.currentTarget.parentElement.parentElement);
+            // console.log(e.target.id);
+            // console.log(Number(e.target.id[8]));
+            // console.log(this.parents[Number(e.target.id[8]) - 1].ID);
+            this.parents.splice(Number(e.target.id[8]) - 1, 1);
+            // axios DELETE                    
+            // 해당 this.parents[Number(e.target.id[8]) - 1].ID로 parent Info data delete
+            // parents ID -> this.parents[idx].ID
+            // 
+            // delete 코드 추가
+            // 
         },
-        parentInfoUpdate() {
-            this.parents = [];
-            const parentInfo = document.querySelectorAll('#parent-info');
+        parentInfoUpdate(e) {
+            if (e.target.parentElement.parentElement.children[0].children[0].value.length > 0 &&
+                e.target.parentElement.parentElement.children[1].children[0].value.length > 0 &&
+                e.target.parentElement.parentElement.children[2].children[0].value.length > 0) {
+                // 처음 등록하는 경우
+                if(!this.parents[Number(e.target.id[8]) - 1].ID){
+                    // POST
+                    var bodyPost = { student_id: this.parents[Number(e.target.id[8]) - 1].student_id, 
+                    relation: e.target.parentElement.parentElement.children[0].children[0].value,
+                    name: e.target.parentElement.parentElement.children[1].children[0].value,
+                    phone: e.target.parentElement.parentElement.children[2].children[0].value};
+                    console.log(bodyPost);
+                    alert('등록되었습니다');
+                }
+                // UPDATE 경우
+                else {
+                    var body = { ID: this.parents[Number(e.target.id[8]) - 1].ID, student_id: this.parents[Number(e.target.id[8]) - 1].student_id, 
+                    relation: e.target.parentElement.parentElement.children[0].children[0].value,
+                    name: e.target.parentElement.parentElement.children[1].children[0].value,
+                    phone: e.target.parentElement.parentElement.children[2].children[0].value};
+                    console.log(this.parents[Number(e.target.id[8]) - 1].ID);
+                    console.log(body);
+                    // axis POST
+                    // BODY key -> this.parents[Number(e.target.id[8]) - 1].ID
 
-            for (var i = 0; i < parentInfo.length; i++) {
-                this.parents.push({ Relation: parentInfo[i].children[0].children[0].children[0].value, Name: parentInfo[i].children[0].children[1].children[0].value, 
-                Phone: parentInfo[i].children[0].children[2].children[0].value})
-                // parents.push({ Relation: parentInfo[i].children, Name: '김다정', Phone: '010-1234-5678' })
-            }
-            const parentInfoAddtion = document.querySelector('.addition-form');
-            parentInfoAddtion.parentElement.removeChild(parentInfoAddtion);
-            
-        },
-        addForm() {
-            const parentInfo = document.querySelectorAll('#parent-info');
-
-            if (parentInfo.length === 2) {
-                alert('더 이상 추가할 수 없습니다');
+                    this.parents[Number(e.target.id[8]) - 1].relation = e.target.parentElement.parentElement.children[0].children[0].value;
+                    this.parents[Number(e.target.id[8]) - 1].name = e.target.parentElement.parentElement.children[1].children[0].value;
+                    this.parents[Number(e.target.id[8]) - 1].phone = e.target.parentElement.parentElement.children[2].children[0].value;
+                }
             }
             else {
-                const parentInfoFormGraph = document.querySelector('#parent-info-form-graph');
-                console.log('add');
-                parentInfoFormGraph.insertAdjacentHTML('beforeend', `
-                    <div id="parent-info" class="addition-form">
-                        <b-row>
-                            <b-col cols="2"><input style="min-width:120px; max-width:120px; margin-right: 73px;"/></b-col>
-                            <b-col cols="3"><input style="min-width:160px; max-width:160px; margin-right: 45px;"/></b-col>
-                            <b-col cols="4"><input style="min-width:200px; max-width:200px; margin-right: 108px;"/></b-col>
-                            <b-col><button type="button" style="min-width: 80px; min-height: 35px; border: 0px; border-radius: 10px; margin-right: 32px;" onclick="parentInfoDelete(e)"> 삭제 </button></b-col>
-                        </b-row>
-                    </div>
-                `);
+                alert('빈칸을 채워주세요');
+            }
+        },
+        addForm() {
+            if (this.parents.length <= 1) {
+                this.parents.push({ student_id: this.student.ID, relation: '', name: '', phone: ''});
+            }
+            else {
+                alert('더 이상 추가할 수 없습니다');
             }
         }
     },
@@ -242,6 +266,10 @@ export default {
 
 #parent-info {
     margin-bottom: 10px;
+}
+
+#parent-info input {
+    text-align: center;
 }
 
 #parent-info-form-graph input {

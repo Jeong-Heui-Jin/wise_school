@@ -18,12 +18,11 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 @authentication_classes([JSONWebTokenAuthentication])
 @permission_classes([IsAuthenticated])
 def notice(request):
-    user = get_object_or_404(get_user_model(), pk=request.data.get('user_id'))
-    classroom = user.classroom
+    classroom = request.user.classroom
 
     # classroom = request.user.classroom
     if request.method == 'GET':
-        notices = get_list_or_404(Notice, classroom=classroom)
+        notices = Notice.objects.filter(classroom=classroom)
         serializer = NoticeListSerializer(notices, many=True)
         return Response(serializer.data)
 

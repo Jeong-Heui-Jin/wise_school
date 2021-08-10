@@ -16,52 +16,89 @@
     style="position: absolute; left: 750px;border: 0px; top: 80px; border-radius: 5px; min-width: 80px; min-height: 30px;"
     @click="changeTimetableTitle">
     수정하기</button>
-    <b-container id="timetable-change-content">
+    <b-container class="timetable-change-content">
       <!-- 요일 -->
-      <b-row id="period" >
-        <b-col id="subject" style="padding-bottom: 20px;"> </b-col>
-        <b-col id="subject" style="padding-bottom: 20px;">월</b-col>
-        <b-col id="subject" style="padding-bottom: 20px;">화</b-col>
-        <b-col id="subject" style="padding-bottom: 20px;">수</b-col>
-        <b-col id="subject" style="padding-bottom: 20px;">목</b-col>
-        <b-col id="subject" style="padding-bottom: 20px;">금</b-col>
+      <b-row class="period" >
+        <b-col class="subject" style="padding-bottom: 20px;"> </b-col>
+        <b-col class="subject" style="padding-bottom: 20px;">월</b-col>
+        <b-col class="subject" style="padding-bottom: 20px;">화</b-col>
+        <b-col class="subject" style="padding-bottom: 20px;">수</b-col>
+        <b-col class="subject" style="padding-bottom: 20px;">목</b-col>
+        <b-col class="subject" style="padding-bottom: 20px;">금</b-col>
         <b-col></b-col>
       </b-row>
       <!-- 과목 -->
-      <b-row id="period" v-for="detail in timetableDetail" :key="detail.Period">
-        <b-col id="subject">
-          {{detail.Period}}교시
-          <div id="time" v-if="detail.Period === '1'">09:00 ~ 09:40</div>
-          <div id="time" v-else-if="detail.Period === '2'">09:50 ~ 10:30</div>
-          <div id="time" v-else-if="detail.Period === '3'">10:40 ~ 11:20</div>
-          <div id="time" v-else-if="detail.Period === '4'">11:30 ~ 12:10</div>
-          <div id="time" v-else-if="detail.Period === '5'">13:00 ~ 13:40</div>
-          <div id="time" v-else-if="detail.Period === '6'">13:50 ~ 14:30</div>
+      <b-row class="period 1-class" v-if="timetableDetail.length >= 1">
+        <b-col class="subject">
+          1교시
+          <div class="time">09:00 ~ 09:40</div>
         </b-col>
-        <b-col id="subject"><b-form-input 
-        style="margin-top: auto; margin-bottom: auto; min-width:100px; max-width:140px; max-height: 60px; min-height: 60px; font-size: 32px; border: 0px;" 
-        v-model="detail.Monday">
-        </b-form-input></b-col>
-        <b-col id="subject"><b-form-input 
-        style="margin-top: auto; margin-bottom: auto; min-width:100px; max-width:140px; max-height: 60px; min-height: 60px; font-size: 32px; border: 0px;" 
-        v-model="detail.Tuesday">
-        </b-form-input></b-col>
-        <b-col id="subject"><b-form-input 
-        style="margin-top: auto; margin-bottom: auto; min-width:100px; max-width:140px; max-height: 60px; min-height: 60px; font-size: 32px; border: 0px;" 
-        v-model="detail.Wednesday">
-        </b-form-input></b-col>
-        <b-col id="subject"><b-form-input 
-        style="margin-top: auto; margin-bottom: auto; min-width:100px; max-width:140px; max-height: 60px; min-height: 60px; font-size: 32px; border: 0px;" 
-        v-model="detail.Thursday">
-        </b-form-input></b-col>
-        <b-col id="subject"><b-form-input 
-        style="margin-top: auto; margin-bottom: auto; min-width:100px; max-width:140px; max-height: 60px; min-height: 60px; font-size: 32px; border: 0px;" 
-        v-model="detail.Friday">
-        </b-form-input></b-col>
-        <b-col style="margin-top: auto;"><button
-        style="border: 0px; border-radius: 5px; min-width: 80px; min-height: 30px;"
-        @click="changeTimetableContent()">
-        수정하기</button></b-col>
+        <b-col class="subject"><b-form-input id="mon"></b-form-input></b-col>
+        <b-col class="subject"><b-form-input id="tue"></b-form-input></b-col>
+        <b-col class="subject"><b-form-input id="wed"></b-form-input></b-col>
+        <b-col class="subject"><b-form-input id="thu"></b-form-input></b-col>
+        <b-col class="subject"><b-form-input id="fri"></b-form-input></b-col>
+        <b-col class="button-field"><button @click="changeTimetableContent" id="1">수정하기</button></b-col>
+      </b-row>
+      <b-row class="period 2-class" v-if="timetableDetail.length >= 2">
+        <b-col class="subject">
+          2교시
+          <div class="time">09:50 ~ 10:30</div>
+        </b-col>
+        <b-col class="subject"><b-form-input id="mon"></b-form-input></b-col>
+        <b-col class="subject"><b-form-input id="tue"></b-form-input></b-col>
+        <b-col class="subject"><b-form-input id="wed"></b-form-input></b-col>
+        <b-col class="subject"><b-form-input id="thu"></b-form-input></b-col>
+        <b-col class="subject"><b-form-input id="fri"></b-form-input></b-col>
+        <b-col class="button-field"><button @click="changeTimetableContent" id="2">수정하기</button></b-col>
+      </b-row>
+      <b-row class="period 3-class" v-if="timetableDetail.length >= 3">
+        <b-col class="subject">
+          3교시
+          <div class="time">10:40 ~ 11:20</div>
+        </b-col>
+        <b-col class="subject"><b-form-input id="mon"></b-form-input></b-col>
+        <b-col class="subject"><b-form-input id="tue"></b-form-input></b-col>
+        <b-col class="subject"><b-form-input id="wed"></b-form-input></b-col>
+        <b-col class="subject"><b-form-input id="thu"></b-form-input></b-col>
+        <b-col class="subject"><b-form-input id="fri"></b-form-input></b-col>
+        <b-col class="button-field"><button @click="changeTimetableContent" id="3">수정하기</button></b-col>
+      </b-row>
+      <b-row class="period 4-class" v-if="timetableDetail.length >= 4">
+        <b-col class="subject">
+          4교시
+          <div class="time">11:30 ~ 12:10</div>
+        </b-col>
+        <b-col class="subject"><b-form-input id="mon"></b-form-input></b-col>
+        <b-col class="subject"><b-form-input id="tue"></b-form-input></b-col>
+        <b-col class="subject"><b-form-input id="wed"></b-form-input></b-col>
+        <b-col class="subject"><b-form-input id="thu"></b-form-input></b-col>
+        <b-col class="subject"><b-form-input id="fri"></b-form-input></b-col>
+        <b-col class="button-field"><button @click="changeTimetableContent" id="4">수정하기</button></b-col>
+      </b-row>
+      <b-row class="period 5-class" v-if="timetableDetail.length >= 5">
+        <b-col class="subject">
+          5교시
+          <div class="time">13:00 ~ 13:40</div>
+        </b-col>
+        <b-col class="subject"><b-form-input id="mon"></b-form-input></b-col>
+        <b-col class="subject"><b-form-input id="tue"></b-form-input></b-col>
+        <b-col class="subject"><b-form-input id="wed"></b-form-input></b-col>
+        <b-col class="subject"><b-form-input id="thu"></b-form-input></b-col>
+        <b-col class="subject"><b-form-input id="fri"></b-form-input></b-col>
+        <b-col class="button-field"><button @click="changeTimetableContent" id="5">수정하기</button></b-col>
+      </b-row>
+      <b-row class="period 6-class" v-if="timetableDetail.length >= 6">
+        <b-col class="subject">
+          6교시
+          <div class="time">13:50 ~ 14:30</div>
+        </b-col>
+        <b-col class="subject"><b-form-input id="mon"></b-form-input></b-col>
+        <b-col class="subject"><b-form-input id="tue"></b-form-input></b-col>
+        <b-col class="subject"><b-form-input id="wed"></b-form-input></b-col>
+        <b-col class="subject"><b-form-input id="thu"></b-form-input></b-col>
+        <b-col class="subject"><b-form-input id="fri"></b-form-input></b-col>
+        <b-col class="button-field"><button @click="changeTimetableContent" id="6">수정하기</button></b-col>
       </b-row>
     </b-container>
     
@@ -95,102 +132,102 @@ export default {
       timetableDetail : [
         {Period : '1', Monday: '국어', Tuesday: '체육', Wednesday: '영어', Thursday: '사회', Friday: '수학'},
         {Period : '2', Monday: '수학', Tuesday: '영어', Wednesday: '체육', Thursday: '국어', Friday: '과학'},
-      ]
+      ],
     }
   },
-  methods: {
-    // getTimetable: function () {
-    //   axios({
-    //     method: "get",
-    //     // url: "http://i5a205.p.ssafy.io:8000/homework/list/",
-    //     url: 'http://127.0.0.1:8000/classroom/timetable/1/',
-    //     // headers: this.headers,
-    //     // data: this.createValue,
-    //   })
-    //     .then((res) => {
-    //       console.log(res)
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
-    // },
+  mounted() {
+    //   
+    //   처음에 한번만 axios로 timetableDetail에 데이터 받아와주세용!
     // 
-    changeTimetableContent() {
-        console.log('HI');
-        // console.log(e.Target);
+
+      for (var i = 0; i < this.timetableDetail.length; i++) {
+          const classBody = document.getElementsByClassName(this.timetableDetail[i].Period + '-class');
+
+          classBody[0].children[1].children[0].value=this.timetableDetail[i].Monday;
+          classBody[0].children[2].children[0].value=this.timetableDetail[i].Tuesday;
+          classBody[0].children[3].children[0].value=this.timetableDetail[i].Wednesday;
+          classBody[0].children[4].children[0].value=this.timetableDetail[i].Thursday;
+          classBody[0].children[5].children[0].value=this.timetableDetail[i].Friday;
+      }
+  },
+  methods: {
+    changeTimetableContent(e) {
+        console.log(e.target.id);
+        // console.log(e.target.parentElement.parentElement.children[1].children[0]);
+        if (e.target.parentElement.parentElement.children[1].children[0].value.length <= 0) {
+            alert('빈칸이 존재합니다')
+        } 
+        else if (e.target.parentElement.parentElement.children[2].children[0].value.length <= 0) {
+            alert('빈칸이 존재합니다')
+        } 
+        else if (e.target.parentElement.parentElement.children[3].children[0].value.length <= 0) {
+            alert('빈칸이 존재합니다')
+        } 
+        else if (e.target.parentElement.parentElement.children[4].children[0].value.length <= 0) {
+            alert('빈칸이 존재합니다')
+        } 
+        else if (e.target.parentElement.parentElement.children[5].children[0].value.length <= 0) {
+            alert('빈칸이 존재합니다')
+        } 
+        else {
+            // do update
+            // axios update -> id === Period
+        }
     },
     // 시간표 삭제하기 버튼 함수
     deleteTimeTable() {
-
+        
     },
 
     // 시간표 제목 바꾸기 버튼 함수
     changeTimetableTitle() {
 
     },
+    // 시간표 한 줄 추가
     addTimetable() {
-        // const parentInfo = document.querySelectorAll('#parent-info');
+        const timetableBody = document.getElementsByClassName(this.timetableDetail.length+'-class');
+        console.log(timetableBody[0].children[1].children[0].value.length);
 
-        // if (parentInfo.length === 2) {
-        //     alert('더 이상 추가할 수 없습니다');
-        // }
-        // else {
-            //             <div id="time" v-if="detail.Period === '1'">09:00 ~ 09:40</div>
-            // <div id="time" v-else-if="detail.Period === '2'">09:50 ~ 10:30</div>
-            // <div id="time" v-else-if="detail.Period === '3'">10:40 ~ 11:20</div>
-            // <div id="time" v-else-if="detail.Period === '4'">11:30 ~ 12:10</div>
-            // <div id="time" v-else-if="detail.Period === '5'">13:00 ~ 13:40</div>
-            // <div id="time" v-else-if="detail.Period === '6'">13:50 ~ 14:30</div>
-        const timetableGraph = document.getElementById('timetable-change-content');
-
-        timetableGraph.insertAdjacentHTML('beforeend', `
-            <b-row id="period">
-                <b-col id="subject" style="min-width: 100px; font-size: 32px; text-align: center; padding-top: 20px; border: 1px solid black; min-height: 80px;">
-                교시
-                </b-col>
-                <b-col id="subject"><input 
-                style="margin-top: auto; margin-bottom: auto; min-width:120px; max-width:120px; max-height: 60px; min-height: 60px; font-size: 32px; border: 0px;"/>
-                </b-col>
-                <b-col id="subject"><input 
-                style="margin-top: auto; margin-bottom: auto; min-width:120px; max-width:120px; max-height: 60px; min-height: 60px; font-size: 32px; border: 0px;"/>
-                </b-col>
-                <b-col id="subject"><input 
-                style="margin-top: auto; margin-bottom: auto; min-width:120px; max-width:120px; max-height: 60px; min-height: 60px; font-size: 32px; border: 0px;"/>
-                </b-col>
-                <b-col id="subject"><input 
-                style="margin-top: auto; margin-bottom: auto; min-width:120px; max-width:120px; max-height: 60px; min-height: 60px; font-size: 32px; border: 0px;"/>
-                </b-col>
-                <b-col id="subject"><input 
-                style="margin-top: auto; margin-bottom: auto; min-width:120px; max-width:120px; max-height: 60px; min-height: 60px; font-size: 32px; border: 0px;"/>
-                </b-col>
-                <b-col style="margin-top: auto;">
-                <button onclick="changeTimetableContent()" style="border: 0px; border-radius: 5px; min-width: 80px; min-height: 30px;">
-                수정하기</button></b-col>
-            </b-row>`);
+        if (timetableBody[0].children[1].children[0].value.length > 0 &&
+            timetableBody[0].children[2].children[0].value.length > 0 &&
+            timetableBody[0].children[3].children[0].value.length > 0 &&
+            timetableBody[0].children[4].children[0].value.length > 0 &&
+            timetableBody[0].children[5].children[0].value.length > 0) {
+            if (this.timetableDetail.length <= 5) {
+                this.timetableDetail.push({Period: this.timetableDetail.length + 1, Monday: '', Tuesday: '', Wednesday: '', Thursday: '', Friday: ''});
+            }
+            else {
+                alert('더 이상 추가할 수 없습니다');
+            }
+        }
+        else {
+            alert('빈칸을 채워주세요');
+        }
     },
   }
 };
 </script>
 
 <style>
-#timetable-change-content {
+.timetable-change-content {
   position: absolute;
   top: 150px;
   left: 350px;
+  max-width: 800px;
+  min-width: 800px;
   width: 800px;
-  max-width: 900px;
-  min-width: 900px;
 }
 
-#timetable-change-content #subject {
-  min-width: 100px;
+.timetable-change-content .subject {
+  min-width: 130px;
+  max-width: 130px;
   font-size: 32px;
   text-align: center;
   padding-top: 20px;
   border: 1px solid black;
 }
 
-#timetable-change-content #time {
+.timetable-change-content .time {
   font-size: 15px;
 }
 
@@ -207,5 +244,69 @@ export default {
   margin-bottom: 20px;
   border: 0px;
   font-size: 24px;
+}
+
+.subject #mon{
+    margin-top: auto; 
+    margin-bottom: auto; 
+    min-width:100px; 
+    max-width:100px; 
+    max-height: 60px; 
+    min-height: 60px; 
+    font-size: 32px; 
+    border: 0px;
+}
+.subject #tue{
+    margin-top: auto; 
+    margin-bottom: auto; 
+    min-width:100px; 
+    max-width:100px; 
+    max-height: 60px; 
+    min-height: 60px; 
+    font-size: 32px; 
+    border: 0px;
+}
+.subject #wed{
+    margin-top: auto; 
+    margin-bottom: auto; 
+    min-width:100px; 
+    max-width:100px; 
+    max-height: 60px; 
+    min-height: 60px; 
+    font-size: 32px; 
+    border: 0px;
+}
+.subject #thu{
+    margin-top: auto; 
+    margin-bottom: auto; 
+    min-width:100px; 
+    max-width:100px; 
+    max-height: 60px; 
+    min-height: 60px; 
+    font-size: 32px; 
+    border: 0px;
+}
+.subject #fri{
+    margin-top: auto; 
+    margin-bottom: auto; 
+    min-width:100px; 
+    max-width:100px; 
+    max-height: 60px; 
+    min-height: 60px; 
+    font-size: 32px; 
+    border: 0px;
+}
+
+.period .button-field{
+    margin-top: auto;
+    min-width: 80px;
+    max-width: 80px;
+}
+
+.period button{
+    border: 0px;
+    border-radius: 5px;
+    min-width: 80px;
+    min-height: 30px;
 }
 </style>

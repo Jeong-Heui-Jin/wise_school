@@ -68,16 +68,13 @@ export default {
       axios({
         method: "post",
         url: "http://i5a205.p.ssafy.io:8000/homework/list/",
-        // url: "http://i5a205.p.ssafy.io:8081/homework/list/",
         headers: this.headers,
         data: this.createValue,
       })
         .then((res) => {
-          console.log(res);
-          this.$router.push({
-            name: "HomeworkView",
-            params: { homework: res },
-          });
+          // console.log(res);
+          this.$store.dispatch('selectHomework', res.data)
+          this.$router.push({ name: "HomeworkView" });
         })
         .catch((err) => {
           console.log(err);

@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div style="font-family: 'Jua', sans-serif">
     <NavSideBar/>
     <NavBar/>
-    <h1>출석 관리</h1>
+    <h1 id="title">출석 관리</h1>
   </div>
 </template>
 
@@ -20,7 +20,7 @@ export default {
   },
   data: function() {
     return {
-
+      attendances: {},
     }
   },
   methods: {
@@ -34,8 +34,8 @@ export default {
         headers: this.headers,
       })
         .then((res) => {
-          console.log(res.data)
-          // this.items = res.data
+          // console.log(res.data)
+          this.attendances = res.data
         })
         .catch((err) => {
           console.log(err);
