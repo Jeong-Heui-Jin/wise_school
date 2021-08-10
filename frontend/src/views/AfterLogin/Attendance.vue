@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div style="font-family: 'Jua', sans-serif">
     <NavSideBar/>
     <NavBar/>
-    <h1>출석 관리</h1>
+    <h1 id="title">출석 관리</h1>
   </div>
 </template>
 
