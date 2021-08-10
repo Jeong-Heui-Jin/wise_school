@@ -6,7 +6,7 @@
     <h1 id="title">공지사항</h1>
 
     <div id="listForm">
-      <b-list-group>
+      <!-- <b-list-group>
         <b-list-group>
           <div>
             <button
@@ -50,7 +50,25 @@
             >📒 {{ item.name }}</a
           >
         </b-list-group-item>
-      </b-list-group>
+      </b-list-group> -->
+      <b-table
+        id="my-table textNotice"
+        :hover="true"
+        :small="false"
+        :borderless="true"
+        :items="items"
+        :fields="fields"
+        :per-page="perPage"
+        :current-page="currentPage"
+        :tbody-tr-class="rowClass"
+      >
+        <template #cell(items)="data">
+          <b-link v-if="data.items.is_important === true">{{
+            data.items
+          }}</b-link>
+          <b-link v-else>안 중요!</b-link>
+        </template>
+      </b-table>
     </div>
   </div>
 </template>
@@ -59,7 +77,7 @@
 import axios from "axios";
 import NavSideBar from "@/components/NavSideBarTeacher.vue";
 import NavBar from "@/components/NavBar.vue";
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 
 export default {
   name: "Notice",
@@ -67,20 +85,19 @@ export default {
     return {
       perPage: 7,
       currentPage: 1,
-      important_items: [
-        { name: "중요 공지사항 1" },
-        { name: "중요 공지사항 2" },
-        { name: "중요 공지사항 3" },
-        { name: "중요 공지사항 4" },
+      fields: [
+        { key: "id", label: "번호" },
+        { key: "content", label: "공지사항 제목" },
+        { key: "registertime", label: "날짜" },
       ],
       items: [
-        { name: "공지사항 1" },
-        { name: "공지사항 2" },
-        { name: "공지사항 3" },
-        { name: "공지사항 4" },
-        { name: "공지사항 5" },
-        { name: "공지사항 6" },
-        { name: "공지사항 7" },
+        // { name: "공지사항 1" },
+        // { name: "공지사항 2" },
+        // { name: "공지사항 3" },
+        // { name: "공지사항 4" },
+        // { name: "공지사항 5" },
+        // { name: "공지사항 6" },
+        // { name: "공지사항 7" },
       ],
     };
   },
@@ -89,18 +106,74 @@ export default {
     NavBar,
   },
   methods: {
+    rowClass(item) {
+      if (item.is_important === true) {
+        return "table-success";
+      }
+    },
     setToken: function () {
-      this.$store.dispatch('setToken')
+      this.$store.dispatch("setToken");
     },
     getNoticeList: function () {
       axios({
         method: "get",
-        url: 'http://i5a205.p.ssafy.io:8000/notice/',
-        // url: 'http://127.0.0.1:8000/notice/',
+        // url: "http://i5a205.p.ssafy.io:8000/notice/",
+        url: "http://127.0.0.1:8000/notice/",
         headers: this.headers,
       })
         .then((res) => {
-          console.log(res.data)
+          // Print Before
+          // for (let i = 0; i < res.data.length; ++i) {
+          //   console.log(
+          //     "Before :",
+          //     "id :",
+          //     res.data[i].id,
+          //     ", is_important :",
+          //     res.data[i].is_important
+          //   );
+          // }
+
+          // 중요도 우선 & 중요도가 같다면 id 기준 내림차순
+          res.data.sort(function (a, b) {
+            if (a.is_important === b.is_important) {
+              if (a.id > b.id) {
+                return -1;
+              } else {
+                return 1;
+              }
+            } else {
+              if (a.is_important > b.is_important) {
+                return -1;
+              } else {
+                return 1;
+              }
+            }
+          });
+          // Print After
+          // for (let i = 0; i < res.data.length; ++i) {
+          //   console.log(
+          //     "After :",
+          //     "id :",
+          //     res.data[i].id,
+          //     ", is_important :",
+          //     res.data[i].is_important
+          //   );
+          // }
+          this.items = res.data; // 모든 items의 end 데이터를 가공한다.
+          for (let i = 0; i < this.items.length; ++i) {
+            var temp = this.items[i].registertime;
+            console.log(temp);
+
+            this.items[i].registertime =
+              temp.substring(5, 7) +
+              "월 " +
+              temp.substring(8, 10) +
+              "일 " +
+              temp.substring(11, 13) +
+              "시 " +
+              temp.substring(14, 16) +
+              "분";
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -110,19 +183,17 @@ export default {
       window.open("/notice_create", "_self");
     },
     goNoticeView: function () {
-      this.$store.dispatch('selectNotice')
+      this.$store.dispatch("selectNotice");
       // window.open("/notice_view", "_self")
-    }
+    },
   },
   computed: {
-    ...mapState([
-      'headers'
-    ]),
+    ...mapState(["headers"]),
   },
-  created: function() {
-    this.setToken()
-    this.getNoticeList()
-  }
+  created: function () {
+    this.setToken();
+    this.getNoticeList();
+  },
 };
 </script>
 
