@@ -67,6 +67,15 @@
 			<div class="student-wrapper2"></div>
 			<div class="student-wrapper3"></div> -->
 		</div>
+		<!-- 경고 메시지 모달창 -->
+		<div class="alert-message-wrapper" v-if='alertMessage' @click="closeModal">
+			<div class="alert-message-background"></div>
+			<div class="alert-message-modal" >
+				<div class="alert-message-title">선생님이 쪽지를 보냈어요</div>
+				<div class="alert-message-content"> {{alertMessage}} </div>
+			</div>
+		</div>
+		
 	</div>
 	
 </template>
@@ -105,6 +114,7 @@ export default {
 			myUserName: 'SSAFY' + Math.floor(Math.random() * 100),
 			// 메뉴 오픈상태
 			menu: false,
+			alertMessage:"",
 		}
 	},
 
@@ -135,6 +145,7 @@ export default {
 			// On alert from teacher to you
 			this.session.on('signal:alert', (msg)=>{
 				console.log(msg.data)
+				this.alertMessage=msg.data;
 			})
 
 			// --- Connect to the session with a valid user token ---
@@ -299,7 +310,11 @@ export default {
 			.catch(error => {
 				console.error(error);
 			});
-		}
+		},
+
+		closeModal () {
+			this.alertMessage="";
+		},
 	},
 
 	created() {
