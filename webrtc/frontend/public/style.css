@@ -126,8 +126,8 @@ a:hover .demo-logo {
 
 #join-dialog {
 	margin-left: auto;
-    margin-right: auto;
-    max-width: 70%;
+	margin-right: auto;
+	max-width: 70%;
 }
 
 #join-dialog h1 {
@@ -166,12 +166,20 @@ a:hover .demo-logo {
 	display: inline-block;
 }
 
+.no-drag {
+	-ms-user-select: none;
+	-moz-user-select: -moz-none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	user-select: none;
+}
+
 .rotate-menu {
 	transform: rotate(45deg);
 }
 
 .menu-wrapper {
-	position:absolute;
+	position: absolute;
 	display: flex;
 	flex-direction: column;
 	right: 5rem;
@@ -229,7 +237,7 @@ a:hover .demo-logo {
 	transition-duration: 0.5s;
 }
 
-#menu-more:hover{
+#menu-more:hover {
 	background-color: #1abd61;
 	color: white
 }
@@ -256,12 +264,12 @@ a:hover .demo-logo {
 	flex-direction: column;
 	align-items: center;
 	padding-top: 50px;
-	height:100%;
-	width:350px;
-	background-color:#C5E0B4;
+	height: 100%;
+	width: 350px;
+	background-color: #C5E0B4;
 	position: absolute;
-	right:0px;
-	top:0px;
+	right: 0px;
+	top: 0px;
 	transition-duration: 0.5s;
 	transform-origin: bottom right;
 	box-shadow: -2px 0 10px 1px #4d4d4d, inset 1px 1px 1px 2px rgba(0, 0, 0, .075);
@@ -270,25 +278,27 @@ a:hover .demo-logo {
 
 .student-wrapper1 {
 	position: absolute;
-	height:95%;
+	height: 95%;
 	width: 91%;
 	right: 0px;
 	top: 2.5%;
 	background-color: #ffffff;
 	box-shadow: 0px 0 5px 0px #4d4d4d;
 }
+
 .student-wrapper2 {
 	position: absolute;
-	height:95%;
+	height: 95%;
 	width: 90%;
 	right: 0px;
 	top: 2.5%;
 	background-color: #ffffff;
 	box-shadow: 0px 0 5px 0px #4d4d4d;
 }
+
 .student-wrapper3 {
 	position: absolute;
-	height:95%;
+	height: 95%;
 	width: 89%;
 	right: 0px;
 	top: 2.5%;
@@ -352,27 +362,27 @@ a:hover .demo-logo {
 
 .alert-message-wrapper {
 	position: absolute;
-	left:0;
-	top:0;
-	width:100%;
+	left: 0;
+	top: 0;
+	width: 100%;
 	height: 100%;
 }
 
 .alert-message-background {
 	background-color: #000000;
 	opacity: 0.5;
-	width:100%;
-	height:100%;
+	width: 100%;
+	height: 100%;
 }
 
 .alert-message-modal {
-	position:fixed;
+	position: fixed;
 	display: flex;
 	flex-direction: column;
-	top:50%;
-	left:50%;
-	width:500px;
-	height:300px;
+	top: 50%;
+	left: 50%;
+	width: 500px;
+	height: 300px;
 	transform: translate(-250px, -150px);
 	background-image: url("./resources/images/memo2.png");
 	align-items: center;
@@ -391,16 +401,86 @@ a:hover .demo-logo {
 	margin-left: 60px;
 	font-size: 20px;
 	font-weight: 700;
-	width:80%;
-	height:60%;
+	width: 80%;
+	height: 60%;
 }
 
-.alert-message-ok {
+.alert-message-write-wrapper {
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	left: 20px;
+	bottom: 0;
+	width: 300px;
+	max-height: 150px;
+	opacity: 0.8;
+}
 
+.alert-message-write-nav {
+	display: flex;
+	background-image: url("./resources/images/circlesqure2.png");
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	justify-content: space-between;
+	color:whitesmoke;
+}
+
+.alert-message-write-to {
+	font-size: 20px;
+	font-weight: bold;
+	margin: 5px 0px;
+	margin-left: 30px;
+}
+
+.alert-message-write-close {
+	font-size: 15px;
+	font-weight: bold;
+	margin-right: 10px;
+	padding: 5px 10px;
+	text-align: center;
+	/* background-color: red; */
+}
+
+.alert-message-write-close:hover {
+	color:red;
+}
+
+.alert-message-write-foot {
+	display: flex;
+	max-height: 50px;
+	font-size: 20px;
+	background-color: black;
+	justify-content: space-between;
+}
+
+.alert-message-write-content {
+	width: auto;
+	font-size: 20px;
+	max-height: 50px;
+	border:none;
+	white-space: normal;
+	background-color: #202020;
+	color: whitesmoke;
+	resize: none;
+}
+
+.alert-message-write-send {
+	width: 30%;
+	max-height: 50px;
+	text-align: center;
+	border-radius: 10px;
+	background-color: #038bca;
+	color: black;
+	line-height: 50px;
+}
+
+.alert-message-write-send:hover {
+	background-color: whitesmoke;
 }
 
 .student-hide {
-	transform:scaleX(0);
+	transform: scaleX(0);
 }
 
 #menu-other {
@@ -420,7 +500,7 @@ a:hover .demo-logo {
 	cursor: pointer;
 }
 
-#video-container video + div {
+#video-container video+div {
 	float: left;
 	width: 50%;
 	position: relative;
@@ -478,20 +558,28 @@ video {
 	#join-dialog {
 		max-width: inherit;
 	}
+
 	#img-div img {
 		height: 10%;
 	}
+
 	#img-div {
 		margin-top: 2em;
 		margin-bottom: 2em;
 	}
-	.container-fluid>.navbar-collapse, .container-fluid>.navbar-header, .container>.navbar-collapse, .container>.navbar-header {
+
+	.container-fluid>.navbar-collapse,
+	.container-fluid>.navbar-header,
+	.container>.navbar-collapse,
+	.container>.navbar-header {
 		margin-right: 0;
 		margin-left: 0;
 	}
+
 	.navbar-header i.fa {
 		font-size: 30px;
 	}
+
 	.navbar-header a.nav-icon {
 		padding: 7px 3px 7px 3px;
 	}
@@ -502,6 +590,7 @@ video {
 		margin-top: 1em;
 		margin-bottom: 1em;
 	}
+
 	#join-dialog {
 		max-width: inherit;
 	}
