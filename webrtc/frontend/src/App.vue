@@ -71,8 +71,8 @@
 			<div class="student-wrapper3"></div> -->
 		</div>
 
-		<div id="videos" style="width:1280px; height:720px;" v-if="isScreenShared">
-			<user-video v-for="sub in subscribers.slice(-1)" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+		<div id="sharingvideo" style="width:1280px; height:720px;" v-if="isScreenShared">
+			<user-video style="width:1280px; height:720px;" v-if="clientData === 'Screen Sharing'" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
 		</div>
 	</div>
 	
@@ -120,6 +120,7 @@ export default {
 			menu: false,
 			// 화면공유 상태
 			isScreenShared: false,
+			screenShareName: "Screen Sharing"
 		}
 	},
 
@@ -318,29 +319,30 @@ export default {
 
 		startScreenSharing () {
 			this.OVForScreenShare = new OpenVidu();
-			this.OVForScreenShare.setAdvancedConfiguration(
-				{ screenShareChromeExtension: "https://chrome.google.com/webstore/detail/EXTENSION_NAME/EXTENSION_ID" }
-			);
+			// this.OVForScreenShare.setAdvancedConfiguration(
+			// 	{ screenShareChromeExtension: "https://chrome.google.com/webstore/detail/EXTENSION_NAME/EXTENSION_ID" }
+			// );
 			this.sessionForScreenShare = this.OVForScreenShare.initSession();
 
 			var mySessionId = this.mySessionId;
 			this.getToken(mySessionId).then(token => {
-				this.sessionForScreenShare.connect(token, { clientData: this.myUserName })
+				this.sessionForScreenShare.connect(token, { clientData: this.screenShareName })
 				.then(() => {
-					let publisher = this.OVForScreenShare.initPublisher("videos", {
+					let publisher = this.OVForScreenShare.initPublisher("sharingvideo", {
 						videoSource: "screen",      
                         publishVideo: true,  
 						resolution: "1280x720",
-						frameRate: 30,           
+						frameRate: 10,           
                         insertMode: 'APPEND',    
                         mirror: false        
 					});
+					console.log("publisher",publisher);
 					// publisher.once('accessAllowed', () => {
                     //     publisher.stream.getMediaStream().getVideoTracks()[0].addEventListener('ended', this.leaveSessionForScreenSharing)        
                     // });
 					publisher.once('accessAllowed', () => {
 						try {
-							console.log(this.subscribers);
+							console.log("subscriber", this.subscribers);
 							this.isScreenShared=true;
 							publisher.stream.getMediaStream().getVideoTracks()[0].addEventListener('ended', () => {
 								console.log('User pressed the "Stop sharing" button');
