@@ -20,9 +20,9 @@
       <b-form-textarea readonly id="contentText" plaintext v-model="homework.content">{{ homework.content }}</b-form-textarea>
 
       <!-- 취소/수정/삭제 버튼 -->
-      <button id="cancelBtn">취소</button>
-      <button id="changeBtn">수정</button>
-      <button id="deleteBtn">삭제</button>
+      <button id="cancelBtn" @click="goHomeworkList">닫기</button>
+      <button id="changeBtn" @click="editHomework">수정</button>
+      <button id="deleteBtn" @click="deleteHomework">삭제</button>
     </b-form>
   </div>
 </template>
@@ -41,7 +41,7 @@ export default {
   },
   data: function() {
     return {
-      homework: {}
+      homework: {},
     }
   },
   methods: {
@@ -49,10 +49,9 @@ export default {
       this.$store.dispatch('setToken')
     },
     getHomeworkDetail: function () {
-      const homework_id = this.selected_homework.id
       axios({
           method: "get",
-          url: `http://i5a205.p.ssafy.io:8000/homework/detail/${homework_id}/`,
+          url: `http://i5a205.p.ssafy.io:8000/homework/detail/${this.selected_homework.id}/`,
           headers: this.headers,
       })
         .then((res) => {
@@ -62,6 +61,29 @@ export default {
         console.log(err);
         });
     },
+    goHomeworkList: function () {
+      // window.open("/homework", "_self");
+      this.$router.push({ name: 'Homework' })
+    },
+    editHomework: function () {
+
+    },
+    deleteHomework: function (event) {
+      event.preventDefault();
+      axios({
+        method: "delete",
+        url: `http://i5a205.p.ssafy.io:8000/homework/detail/${this.selected_homework.id}/`,
+        headers: this.headers,
+      })
+        .then((res) => {
+          console.log(res)
+          // this.$router.push({ name: 'Homework' })
+          window.open("/homework", "_self");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   },
   computed: {
     ...mapState([
