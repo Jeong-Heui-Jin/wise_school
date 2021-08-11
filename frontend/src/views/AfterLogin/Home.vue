@@ -16,7 +16,7 @@
             <img id="img" src="@/assets/blackboard.png" alt="수업참여"/>
             <p>수업 참여</p>
           </div>
-          <b-button id="class-btn" variant="warning">교실<br/>입장하기</b-button>
+          <b-button id="class-btn" variant="warning" @click="enterRoom">교실<br/>입장하기</b-button>
         </div>
       <!-- 숙제 -->
         <div id="homework">
@@ -145,7 +145,19 @@ export default {
         .catch(err => {
           console.log(err)
       })
-    }
+    },
+    enterRoom: async function () {
+      // const classRoom = window.open("https://i5a205.p.ssafy.io:8080");
+      
+      this.child = window.open("https://localhost:8081");
+      const user = {
+        msgType: "init_classroom",
+        class: this.now_user.classroom,
+        name: this.now_user.name,
+        type: this.now_user.usertype,
+      }
+      setTimeout(()=> this.child.postMessage(user, 'https://localhost:8081'), 2000);
+    },
   },
   created() {
     this.setToken();

@@ -451,18 +451,16 @@ export default {
 	created() {
 		// 접속 시 바로 연결설정 시작.
 		this.joinSession()
-		// console.log(opener)
 		
-		// var child = window.open("https://localhost:8080");
-		// const user={
-		// 	name:"조동윤",
-		// 	id:"Token",
-		// 	type:"2"
-		// }
-		// window.ABC = user;
-		// child.ABCD = user;
 		// 이미지 preload
 		document.createElement("img").src = "resources/images/memo2.png"
+		window.addEventListener('message', function(e) {
+		console.log(e)
+			if (e.data.msgType === "init_classroom") {
+				console.log("@@@@@@@@@@@@@@@@@@@@@@")
+				console.log(e.data)
+			}
+		});
 	}
 }
 </script>
