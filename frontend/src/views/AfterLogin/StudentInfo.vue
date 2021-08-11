@@ -80,6 +80,7 @@ export default {
     },
     data() {
         return {
+            student_id: this.$route.params.id,
             student: { ID: 1234, name: '목상원', number: '16', phone: '010-3542-8554', address: '서울시 강남구 테헤란로 212' },
             parents: [
                 { ID: 123, student_id: 1234, relation: '어머니', name: '김다정', phone: '010-1234-5678' }
@@ -112,11 +113,13 @@ export default {
         getNoticeList: function () {
         axios({
             method: "get",
+            // url: "http://i5a205.p.ssafy.io:8081/homework/list/",
             url: 'http://i5a205.p.ssafy.io:8000/accounts/info/2',
             headers: this.headers,
         })
             .then((res) => {
-            console.log(res.data)
+            console.log(res.data);
+            console.log(this.student_id);
             })
             .catch((err) => {
             console.log(err);
@@ -169,21 +172,9 @@ export default {
                     relation: e.target.parentElement.parentElement.children[0].children[0].value,
                     name: e.target.parentElement.parentElement.children[1].children[0].value,
                     phone: e.target.parentElement.parentElement.children[2].children[0].value};
-
-                    // axios({
-                    //     method: "post",
-                    //     url: `http://i5a205.p.ssafy.io:8000/accounts/parents/${}/`,
-                    //     headers: this.headers,
-                    //     data: bodyPost,
-                    // })
-                    //     .then((res) => {
-                    //         console.log(res.data)
-                    //         alert('등록되었습니다');
-                    //     })
-                    //     .catch((err) => {
-                    //         console.log(err);
-                    //     });
                     console.log(bodyPost);
+                    // POST axios
+                    alert('등록되었습니다');
                 }
                 // UPDATE 경우
                 else {
@@ -193,22 +184,8 @@ export default {
                     phone: e.target.parentElement.parentElement.children[2].children[0].value};
                     console.log(this.parents[Number(e.target.id[8]) - 1].ID);
                     console.log(body);
-                    // axis POST
+                    // axis UPDATE
                     // BODY key -> this.parents[Number(e.target.id[8]) - 1].ID
-
-                    // axios({
-                    //     method: "put",
-                    //     url: `http://i5a205.p.ssafy.io:8000/accounts/parents/${}/`,
-                    //     headers: this.headers,
-                    //     data: body,
-                    // })
-                    //     .then((res) => {
-                    //         console.log(res.data)
-                    //         alert('등록되었습니다');
-                    //     })
-                    //     .catch((err) => {
-                    //         console.log(err);
-                    //     });
 
                     this.parents[Number(e.target.id[8]) - 1].relation = e.target.parentElement.parentElement.children[0].children[0].value;
                     this.parents[Number(e.target.id[8]) - 1].name = e.target.parentElement.parentElement.children[1].children[0].value;
@@ -233,10 +210,10 @@ export default {
             'headers'
         ]),
         },
-    created: function() {
-        this.setToken()
-        this.getNoticeList()
-    }
+        created: function() {
+            this.setToken()
+            this.getNoticeList()
+        }
 };
 </script>
 
