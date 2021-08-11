@@ -28,9 +28,9 @@ class Timetable(models.Model):
 class TimetableDetail(models.Model):
     timetable = models.ForeignKey(Timetable, on_delete=models.CASCADE, related_name='details')
     period = models.IntegerField()
-    mon = models.TextField(blank=True)
-    tue = models.TextField(blank=True)
-    wed = models.TextField(blank=True)
-    thu = models.TextField(blank=True)
-    fri = models.TextField(blank=True)
+    mon = models.TextField(blank=True, null=True)
+    tue = models.TextField(blank=True, null=True)
+    wed = models.TextField(blank=True, null=True)
+    thu = models.TextField(blank=True, null=True)
+    fri = models.TextField(blank=True, null=True)
     # 요일마다 교시 수가 다를 수 있으니까 blank=True

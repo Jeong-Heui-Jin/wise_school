@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404, get_list_or_404
 from rest_framework import status
 from rest_framework.response import Response
@@ -29,8 +30,8 @@ def timetable_create(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-# 전체 시간표 조회 / 시간표 상세 생성
-@api_view(['GET', 'POST',])
+# 전체 시간표 조회/수정 / 시간표 상세 생성
+@api_view(['GET', 'POST', 'PUT',])
 @authentication_classes([JSONWebTokenAuthentication])
 @permission_classes([IsAuthenticated])
 def timetable(request):
@@ -40,10 +41,17 @@ def timetable(request):
         timetable = get_object_or_404(Timetable, pk=timetable.id)
         serializer = TimetableListSerializer(timetable)
         return Response(serializer.data)
+    
     elif request.method == 'POST':
         serializer = TimetableDetailSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save(timetable=timetable)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    elif request.method == 'PUT':
+        serializer = TimetableSerializer(timetable, data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -65,20 +73,33 @@ def timetable_detail(request, timetabledetail_id):
         return Response({ 'deleted': timetabledetail_id }, status=status.HTTP_204_NO_CONTENT)
 
 
-# 전체 시간표 조회 / 시간표 상세 생성
+# 홈 페이지에 들어갈 정보들
 @api_view(['GET',])
 @authentication_classes([JSONWebTokenAuthentication])
 @permission_classes([IsAuthenticated])
 def home(request):
     classroom = request.user.classroom
+    # user = get_object_or_404(get_user_model(), pk=request.data.get('user_id'))
+    # classroom = user.classroom
 
-    homeworks = HomeworkSerializer(get_list_or_404(Homework, classroom=classroom), many=True)
-    timetable = TimetableListSerializer(get_object_or_404(Timetable, classroom=classroom))
-    notices = NoticeListSerializer(get_list_or_404(Notice, classroom=classroom), many=True)
+    if Homework.objects.filter(classroom=classroom):
+        homeworks = HomeworkSerializer(get_list_or_404(Homework, classroom=classroom), many=True)
+    else:
+        homeworks = []
+
+    if Timetable.objects.filter(classroom=classroom):
+        timetable = TimetableListSerializer(get_object_or_404(Timetable, classroom=classroom)).data
+    else:
+        timetable = {}
+
+    if Notice.objects.filter(classroom=classroom):
+        notices = NoticeListSerializer(get_list_or_404(Notice, classroom=classroom), many=True)
+    else:
+        notices = []
 
     data = {
         'homeworks': homeworks.data[:-6:-1],
         'notices': notices.data[:-6:-1],
-        'timetable': timetable.data,
+        'timetable': timetable,
     }
     return JsonResponse(data)

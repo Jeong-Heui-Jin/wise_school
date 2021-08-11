@@ -88,10 +88,19 @@ def info(request, user_id):
 
 # 해당 학생의 보호자들 목록 조회 / 추가
 @api_view(['GET', 'POST'])
+# @authentication_classes([JSONWebTokenAuthentication])
+# @permission_classes([IsAuthenticated])
 def parents_list(request, user_id):
-    parents_list = get_list_or_404(Parents, pk=user_id)
-    serializer = ParentSerializer(parents_list, many=True)
-    return Response(serializer.data)
+    student = get_object_or_404(get_user_model(), pk=user_id)
+    if request.method == 'GET':
+        parents_list = Parents.objects.filter(pk=user_id)
+        serializer = ParentSerializer(parents_list, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = ParentSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(student=student)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 # 보호자 상세 조회 / 수정 / 삭제

@@ -71,10 +71,8 @@ export default {
     getTimetable: function () {
       axios({
         method: "get",
-        // url: "http://i5a205.p.ssafy.io:8000/homework/list/",
         url: 'http://i5a205.p.ssafy.io:8000/classroom/timetable/',
         headers: this.headers,
-        // data: this.createValue,
       })
         .then((res) => {
           console.log(res.data)

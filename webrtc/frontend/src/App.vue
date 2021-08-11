@@ -69,7 +69,7 @@
 				<div class="student-function-wrapper">
 					<div class="student-function" id="student-mute" @click="muteStudent(sub.stream.connection)"></div>
 					<div class="student-function" id="student-cam"></div>
-					<div class="student-function" id="student-alert" @click="alertStudent(sub.stream.connection)"></div>
+					<div class="student-function" id="student-alert" @click="makeMessage(sub.stream.connection)"></div>
 				</div>
 			</div>
 			<!-- <div class="student-wrapper1"></div>
@@ -81,6 +81,26 @@
 			<user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
 		</div> -->
 
+		<!-- 경고 메시지 수신창 -->
+		<div class="alert-message-wrapper" v-if='alertMessage' @click="closeModal">
+			<div class="alert-message-background"></div>
+			<div class="alert-message-modal" >
+				<div class="alert-message-title">선생님이 쪽지를 보냈어요</div>
+				<div class="alert-message-content"> {{alertMessage}} </div>
+			</div>
+		</div>
+		<!-- 경고 메시지 작성창 -->
+		<div class="alert-message-write-wrapper no-drag" v-if="isAlertWriting">
+			<div class="alert-message-write">
+				<div class="alert-message-write-nav">
+					<div class="alert-message-write-to">{{JSON.parse(alertTo.data).clientData}}</div><div class="alert-message-write-close" @click="closeWriter">X</div>
+				</div>
+				<div class="alert-message-write-foot">
+					<div><textarea v-model="sendMessage" class="alert-message-write-content" placeholder="내용을 입력하세요."></textarea></div>
+					<div class="alert-message-write-send" @click="alertStudent">전송</div>
+				</div>
+			</div>
+		</div>
 	</div>
 	
 	
@@ -128,7 +148,11 @@ export default {
 			menu: false,
 			// 화면공유 상태
 			isScreenShared: false,
-			screenShareName: "Screen Sharing"
+			screenShareName: "Screen Sharing",
+			alertMessage:"",
+			sendMessage:"",
+			isAlertWriting:false,
+			alertTo:"",
 		}
 	},
 
@@ -159,6 +183,7 @@ export default {
 			// On alert from teacher to you
 			this.session.on('signal:alert', (msg)=>{
 				console.log(msg.data)
+				this.alertMessage=msg.data;
 			})
 
 			// --- Connect to the session with a valid user token ---
@@ -310,11 +335,20 @@ export default {
 			console.log(studentConnectionId, studentName);
 		},
 		
-		alertStudent (connection) {
-			const studentName = JSON.parse(connection.data).clientData;
+		makeMessage (connection) {
+			// this.alertTo = JSON.parse(connection.data).clientData;
+			this.alertTo = connection;
+			this.isAlertWriting=true;
+		},
+
+		alertStudent () {
+			if(!this.sendMessage) {
+				alert("메시지 내용이 없습니다.");
+				return;
+			}
 			this.session.signal({
-				data: `야 ${studentName} 집중해!!!!`,  // Any string (optional)
-				to: [connection],                     // Array of Connection objects (optional. Broadcast to everyone if empty)
+				data: this.sendMessage,  // Any string (optional)
+				to: [this.alertTo],                     // Array of Connection objects (optional. Broadcast to everyone if empty)
 				type: 'alert'             // The type of message (optional)
 			})
 			.then(() => {
@@ -323,6 +357,8 @@ export default {
 			.catch(error => {
 				console.error(error);
 			});
+			this.isAlertWriting=false;
+			this.sendMessage="";
 		},
 
 		startScreenSharing () {
@@ -392,8 +428,15 @@ export default {
             this.OVForScreenShare = undefined;
 
             window.removeEventListener('beforeunload', this.leaveSessionForScreenSharing);
-		}
+		},
+		
+		closeModal () {
+			this.alertMessage="";
+		},
 
+		closeWriter () {
+			this.isAlertWriting=false;
+		},
 	},
 
 	created() {

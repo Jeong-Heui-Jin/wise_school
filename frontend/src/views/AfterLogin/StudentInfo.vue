@@ -109,18 +109,18 @@ export default {
         setToken: function () {
             this.$store.dispatch('setToken')
         },
-        getNoticeList: function () {
-        axios({
-            method: "get",
-            url: 'http://i5a205.p.ssafy.io:8000/accounts/info/2',
-            headers: this.headers,
-        })
-            .then((res) => {
-            console.log(res.data)
-            })
-            .catch((err) => {
-            console.log(err);
-            });
+        getStudentInfo: function () {
+            // axios({
+            //     method: "get",
+            //     url: `http://i5a205.p.ssafy.io:8000/accounts/info/${}`,
+            //     headers: this.headers,
+            // })
+            //     .then((res) => {
+            //     console.log(res.data)
+            //     })
+            //     .catch((err) => {
+            //     console.log(err);
+            //     });
         },
         // 기존의 정보로 되돌리기
         infoRecovery() {
@@ -169,8 +169,21 @@ export default {
                     relation: e.target.parentElement.parentElement.children[0].children[0].value,
                     name: e.target.parentElement.parentElement.children[1].children[0].value,
                     phone: e.target.parentElement.parentElement.children[2].children[0].value};
+
+                    // axios({
+                    //     method: "post",
+                    //     url: `http://i5a205.p.ssafy.io:8000/accounts/parents/${}/`,
+                    //     headers: this.headers,
+                    //     data: bodyPost,
+                    // })
+                    //     .then((res) => {
+                    //         console.log(res.data)
+                    //         alert('등록되었습니다');
+                    //     })
+                    //     .catch((err) => {
+                    //         console.log(err);
+                    //     });
                     console.log(bodyPost);
-                    alert('등록되었습니다');
                 }
                 // UPDATE 경우
                 else {
@@ -182,6 +195,20 @@ export default {
                     console.log(body);
                     // axis POST
                     // BODY key -> this.parents[Number(e.target.id[8]) - 1].ID
+
+                    // axios({
+                    //     method: "put",
+                    //     url: `http://i5a205.p.ssafy.io:8000/accounts/parents/${}/`,
+                    //     headers: this.headers,
+                    //     data: body,
+                    // })
+                    //     .then((res) => {
+                    //         console.log(res.data)
+                    //         alert('등록되었습니다');
+                    //     })
+                    //     .catch((err) => {
+                    //         console.log(err);
+                    //     });
 
                     this.parents[Number(e.target.id[8]) - 1].relation = e.target.parentElement.parentElement.children[0].children[0].value;
                     this.parents[Number(e.target.id[8]) - 1].name = e.target.parentElement.parentElement.children[1].children[0].value;
@@ -206,10 +233,10 @@ export default {
             'headers'
         ]),
         },
-        created: function() {
-            this.setToken()
-            this.getNoticeList()
-        }
+    created: function() {
+        this.setToken()
+        this.getStudentInfo()
+    }
 };
 </script>
 

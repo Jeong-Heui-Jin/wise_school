@@ -113,10 +113,10 @@
 </template>
 
 <script>
-// import axios from "axios";
+import axios from "axios";
 import NavSideBar from '@/components/NavSideBarTeacher.vue'
 import NavBar from '@/components/NavBar.vue'
-// import { mapState } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   name: 'TimetableChange',
@@ -151,6 +151,9 @@ export default {
       }
   },
   methods: {
+    setToken: function () {
+        this.$store.dispatch('setToken')
+    },
     changeTimetableContent(e) {
         console.log(e.target.id);
         // console.log(e.target.parentElement.parentElement.children[1].children[0]);
@@ -172,6 +175,19 @@ export default {
         else {
             // do update
             // axios update -> id === Period
+            axios({
+                method: "put",
+                url: `http://i5a205.p.ssafy.io:8000/classroom/timetable-detail/${e.id}/`,
+                headers: this.headers,
+                data: {},
+            })
+                .then((res) => {
+                    console.log(res.data)
+                    alert('수정되었습니다.');
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         }
     },
     // 시간표 삭제하기 버튼 함수
@@ -180,8 +196,20 @@ export default {
     },
 
     // 시간표 제목 바꾸기 버튼 함수
-    changeTimetableTitle() {
-
+    changeTimetableTitle: function () {
+      // axios({
+      //     method: "put",
+      //     url: `http://i5a205.p.ssafy.io:8000/classroom/timetable/`,
+      //     headers: this.headers,
+      //     data: {},
+      // })
+      //     .then((res) => {
+      //         console.log(res.data)
+      //         alert('등록되었습니다');
+      //     })
+      //     .catch((err) => {
+      //         console.log(err);
+      //     });
     },
     // 시간표 한 줄 추가
     addTimetable() {
@@ -204,6 +232,14 @@ export default {
             alert('빈칸을 채워주세요');
         }
     },
+  },
+  computed: {
+      ...mapState([
+          'headers'
+      ]),
+  },
+  created: function() {
+      this.setToken()
   }
 };
 </script>
