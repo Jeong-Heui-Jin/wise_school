@@ -51,7 +51,7 @@ export default {
         class: "2학년 2반",
       },
       students: [
-        { name: "김우진", number: "1234" },
+        { name: "김우진", number: "2" },
         { name: "목상원", number: "2341" },
         { name: "정희진", number: "17" },
         { name: "정명지", number: "45" },
@@ -76,7 +76,7 @@ export default {
     getMembers: function () {
       axios({
         method: "get",
-        url: 'http://127.0.0.1:8000/accounts/class-members/',
+        url: 'http://i5a205.p.ssafy.io:8000/accounts/class-members/',
         headers: this.setToken(),
       })
         .then((res) => {

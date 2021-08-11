@@ -80,6 +80,8 @@ export default {
     },
     data() {
         return {
+            data: '',
+            student_id: this.$route.params.id,
             student: { ID: 1234, name: '목상원', number: '16', phone: '010-3542-8554', address: '서울시 강남구 테헤란로 212' },
             parents: [
                 { ID: 123, student_id: 1234, relation: '어머니', name: '김다정', phone: '010-1234-5678' }
@@ -87,40 +89,44 @@ export default {
         }
     },
     mounted() {
-        const studentName = document.querySelector('#student-name');
-        const studentNumber = document.querySelector('#student-number');
-        const studentPhone = document.querySelector('#student-phone');
-        const studentAddress = document.querySelector('#student-address');
-
-        studentName.value = this.student.name;
-        studentNumber.value = this.student.number;
-        studentPhone.value = this.student.phone;
-        studentAddress.value = this.student.address;
-
-        const parentInfo = document.querySelectorAll('#parent-info');
-
-        for (var i = 0; i < this.parents.length; i++) {
-            parentInfo[i].children[0].children[0].children[0].value = this.parents[i].relation;
-            parentInfo[i].children[0].children[1].children[0].value = this.parents[i].name;
-            parentInfo[i].children[0].children[2].children[0].value = this.parents[i].phone;
-        }
+        this.setToken();
+        this.getStudentInfo();
     },
     methods: {
         setToken: function () {
             this.$store.dispatch('setToken')
         },
         getStudentInfo: function () {
-            // axios({
-            //     method: "get",
-            //     url: `http://i5a205.p.ssafy.io:8000/accounts/info/${}`,
-            //     headers: this.headers,
-            // })
-            //     .then((res) => {
-            //     console.log(res.data)
-            //     })
-            //     .catch((err) => {
-            //     console.log(err);
-            //     });
+            axios({
+                method: "get",
+                url: `http://i5a205.p.ssafy.io:8000/accounts/info/${this.student_id}`,
+                headers: this.headers,
+            })
+                .then((res) => {
+                this.data = Object.assign([], res.data);
+                console.log(this.data);
+                const studentName = document.querySelector('#student-name');
+                const studentNumber = document.querySelector('#student-number');
+                const studentPhone = document.querySelector('#student-phone');
+                const studentAddress = document.querySelector('#student-address');
+
+                studentName.value = this.data.name;
+                studentNumber.value = this.data.info.number;
+                studentPhone.value = this.data.phone;
+                studentAddress.value = this.data.info.address;
+
+                const parentInfo = document.querySelectorAll('#parent-info');
+
+                console.log(this.data.parents[0]);
+                for (var i = 0; i < this.data.parents.length; i++) {
+                    parentInfo[i].children[0].children[0].children[0].value = this.data.parents[i].relation;
+                    parentInfo[i].children[0].children[1].children[0].value = this.data.parents[i].name;
+                    parentInfo[i].children[0].children[2].children[0].value = this.data.parents[i].phone;
+                }
+            })
+                .catch((err) => {
+                console.log(err);
+                });
         },
         // 기존의 정보로 되돌리기
         infoRecovery() {
@@ -129,10 +135,10 @@ export default {
             const studentPhone = document.querySelector('#student-phone');
             const studentAddress = document.querySelector('#student-address');
 
-            studentName.value = this.student.name;
-            studentNumber.value = this.student.number;
-            studentPhone.value = this.student.phone;
-            studentAddress.value = this.student.address;
+            studentName.value = this.data.name;
+            studentNumber.value = this.data.info.number;
+            studentPhone.value = this.data.phone;
+            studentAddress.value = this.data.address;
         },
         // 학생 정보 수정 하기
         infoChange() {
@@ -169,21 +175,9 @@ export default {
                     relation: e.target.parentElement.parentElement.children[0].children[0].value,
                     name: e.target.parentElement.parentElement.children[1].children[0].value,
                     phone: e.target.parentElement.parentElement.children[2].children[0].value};
-
-                    // axios({
-                    //     method: "post",
-                    //     url: `http://i5a205.p.ssafy.io:8000/accounts/parents/${}/`,
-                    //     headers: this.headers,
-                    //     data: bodyPost,
-                    // })
-                    //     .then((res) => {
-                    //         console.log(res.data)
-                    //         alert('등록되었습니다');
-                    //     })
-                    //     .catch((err) => {
-                    //         console.log(err);
-                    //     });
                     console.log(bodyPost);
+                    // POST axios
+                    alert('등록되었습니다');
                 }
                 // UPDATE 경우
                 else {
@@ -193,22 +187,8 @@ export default {
                     phone: e.target.parentElement.parentElement.children[2].children[0].value};
                     console.log(this.parents[Number(e.target.id[8]) - 1].ID);
                     console.log(body);
-                    // axis POST
+                    // axis UPDATE
                     // BODY key -> this.parents[Number(e.target.id[8]) - 1].ID
-
-                    // axios({
-                    //     method: "put",
-                    //     url: `http://i5a205.p.ssafy.io:8000/accounts/parents/${}/`,
-                    //     headers: this.headers,
-                    //     data: body,
-                    // })
-                    //     .then((res) => {
-                    //         console.log(res.data)
-                    //         alert('등록되었습니다');
-                    //     })
-                    //     .catch((err) => {
-                    //         console.log(err);
-                    //     });
 
                     this.parents[Number(e.target.id[8]) - 1].relation = e.target.parentElement.parentElement.children[0].children[0].value;
                     this.parents[Number(e.target.id[8]) - 1].name = e.target.parentElement.parentElement.children[1].children[0].value;
@@ -233,10 +213,6 @@ export default {
             'headers'
         ]),
         },
-    created: function() {
-        this.setToken()
-        this.getStudentInfo()
-    }
 };
 </script>
 
