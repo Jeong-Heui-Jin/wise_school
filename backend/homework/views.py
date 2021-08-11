@@ -3,9 +3,9 @@ from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .models import Homework, SubmitHomework
+from .models import Homework, SubmitHomework, HomeworkFile
 from classroom.models import Classroom
-from .serializers import HomeworkSerializer, HomeworkListSerializer, SubmitHomeworkSerializer
+from .serializers import HomeworkSerializer, HomeworkListSerializer, HomeworkFileSerializer, SubmitHomeworkSerializer
 from notice.serializers import NotificationSerializer
 from django.db.models import Q
 
@@ -29,13 +29,14 @@ def homework_list(request):
     elif request.method == 'POST':
         serializer = HomeworkSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save(classroom=classroom)
-            # image_list = request.FILES.getlist('image_path')
-            # for image in image_list:
-            #     item = HomeworkFile.objects.create(homework=homework, image=image)
-            #     item.save()
+            homework = serializer.save(classroom=classroom)
+
+            image_list = request.FILES.getlist('image_path')
+            for image in image_list:
+                item = HomeworkFile.objects.create(homework=homework, image=image)
+                item.save()
             # 사진파일까지 저장되도록 한 번 더 저장
-            # serializer.save()
+            serializer.save()
 
             # 해당 반의 학생들 명단
             students = get_user_model().objects.filter(Q(classroom=classroom) & Q(usertype=2))
@@ -55,6 +56,24 @@ def homework_list(request):
                     student.info.save()
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+# 숙제 파일 저장
+@api_view(['POST',])
+def homeworkfile(request, homework_id):
+    homework = get_object_or_404(Homework, pk=homework_id)
+
+    images = request.data.get('files')
+
+    for image in images:
+        data = {
+            'image': image,
+        }
+        serializer = HomeworkFileSerializer(data=data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(homework=homework)
+    
+    return Response(serializer.data)
 
 
 # 숙제 상세 조회 / 수정 / 삭제
