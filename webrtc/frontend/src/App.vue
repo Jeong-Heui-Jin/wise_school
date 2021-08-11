@@ -19,6 +19,7 @@
 				</div>
 			</div>
 		</div> -->
+		
 
 		<div id="session" v-if="session">
 			<div id="session-header">
@@ -28,9 +29,14 @@
 			<!-- <div id="main-video" class="col-md-6">
 				<user-video :stream-manager="mainStreamManager"/>
 			</div> -->
-			<div id="video-container" class="col-md-6">
+			<div id="video-container" class="col-md-6" >
 				<user-video :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
 				<user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+			</div>
+			<div v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub">
+				<div v-if="JSON.parse(sub.stream.connection.data).clientData === 'Screen Sharing'">
+					<user-video style="width:1280px; height:720px;" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+				</div>
 			</div>
 		</div>
 		<div class="menu-wrapper" id="menu-wrapper">
@@ -71,10 +77,12 @@
 			<div class="student-wrapper3"></div> -->
 		</div>
 
-		<div id="sharingvideo" style="width:1280px; height:720px;" v-if="isScreenShared">
-			<user-video style="width:1280px; height:720px;" v-if="clientData === 'Screen Sharing'" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
-		</div>
+		<!-- <div id="sharingvideo" style="width:1280px; height:720px;" v-if="isScreenShared" background-color="grey">
+			<user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+		</div> -->
+
 	</div>
+	
 	
 </template>
 
@@ -329,9 +337,10 @@ export default {
 				this.sessionForScreenShare.connect(token, { clientData: this.screenShareName })
 				.then(() => {
 					let publisher = this.OVForScreenShare.initPublisher("sharingvideo", {
+						audioSource: false,
 						videoSource: "screen",      
                         publishVideo: true,  
-						resolution: "1280x720",
+						resolution: "1920x1980",
 						frameRate: 10,           
                         insertMode: 'APPEND',    
                         mirror: false        
@@ -342,7 +351,7 @@ export default {
                     // });
 					publisher.once('accessAllowed', () => {
 						try {
-							console.log("subscriber", this.subscribers);
+							console.log("subscriber >>>>> ", this.subscribers);
 							this.isScreenShared=true;
 							publisher.stream.getMediaStream().getVideoTracks()[0].addEventListener('ended', () => {
 								console.log('User pressed the "Stop sharing" button');
