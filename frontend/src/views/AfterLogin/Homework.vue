@@ -93,7 +93,7 @@ export default {
           // 모든 items의 end 데이터를 가공한다.
           for (let i = 0; i < this.items.length; ++i) {
             var temp = this.items[i].end;
-            console.log(temp);
+            // console.log(temp);
 
             this.items[i].end =
               temp.substring(5, 7) +
