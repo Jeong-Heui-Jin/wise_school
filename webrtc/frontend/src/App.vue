@@ -19,6 +19,7 @@
 				</div>
 			</div>
 		</div> -->
+		
 
 		<div id="session" v-if="session">
 			<div id="session-header">
@@ -28,9 +29,14 @@
 			<!-- <div id="main-video" class="col-md-6">
 				<user-video :stream-manager="mainStreamManager"/>
 			</div> -->
-			<div id="video-container" class="col-md-6">
+			<div id="video-container" class="col-md-6" >
 				<user-video :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
 				<user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+			</div>
+			<div v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub">
+				<div v-if="JSON.parse(sub.stream.connection.data).clientData === 'Screen Sharing'">
+					<user-video style="width:1280px; height:720px;" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+				</div>
 			</div>
 		</div>
 		<div class="menu-wrapper" id="menu-wrapper">
@@ -39,7 +45,10 @@
 				<div class="menu-opener" id="menu-more">+</div>
 			</div>
 			<div class="menu-hide menu" id="menu-student-list" @click="showStudents"></div>
-			<div class="menu-hide menu" id="menu-other">+</div>
+
+			<!-- 화면공유 -->
+			<div class="menu-hide menu" id="menu-other" @click="startScreenSharing">+</div>
+
 			<!-- 나가기 버튼 -->
 			<div class="menu-hide menu" id="menu-exit" @click="leaveSession"></div>
 			<!-- <input v-if="menu" class="btn btn-large btn-danger" type="button" id="buttonLeaveSession" @click="leaveSession" value="Leave session"> -->
@@ -67,6 +76,11 @@
 			<div class="student-wrapper2"></div>
 			<div class="student-wrapper3"></div> -->
 		</div>
+
+		<!-- <div id="sharingvideo" style="width:1280px; height:720px;" v-if="isScreenShared" background-color="grey">
+			<user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+		</div> -->
+
 		<!-- 경고 메시지 수신창 -->
 		<div class="alert-message-wrapper" v-if='alertMessage' @click="closeModal">
 			<div class="alert-message-background"></div>
@@ -88,6 +102,7 @@
 			</div>
 		</div>
 	</div>
+	
 	
 </template>
 
@@ -119,16 +134,27 @@ export default {
 			publisher: undefined,
 			subscribers: [],
 
+			// 화면 공유
+			OVForScreenShare: undefined,
+			sessionForScreenShare: undefined,
+			mainStreamManager2: undefined,
+			sharingPublisher: undefined,
+
 			// 학급코드 (X반)
 			mySessionId: '0110121',
 			// 사용자 이름 (조싸피)
 			myUserName: 'SSAFY' + Math.floor(Math.random() * 100),
 			// 메뉴 오픈상태
 			menu: false,
+			// 화면공유 상태
+			isScreenShared: false,
+			screenShareName: "Screen Sharing",
 			alertMessage:"",
 			sendMessage:"",
 			isAlertWriting:false,
 			alertTo:"",
+
+			muted: null,
 		}
 	},
 
@@ -162,6 +188,16 @@ export default {
 				this.alertMessage=msg.data;
 			})
 
+			// On request mute from teacher to you
+			this.session.on('signal:mute', ()=>{
+				if(this.muted) {
+					this.requestCancleMuted();
+					return;
+				}
+				this.publisher.publishAudio(this.muted);
+				this.muted=!this.muted;
+			})
+
 			// --- Connect to the session with a valid user token ---
 
 			// 'getToken' method is simulating what your server-side should do.
@@ -189,6 +225,12 @@ export default {
 						// --- Publish your stream ---
 
 						this.session.publish(this.publisher);
+						if(this.user.type===2) {
+							this.publisher.publishAudio(false);
+							this.muted=true;
+						} else {
+							this.muted=false;
+						}
 					})
 					.catch(error => {
 						console.log('There was an error connecting to the session:', error.code, error.message);
@@ -308,6 +350,18 @@ export default {
 			const studentConnectionId = connection.connectionId;
 			const studentName = JSON.parse(connection.data).clientData;
 
+			this.session.signal({
+				data: "",  // Any string (optional)
+				to: [connection],                     // Array of Connection objects (optional. Broadcast to everyone if empty)
+				type: 'mute'             // The type of message (optional)
+			})
+			.then(() => {
+				console.log('mute request successfully sent');
+			})
+			.catch(error => {
+				console.error(error);
+			});
+
 			console.log(studentConnectionId, studentName);
 		},
 		
@@ -337,12 +391,100 @@ export default {
 			this.sendMessage="";
 		},
 
+		startScreenSharing () {
+			this.OVForScreenShare = new OpenVidu();
+			// this.OVForScreenShare.setAdvancedConfiguration(
+			// 	{ screenShareChromeExtension: "https://chrome.google.com/webstore/detail/EXTENSION_NAME/EXTENSION_ID" }
+			// );
+			this.sessionForScreenShare = this.OVForScreenShare.initSession();
+
+			var mySessionId = this.mySessionId;
+			this.getToken(mySessionId).then(token => {
+				this.sessionForScreenShare.connect(token, { clientData: this.screenShareName })
+				.then(() => {
+					let publisher = this.OVForScreenShare.initPublisher("sharingvideo", {
+						audioSource: false,
+						videoSource: "screen",      
+                        publishVideo: true,  
+						resolution: "1920x1980",
+						frameRate: 10,           
+                        insertMode: 'APPEND',    
+                        mirror: false        
+					});
+					console.log("publisher",publisher);
+					// publisher.once('accessAllowed', () => {
+                    //     publisher.stream.getMediaStream().getVideoTracks()[0].addEventListener('ended', this.leaveSessionForScreenSharing)        
+                    // });
+					publisher.once('accessAllowed', () => {
+						try {
+							console.log("subscriber >>>>> ", this.subscribers);
+							this.isScreenShared=true;
+							publisher.stream.getMediaStream().getVideoTracks()[0].addEventListener('ended', () => {
+								console.log('User pressed the "Stop sharing" button');
+								this.leaveSessionForScreenSharing()
+								this.isScreenShared=false;
+							});
+                            // this.sessionScreen.publish(this.sharingPublisher);						
+						} catch (error) {
+							console.error('Error applying constraints: ', error);
+						}
+					});
+
+					publisher.once('accessDenied', () => { 
+						console.warn('ScreenShare: Access Denied');
+					});
+
+					this.mainStreamManager2 = publisher;
+                    this.sharingPublisher = publisher;
+
+                    this.sessionForScreenShare.publish(this.sharingPublisher);
+
+				}).catch((error => {
+
+					console.warn('There was an error connecting to the session:', error.code, error.message);
+
+				}));
+			});
+
+			window.addEventListener('beforeunload', this.leaveSessionForScreenSharing)
+		},
+
+		leaveSessionForScreenSharing () {
+			if (this.sessionForScreenShare) this.sessionForScreenShare.disconnect();
+
+            this.sessionForScreenShare = undefined;
+            this.mainStreamManager2 = undefined;
+            this.sharingPublisher = undefined;
+            this.OVForScreenShare = undefined;
+
+            window.removeEventListener('beforeunload', this.leaveSessionForScreenSharing);
+		},
+		
 		closeModal () {
 			this.alertMessage="";
 		},
 
 		closeWriter () {
 			this.isAlertWriting=false;
+		},
+		
+		requestCancleMuted () {
+			const res = confirm("마이크를 킬까요?");
+			console.log(res);
+			if(res) {
+				this.publisher.publishAudio(true);
+				this.muted = !this.muted;
+			}
+		},
+
+		bigScreen () {
+			this.subscribers.forEach((sub)=>{
+				if(JSON.parse(sub.stream.connection.data).clientData==="SSAFY81") {
+					const abc=document.getElementsByClassName("SSAFY81");
+					const videoTag = abc[0].children[0];
+					videoTag.classList.toggle("video-bigger");
+				}
+			});
 		},
 	},
 
