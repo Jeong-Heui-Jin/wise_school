@@ -38,7 +38,7 @@ def timetable(request):
 
     if request.method == 'GET':
         if Timetable.objects.filter(classroom=request.user.classroom):
-            timetable = TimetableListSerializer(get_object_or_404(Timetable, classroom=request.user.classroom)).data
+            timetable = TimetableListSerializer(get_object_or_404(Timetable, classroom=request.user.classroom))
             return Response(timetable.data)
         else:
             timetable = {}

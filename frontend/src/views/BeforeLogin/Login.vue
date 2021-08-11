@@ -85,6 +85,24 @@ export default {
       })
       .then((res) => {
         localStorage.setItem('jwt', res.data.token)
+
+        // const token = localStorage.getItem('jwt')
+        const config = {
+          Authorization: `JWT ${res.data.token}`
+        }
+
+        axios({
+          method: 'get',
+          url: 'http://127.0.0.1:8000/accounts/profile/',
+          headers: config,
+          })
+          .then((response) => {
+            this.$store.dispatch('setUser', response.data)
+          })
+          .catch(err => {
+            console.log(err)
+        })
+
         window.open('/home', '_self')
       })
       .catch(err => {
