@@ -109,18 +109,18 @@ export default {
         setToken: function () {
             this.$store.dispatch('setToken')
         },
-        getNoticeList: function () {
-        axios({
-            method: "get",
-            url: 'http://i5a205.p.ssafy.io:8000/accounts/info/2',
-            headers: this.headers,
-        })
-            .then((res) => {
-            console.log(res.data)
-            })
-            .catch((err) => {
-            console.log(err);
-            });
+        getStudentInfo: function () {
+            // axios({
+            //     method: "get",
+            //     url: `http://i5a205.p.ssafy.io:8000/accounts/info/${}`,
+            //     headers: this.headers,
+            // })
+            //     .then((res) => {
+            //     console.log(res.data)
+            //     })
+            //     .catch((err) => {
+            //     console.log(err);
+            //     });
         },
         // 기존의 정보로 되돌리기
         infoRecovery() {
@@ -235,7 +235,7 @@ export default {
         },
     created: function() {
         this.setToken()
-        this.getNoticeList()
+        this.getStudentInfo()
     }
 };
 </script>
