@@ -129,6 +129,13 @@ export default {
 			sendMessage:"",
 			isAlertWriting:false,
 			alertTo:"",
+
+			OV2: undefined,
+			session2: undefined,
+			mainStreamManager2: undefined,
+			publisher2: undefined,
+
+			muted: null,
 		}
 	},
 
@@ -162,6 +169,16 @@ export default {
 				this.alertMessage=msg.data;
 			})
 
+			// On request mute from teacher to you
+			this.session.on('signal:mute', ()=>{
+				if(this.muted) {
+					this.requestCancleMuted();
+					return;
+				}
+				this.publisher.publishAudio(this.muted);
+				this.muted=!this.muted;
+			})
+
 			// --- Connect to the session with a valid user token ---
 
 			// 'getToken' method is simulating what your server-side should do.
@@ -189,6 +206,12 @@ export default {
 						// --- Publish your stream ---
 
 						this.session.publish(this.publisher);
+						if(this.user.type===2) {
+							this.publisher.publishAudio(false);
+							this.muted=true;
+						} else {
+							this.muted=false;
+						}
 					})
 					.catch(error => {
 						console.log('There was an error connecting to the session:', error.code, error.message);
@@ -308,6 +331,18 @@ export default {
 			const studentConnectionId = connection.connectionId;
 			const studentName = JSON.parse(connection.data).clientData;
 
+			this.session.signal({
+				data: "",  // Any string (optional)
+				to: [connection],                     // Array of Connection objects (optional. Broadcast to everyone if empty)
+				type: 'mute'             // The type of message (optional)
+			})
+			.then(() => {
+				console.log('mute request successfully sent');
+			})
+			.catch(error => {
+				console.error(error);
+			});
+
 			console.log(studentConnectionId, studentName);
 		},
 		
@@ -343,6 +378,25 @@ export default {
 
 		closeWriter () {
 			this.isAlertWriting=false;
+		},
+		
+		requestCancleMuted () {
+			const res = confirm("마이크를 킬까요?");
+			console.log(res);
+			if(res) {
+				this.publisher.publishAudio(true);
+				this.muted = !this.muted;
+			}
+		},
+
+		bigScreen () {
+			this.subscribers.forEach((sub)=>{
+				if(JSON.parse(sub.stream.connection.data).clientData==="SSAFY81") {
+					const abc=document.getElementsByClassName("SSAFY81");
+					const videoTag = abc[0].children[0];
+					videoTag.classList.toggle("video-bigger");
+				}
+			});
 		},
 	},
 
