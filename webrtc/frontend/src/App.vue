@@ -476,21 +476,23 @@ export default {
 				this.muted = !this.muted;
 			}
 		},
-
-		bigScreen () {
-			this.subscribers.forEach((sub)=>{
-				if(JSON.parse(sub.stream.connection.data).clientData==="SSAFY81") {
-					const abc=document.getElementsByClassName("SSAFY81");
-					const videoTag = abc[0].children[0];
-					videoTag.classList.toggle("video-bigger");
-				}
-			});
-		},
 	},
 
 	created() {
 		// 접속 시 바로 연결설정 시작.
 		this.joinSession()
+		// console.log(opener)
+		
+		// var child = window.open("https://localhost:8080");
+		// const user={
+		// 	name:"조동윤",
+		// 	id:"Token",
+		// 	type:"2"
+		// }
+		// window.ABC = user;
+		// child.ABCD = user;
+		const image = new Image();
+		image.src = "./resources/images/"
 	}
 }
 </script>
