@@ -13,6 +13,7 @@ import HomeworkView from '../views/AfterLogin/HomeworkView'
 import HomeworkChange from '../views/AfterLogin/HomeworkChange'
 import Notice from '../views/AfterLogin/Notice'
 import NoticeCreate from '../views/AfterLogin/NoticeCreate'
+import NoticeView from '../views/AfterLogin/NoticeView'
 import Attendance from '../views/AfterLogin/Attendance'
 import Attitude from '../views/AfterLogin/Attitude'
 import AttitudeInfo from '../views/AfterLogin/AttitudeInfo'
@@ -102,6 +103,11 @@ const routes = [
     path: '/notice_create',
     name: 'NoticeCreate',
     component: NoticeCreate,
+  },
+  {
+    path: '/notice_view',
+    name: 'NoticeView',
+    component: NoticeView,
   },
   {
     path: '/attendance',
