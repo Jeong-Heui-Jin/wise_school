@@ -23,6 +23,7 @@ export default new Vuex.Store({
     },
     SET_USER: function (state, user) {
       state.now_user = user
+      console.log(user)
     }
   },
   actions: {
