@@ -146,17 +146,33 @@ export default {
           console.log(err)
       })
     },
-    enterRoom: async function () {
-      // const classRoom = window.open("https://i5a205.p.ssafy.io:8080");
+    enterRoom: function () {
+      window.class = window.open("https://i5a205.p.ssafy.io:8080");
       
-      this.child = window.open("https://localhost:8081");
+      // window.class = window.open("https://localhost:8081");
       const user = {
         msgType: "init_classroom",
-        class: this.now_user.classroom,
-        name: this.now_user.name,
-        type: this.now_user.usertype,
+        classroom: this.now_user.classroom,
+        userName: this.now_user.name,
+        userType: this.now_user.usertype,
       }
-      setTimeout(()=> this.child.postMessage(user, 'https://localhost:8081'), 2000);
+      // setTimeout(()=> window.class.postMessage(user, 'https://i5a205.p.ssafy.io:8080'), 2000);
+      window.addEventListener('message', function(e) {
+
+        if (e.data.msgType === "connection_fail") {
+          console.log("Connection refused: Time Out!")
+          clearInterval(window.interval1);
+          window.class.close();
+          window.class=""
+
+        } else if (e.data.msgType === "connect") {
+          console.log("Connect to Classroom Successfully.")
+          clearInterval(window.interval1);
+        }
+      });
+
+      window.interval1=setInterval(()=> window.class.postMessage(user, 'https://i5a205.p.ssafy.io:8080'), 500); // 0.5초 간격으로 정보 전송
+      // window.interval1=setInterval(()=> window.class.postMessage(user, 'https://localhost:8081'), 500); // 0.5초 간격으로 정보 전송
     },
   },
   created() {

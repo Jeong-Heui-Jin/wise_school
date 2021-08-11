@@ -108,7 +108,8 @@ export default {
 			// 사용자 정보
 			mySessionId: '0110121', // 학급 코드(0110121) 및 webRTC 룸 number
 			myUserName: 'SSAFY' + Math.floor(Math.random() * 100), // 사용자 이름, webRTC 상에서 표시될 이름
-			
+			myUserType: 2,			// 사용자 등급. 관리자 선생님 학생
+
 			// 상태 관리 변수
 			menu: false,			// 메뉴 오픈상태
 			isScreenShared: false,	// 화면공유 상태
@@ -163,6 +164,12 @@ export default {
 				// 음소거 시킬 때는 바로 마이크를 끔
 				this.muteMyVoice();
 			})
+
+			if (window.user) {
+				this.myUserName= window.user.userName;
+				this.mySessionId = String(window.user.classroom);
+				this.myUserType = String(window.user.userType);
+			}
 
 			// --- Connect to the session with a valid user token ---
 
@@ -449,18 +456,35 @@ export default {
 	},
 
 	created() {
-		// 접속 시 바로 연결설정 시작.
-		this.joinSession()
-		
-		// 이미지 preload
-		document.createElement("img").src = "resources/images/memo2.png"
-		window.addEventListener('message', function(e) {
-		console.log(e)
-			if (e.data.msgType === "init_classroom") {
-				console.log("@@@@@@@@@@@@@@@@@@@@@@")
-				console.log(e.data)
-			}
-		});
+		if (!window.opener) { // 직접 주소를 사용해서 들어왔을 때
+			this.joinSession();
+		} else {		// 학사 페이지를 통해 들어왔을 때
+			document.createElement("img").src = "resources/images/memo2.png"	// 이미지 preload
+			
+			window.timer=setTimeout(()=>{			// 응답 없을 시 창 종료
+				alert("연결 상태가 좋지 않습니다. 다시 시도해주세요!");
+
+				window.opener.postMessage({
+					msgType: "connection_fail",
+				// },"http://localhost:8080");
+				},"http://i5a205.p.ssafy.io:8081");
+			}, 2000);
+
+			window.joinSession = this.joinSession;	// window 객체에 함수 연결
+			window.addEventListener('message', function(e) {
+
+				if (e.data.msgType === "init_classroom") {
+					clearTimeout(window.timer);		// 타이머 종료
+						window.opener.postMessage({
+						msgType: "connect",
+					// },"http://localhost:8080");
+					},"http://i5a205.p.ssafy.io:8081");
+
+					window.user=e.data;
+					window.joinSession();	// 데이터 수신 시 연결설정 시작.
+				}
+			});
+		}
 	}
 }
 </script>
