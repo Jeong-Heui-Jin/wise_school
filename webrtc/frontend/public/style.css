@@ -3,6 +3,10 @@ html {
 	min-height: 100%;
 }
 
+body::after {
+	content:url("resources/images/memo2.png") url("resources/images/circlesqure2.png")
+}
+
 nav {
 	height: 50px;
 	width: 100%;
