@@ -154,11 +154,6 @@ export default {
 			isAlertWriting:false,
 			alertTo:"",
 
-			OV2: undefined,
-			session2: undefined,
-			mainStreamManager2: undefined,
-			publisher2: undefined,
-
 			muted: null,
 		}
 	},
