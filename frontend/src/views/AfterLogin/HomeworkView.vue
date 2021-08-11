@@ -9,15 +9,25 @@
       <h1 id="homeworkTitle">숙제 보기</h1>
       <!-- 제목 -->
       <h2 id="sub-title">제목</h2>
-      <b-form-input readonly id="titleName" v-model="homework.title">{{ homework.title }}</b-form-input>
+      <b-form-input readonly id="titleName" v-model="homework.title">{{
+        homework.title
+      }}</b-form-input>
 
       <h2 id="endTitle">마감일</h2>
-      <b-form-input readonly id="endDate" v-model="homework.end">{{ homework.end }}</b-form-input>
+      <b-form-input readonly id="endDate" v-model="homework.end">{{
+        homework.end
+      }}</b-form-input>
       <!-- <input type="date" id="endDate" name="trip-start" /> -->
 
       <!-- 내용 -->
       <h2 id="content">내용</h2>
-      <b-form-textarea readonly id="contentText" plaintext v-model="homework.content">{{ homework.content }}</b-form-textarea>
+      <b-form-textarea
+        readonly
+        id="contentText"
+        plaintext
+        v-model="homework.content"
+        >{{ homework.content }}</b-form-textarea
+      >
 
       <!-- 취소/수정/삭제 버튼 -->
       <button id="cancelBtn">취소</button>
@@ -31,7 +41,7 @@
 import axios from "axios";
 import NavSideBar from "@/components/NavSideBarTeacher.vue";
 import NavBar from "@/components/NavBar.vue";
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 
 export default {
   name: "HomeworkView",
@@ -39,40 +49,50 @@ export default {
     NavSideBar,
     NavBar,
   },
-  data: function() {
+  data: function () {
     return {
-      homework: {}
-    }
+      homework: {},
+    };
   },
   methods: {
     setToken: function () {
-      this.$store.dispatch('setToken')
+      this.$store.dispatch("setToken");
     },
     getHomeworkDetail: function () {
-      const homework_id = this.selected_homework.id
+      const homework_id = this.selected_homework.id;
       axios({
-          method: "get",
-          url: `http://i5a205.p.ssafy.io:8000/homework/detail/${homework_id}/`,
-          headers: this.headers,
+        method: "get",
+        url: `http://i5a205.p.ssafy.io:8000/homework/detail/${homework_id}/`,
+        headers: this.headers,
       })
         .then((res) => {
-        this.homework = res.data
+          this.homework = res.data;
+
+          var temp = this.homework.end;
+          // console.log(temp);
+
+          this.homework.end =
+            temp.substring(5, 7) +
+            "월 " +
+            temp.substring(8, 10) +
+            "일 " +
+            temp.substring(11, 13) +
+            "시 " +
+            temp.substring(14, 16) +
+            "분";
         })
         .catch((err) => {
-        console.log(err);
+          console.log(err);
         });
     },
   },
   computed: {
-    ...mapState([
-        'headers',
-        'selected_homework'
-    ]),
+    ...mapState(["headers", "selected_homework"]),
   },
-  created: function() {
-    this.setToken()
-    this.getHomeworkDetail()
-  }
+  created: function () {
+    this.setToken();
+    this.getHomeworkDetail();
+  },
 };
 </script>
 
