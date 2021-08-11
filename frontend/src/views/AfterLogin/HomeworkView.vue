@@ -66,7 +66,7 @@ export default {
       })
         .then((res) => {
           this.homework = res.data;
-
+          console.log(res.data)
           var temp = this.homework.end;
           // console.log(temp);
 

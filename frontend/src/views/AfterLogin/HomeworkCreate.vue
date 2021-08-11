@@ -77,28 +77,51 @@ export default {
           this.$store.dispatch('selectHomework', res.data)
 
           // 파일 저장
-          var formData = new FormData();
-          formData.append('files', this.files[0])
+          if (this.files) {
+            var formData = new FormData();
+            formData.append('files', this.files)
+
+            for( var i = 0; i < this.files.length; i++ ){
+              // var name = 'files[' + `${i}` + ']'
+              formData.append('files', this.files[i]);
+            }
+
+            axios({
+              method: "post",
+              url: `http://127.0.0.1:8000/homework/file/${res.data.id}/`,
+              // url: `http://i5a205.p.ssafy.io:8000/homework/file/${res.data.id}/`,
+              data: formData,
+              headers: { 'Content-Type': 'multipart/form-data' },
+            })
+              .then(function(res){
+                console.log(res)
+                console.log('SUCCESS!!');
+              })
+              .catch(function(err){
+                console.log(err);
+              });
+          }
+          // var formData = new FormData();
+          // formData.append('files', this.files)
 
           // for( var i = 0; i < this.files.length; i++ ){
-          //   var name = 'files[' + `${i}` + ']'
-          //   formData.append(name, this.files[i]);
+          //   // var name = 'files[' + `${i}` + ']'
+          //   formData.append('files', this.files[i]);
           // }
-          console.log(this.files)
-          console.log(formData.entries())
 
           // axios({
           //   method: "post",
           //   url: `http://127.0.0.1:8000/homework/file/${res.data.id}/`,
           //   // url: `http://i5a205.p.ssafy.io:8000/homework/file/${res.data.id}/`,
-          //   headers: { 'Content-Type': 'multipart/form-data' },
           //   data: formData,
+          //   headers: { 'Content-Type': 'multipart/form-data' },
           // })
-          //   .then(function(){
+          //   .then(function(res){
+          //     console.log(res)
           //     console.log('SUCCESS!!');
           //   })
-          //   .catch(function(){
-          //     console.log('FAILURE!!');
+          //   .catch(function(err){
+          //     console.log(err);
           //   });
 
           this.$router.push({ name: "HomeworkView" });
