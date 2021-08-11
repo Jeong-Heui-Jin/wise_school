@@ -492,7 +492,10 @@ export default {
 		// window.ABC = user;
 		// child.ABCD = user;
 		const image = new Image();
-		image.src = "./resources/images/"
+		image.src = [
+			"resources/images/memo2.png",
+			"resources/images/circlesqure2.png",
+		]
 	}
 }
 </script>
