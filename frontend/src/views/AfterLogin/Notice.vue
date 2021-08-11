@@ -146,9 +146,9 @@ export default {
     goNoticeCreate: function () {
       window.open("/notice_create", "_self");
     },
-    goNoticeView: function () { //notice) {
-      // console.log(notice);
-      this.$store.dispatch("selectNotice");
+    goNoticeView: function (notice) {
+      console.log(notice);
+      this.$store.dispatch("selectNotice", notice);
       this.$router.push({ name: "NoticeView" });
       // window.open("/notice_view", "_self")
     },
