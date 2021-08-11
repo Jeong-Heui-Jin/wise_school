@@ -30,7 +30,7 @@
       <!-- 파일 업로드 -->
       <h2 id="fileUploadTitle" style="font-size: 32px">파일 첨부</h2>
       <!-- <input multiple="multiple" type="file" accept="image/*" id="fileUploadText" name="filename[]" /> -->
-      <input type="file" id="files" ref="files" accept="image/*" multiple @change="handleFileUpload()">
+      <input type="file" id="files" ref="files" accept="image/*" multiple v-on:change="handleFileUpload()">
 
       <!-- 취소/저장 버튼 -->
       <button id="saveBtn" @click="homeworkCreate">저장</button>
@@ -80,23 +80,25 @@ export default {
           var formData = new FormData();
 
           for( var i = 0; i < this.files.length; i++ ){
-            let file = this.files[i];
-            formData.append('files[' + i + ']', file);
+            // var file = this.files[i];
+            formData.append(`files[${i}]`, this.files[i]);
           }
+          console.log(this.files)
+          console.log(formData)
 
-          axios({
-            method: "post",
-            url: `http://127.0.0.1:8000/homework/file/${res.data.id}/`,
-            // url: `http://i5a205.p.ssafy.io:8000/homework/file/${res.data.id}/`,
-            headers: { 'Content-Type': 'multipart/form-data' },
-            data: formData,
-          })
-            .then(function(){
-              console.log('SUCCESS!!');
-            })
-            .catch(function(){
-              console.log('FAILURE!!');
-            });
+          // axios({
+          //   method: "post",
+          //   url: `http://127.0.0.1:8000/homework/file/${res.data.id}/`,
+          //   // url: `http://i5a205.p.ssafy.io:8000/homework/file/${res.data.id}/`,
+          //   headers: { 'Content-Type': 'multipart/form-data' },
+          //   data: formData,
+          // })
+          //   .then(function(){
+          //     console.log('SUCCESS!!');
+          //   })
+          //   .catch(function(){
+          //     console.log('FAILURE!!');
+          //   });
 
           this.$router.push({ name: "HomeworkView" });
         })
@@ -108,25 +110,27 @@ export default {
       this.files = this.$refs.files.files;
     },
     submitFiles(){
-      let formData = new FormData();
+      var formData = new FormData();
 
       for( var i = 0; i < this.files.length; i++ ){
-        let file = this.files[i];
+        var file = this.files[i];
         formData.append('files[' + i + ']', file);
       }
 
-      axios({
-        method: "post",
-        url: "http://i5a205.p.ssafy.io:8000/homework/file/",
-        headers: { 'Content-Type': 'multipart/form-data' },
-        data: formData,
-      })
-        .then(function(){
-          console.log('SUCCESS!!');
-        })
-        .catch(function(){
-          console.log('FAILURE!!');
-        });
+      console.log(formData)
+
+      // axios({
+      //   method: "post",
+      //   url: "http://i5a205.p.ssafy.io:8000/homework/file/",
+      //   headers: { 'Content-Type': 'multipart/form-data' },
+      //   data: formData,
+      // })
+      //   .then(function(){
+      //     console.log('SUCCESS!!');
+      //   })
+      //   .catch(function(){
+      //     console.log('FAILURE!!');
+      //   });
     },
   },
   computed: {
