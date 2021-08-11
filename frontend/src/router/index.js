@@ -15,6 +15,7 @@ import Notice from '../views/AfterLogin/Notice'
 import NoticeCreate from '../views/AfterLogin/NoticeCreate'
 import Attendance from '../views/AfterLogin/Attendance'
 import Attitude from '../views/AfterLogin/Attitude'
+import AttitudeInfo from '../views/AfterLogin/AttitudeInfo'
 import StudentInfo from '../views/AfterLogin/StudentInfo'
 import TimetableChange from '../views/AfterLogin/TimetableChange'
 
@@ -111,6 +112,11 @@ const routes = [
     path: '/attitude',
     name: 'Attitude',
     component: Attitude,
+  },
+  {
+    path: '/attitude_info/:id',
+    name: 'AttitudeInfo',
+    component: AttitudeInfo,
   },
 ]
 
