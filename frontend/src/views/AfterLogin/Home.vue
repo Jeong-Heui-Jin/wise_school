@@ -149,11 +149,10 @@ export default {
     }
   },
   created() {
+    console.log(this.now_user)
     this.setToken();
-    this.setUser();
     this.getList();
     this.getNow();
-    console.log(this.now_user)
     this.$nextTick(() => {
       const timeBody = document.querySelector('#timeschedule');
       // const imgName = "@/assets/whale.png"

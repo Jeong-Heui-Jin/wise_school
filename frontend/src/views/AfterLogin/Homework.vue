@@ -133,6 +133,7 @@ export default {
   created: function () {
     this.setToken();
     this.getHomeworkList();
+    
   },
 };
 </script>
