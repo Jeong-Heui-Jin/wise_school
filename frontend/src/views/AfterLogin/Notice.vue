@@ -102,6 +102,7 @@ export default {
         headers: this.headers,
       })
         .then((res) => {
+          console.log(res.data)
           // id 기준 내림차순
           res.data.sort(function (a, b) {
             if (a.id > b.id) {
@@ -114,7 +115,7 @@ export default {
           // registertime print format 변경
           for (let i = 0; i < res.data.length; ++i) {
             var temp = res.data[i].registertime;
-            console.log(temp);
+            // console.log(temp);
 
             res.data[i].registertime =
               temp.substring(5, 7) +
@@ -154,11 +155,12 @@ export default {
     },
   },
   computed: {
-    ...mapState(["headers"]),
+    ...mapState(["headers", 'now_user']),
   },
   created: function () {
     this.setToken();
     this.getNoticeList();
+    console.log(this.now_user)
   },
 };
 </script>
