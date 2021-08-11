@@ -28,15 +28,17 @@
         <!-- 📗📘📔📙📒📕 -->
         <b-list-group-item
           id="textNoticeImportant"
-          v-for="(importantItem, index) in importantItems"
-          v-bind:key="index"
+          v-for="(importantItem, import_index) in importantItems"
+          v-bind:key="import_index"
+          v-on:click="goNoticeView(importantItem)"
         >
           📙 {{ importantItem.title }}
         </b-list-group-item>
         <b-list-group-item
           id="textNotice"
-          v-for="(item, index) in items"
-          v-bind:key="index"
+          v-for="(item, normal_index) in items"
+          v-bind:key="normal_index"
+          v-on:click="goNoticeView(item)"
         >
           📙 {{ item.title }}
         </b-list-group-item>
@@ -144,8 +146,10 @@ export default {
     goNoticeCreate: function () {
       window.open("/notice_create", "_self");
     },
-    goNoticeView: function () {
+    goNoticeView: function (notice) {
+      // console.log(notice);
       this.$store.dispatch("selectNotice");
+      this.$router.push({ name: "NoticeView" });
       // window.open("/notice_view", "_self")
     },
   },
