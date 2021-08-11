@@ -64,6 +64,16 @@ def change_password(request):
     return Response({'error': '비밀번호가 올바르지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
+# 현재 사용자의 정보 조회
+@api_view(['GET',])
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
+def profile(request):
+    user = request.user
+    serializer = UserSerializer(user)
+    return Response(serializer.data)
+
+
 # 해당 사용자의 정보 조회/수정/삭제
 @api_view(['GET', 'PUT','DELETE',])
 def info(request, user_id):
@@ -88,8 +98,8 @@ def info(request, user_id):
 
 # 해당 학생의 보호자들 목록 조회 / 추가
 @api_view(['GET', 'POST'])
-# @authentication_classes([JSONWebTokenAuthentication])
-# @permission_classes([IsAuthenticated])
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
 def parents_list(request, user_id):
     student = get_object_or_404(get_user_model(), pk=user_id)
     if request.method == 'GET':

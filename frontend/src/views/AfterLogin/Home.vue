@@ -134,11 +134,26 @@ export default {
           console.log(err);
         });
     },
+    setUser: function () {
+      axios({
+        method: 'get',
+        url: 'http://127.0.0.1:8000/accounts/profile/',
+        headers: this.headers,
+        })
+        .then((res) => {
+          this.$store.dispatch('setUser', res.data)
+        })
+        .catch(err => {
+          console.log(err)
+      })
+    }
   },
   created() {
     this.setToken();
+    this.setUser();
     this.getList();
     this.getNow();
+    console.log(this.now_user)
     this.$nextTick(() => {
       const timeBody = document.querySelector('#timeschedule');
       // const imgName = "@/assets/whale.png"
@@ -167,7 +182,8 @@ export default {
   },
   computed: {
     ...mapState([
-      'headers'
+      'headers',
+      'now_user',
     ]),
   },
 }

@@ -85,8 +85,6 @@ export default {
       })
       .then((res) => {
         localStorage.setItem('jwt', res.data.token)
-        // console.log(res)
-        // this.$router.push({ name: 'Home' })
         window.open('/home', '_self')
       })
       .catch(err => {

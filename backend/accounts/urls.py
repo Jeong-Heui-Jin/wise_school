@@ -15,6 +15,7 @@ urlpatterns = [
     path('user-confirm/', views.user_confirm, name='user_confirm'),         # 사용자 정보 확인 (비밀번호 재설정 전 단계)
     path('password-reset/', views.password_reset, name='password_reset'),   # 비밀번호 재설정
     path('change-password/', views.change_password, name='change_password'),
+    path('profile/', views.profile, name='profile'),
 
     path('class-members/', views.class_members, name='class_members'),
     path('info/<int:user_id>/', views.info, name='info'),   # 선생님/학생 정보

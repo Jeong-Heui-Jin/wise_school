@@ -35,20 +35,24 @@ def timetable_create(request):
 @authentication_classes([JSONWebTokenAuthentication])
 @permission_classes([IsAuthenticated])
 def timetable(request):
-    user = request.user
-    timetable = get_object_or_404(Timetable, classroom=user.classroom)
+
     if request.method == 'GET':
-        timetable = get_object_or_404(Timetable, pk=timetable.id)
-        serializer = TimetableListSerializer(timetable)
-        return Response(serializer.data)
+        if Timetable.objects.filter(classroom=request.user.classroom):
+            timetable = TimetableListSerializer(get_object_or_404(Timetable, classroom=request.user.classroom)).data
+            return Response(timetable.data)
+        else:
+            timetable = {}
+            return Response(timetable)
     
     elif request.method == 'POST':
+        timetable = get_object_or_404(Timetable, classroom=request.user.classroom)
         serializer = TimetableDetailSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save(timetable=timetable)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
     
     elif request.method == 'PUT':
+        timetable = get_object_or_404(Timetable, classroom=request.user.classroom)
         serializer = TimetableSerializer(timetable, data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
