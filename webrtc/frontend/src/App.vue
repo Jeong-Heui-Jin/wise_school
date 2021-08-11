@@ -27,13 +27,14 @@
 			<!-- 나가기 버튼 -->
 			<div class="menu-hide menu" id="menu-exit" @click="leaveSession"></div>
 		</div>
+		<!-- 학생 리스트 창 -->
 		<div class="student-hide" id="student-wrapper">
 			<div class="student">
 				<div class="student-profile"></div>
-				<div class="student-name">박명수</div>
+				<div class="student-name">{{myUserName}}</div>
 				<div class="student-function-wrapper">
-					<div class="student-function" id="student-mute"></div>
-					<div class="student-function" id="student-cam"></div>
+					<div class="student-function" id="student-mute" @click="muteMyVoice"></div>
+					<div class="student-function" id="student-hand-up" @click="raiseMyHand"></div>
 					<div class="student-function" id="student-alert"></div>
 				</div>
 			</div>
@@ -42,7 +43,7 @@
 				<div class="student-name"> {{ JSON.parse(sub.stream.connection.data).clientData }} </div>
 				<div class="student-function-wrapper">
 					<div class="student-function" id="student-mute" @click="muteStudent(sub.stream.connection)"></div>
-					<div class="student-function" id="student-cam"></div>
+					<div class="student-function" id="student-hand-up" @click="downHand"></div>
 					<div class="student-function" id="student-alert" @click="makeMessage(sub.stream.connection)"></div>
 				</div>
 			</div>
@@ -160,8 +161,7 @@ export default {
 					return;
 				}
 				// 음소거 시킬 때는 바로 마이크를 끔
-				this.publisher.publishAudio(this.muted);
-				this.muted=!this.muted;
+				this.muteMyVoice();
 			})
 
 			// --- Connect to the session with a valid user token ---
@@ -425,14 +425,26 @@ export default {
 		closeWriter () {
 			this.isAlertWriting=false;
 		},
+
+		muteMyVoice () {
+			this.publisher.publishAudio(this.muted);
+			this.muted = !this.muted;
+		},
 		
 		requestCancleMuted () {
 			const res = confirm("마이크를 킬까요?");	// 포커스가 있는 상태에서만 동작, 아니면 무조건 false 반환
 
 			if(res) {
-				this.publisher.publishAudio(true);
-				this.muted = !this.muted;
+				this.muteMyVoice();
 			}
+		},
+
+		raiseMyHand () {
+			alert("손을 들었습니다.")
+		},
+
+		downHand () {
+			alert("손을 내렸습니다.")
 		},
 	},
 

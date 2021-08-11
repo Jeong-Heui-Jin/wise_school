@@ -350,9 +350,10 @@ a:hover .demo-logo {
 	background-size: 20px;
 }
 
-#student-cam {
-	background-image: url("resources/images/mute.png");
+#student-hand-up {
+	background-image: url("resources/images/hand_up.png");
 	background-size: 20px;
+	background-position: 60% !important;
 }
 
 #student-alert {
