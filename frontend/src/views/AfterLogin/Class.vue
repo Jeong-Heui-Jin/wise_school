@@ -50,18 +50,7 @@ export default {
         number: "02-123-4567",
         class: "2학년 2반",
       },
-      students: [
-        { name: "김우진", number: "2" },
-        { name: "목상원", number: "2341" },
-        { name: "정희진", number: "17" },
-        { name: "정명지", number: "45" },
-        { name: "조동윤", number: "984" },
-        { name: "기리보이", number: "123" },
-        { name: "산다라박", number: "3892" },
-        { name: "구창모", number: "1253" },
-        { name: "권지용", number: "8342" },
-        { name: "빈지노", number: "1943" },
-      ],
+      students: [],
     };
   },
 
@@ -80,39 +69,30 @@ export default {
         headers: this.setToken(),
       })
         .then((res) => {
-          console.log(res.data)
-          this.students = res.data
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  },
+          console.log(res.data);
+          this.students = Object.assign([], res.data);
+          const cardBody = document.querySelector("#content");
+          // const imgName = "@/assets/whale.png"
 
-  created: function() {
-    this.$nextTick(() => {
-      const cardBody = document.querySelector("#content");
-      // const imgName = "@/assets/whale.png"
-
-      cardBody.innerHTML = this.students
+        cardBody.innerHTML = this.students
         .map((li) => {
           var img;
 
-          if (Number(li.number) % 9 === 0) {
+          if (Number(li.id) % 9 === 0) {
             img = Whale;
-          } else if (Number(li.number) % 9 === 1) {
+          } else if (Number(li.id) % 9 === 1) {
             img = Beaver;
-          } else if (Number(li.number) % 9 === 2) {
+          } else if (Number(li.id) % 9 === 2) {
             img = Cat;
-          } else if (Number(li.number) % 9 === 3) {
+          } else if (Number(li.id) % 9 === 3) {
             img = Elephant;
-          } else if (Number(li.number) % 9 === 4) {
+          } else if (Number(li.id) % 9 === 4) {
             img = Frog;
-          } else if (Number(li.number) % 9 === 5) {
+          } else if (Number(li.id) % 9 === 5) {
             img = Koala;
-          } else if (Number(li.number) % 9 === 6) {
+          } else if (Number(li.id) % 9 === 6) {
             img = Shark;
-          } else if (Number(li.number) % 9 === 7) {
+          } else if (Number(li.id) % 9 === 7) {
             img = Sheep;
           } else {
             img = Squirrel;
@@ -123,13 +103,20 @@ export default {
             <img id="img" src=${img} alt="프로필"/>
             <br/>
             <div class="d-flex" id="button-field">
-              <button onclick="window.open('/student_info/${li.number}', '_self')" id="student-button">학생정보</button>
+              <button onclick="window.open('/student_info/${li.id}', '_self')" id="student-button">학생정보</button>
               <button href="#" id="message-button">메시지 보내기</button>
             </div>
           </div>`;
         })
         .join("");
-    })
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  },
+
+  created: function() {
     this.getMembers()
   },
   components: {
