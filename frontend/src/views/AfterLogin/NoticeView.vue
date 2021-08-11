@@ -14,12 +14,20 @@
       }}</b-form-input>
 
       <h2 id="endTitle">마감일</h2>
-      <b-form-input readonly id="endDate"></b-form-input>
+      <b-form-input readonly id="endDate" v-model="notice.registertime">
+        {{ notice.registertime }}
+      </b-form-input>
       <!-- <input type="date" id="endDate" name="trip-start" /> -->
 
       <!-- 내용 -->
       <h2 id="content">내용</h2>
-      <b-form-textarea readonly id="contentText" plaintext></b-form-textarea>
+      <b-form-textarea
+        readonly
+        id="contentText"
+        plaintext
+        v-model="notice.content"
+        >{{ notice.content }}</b-form-textarea
+      >
 
       <!-- 취소/수정/삭제 버튼 -->
       <button id="cancelBtn">취소</button>
@@ -55,14 +63,28 @@ export default {
       // console.log(notice_id); // undefined
       axios({
         method: "get",
-        url: `http://127.0.0.1:8000/notice/detail/${notice_id}/`,
+        url: `http://127.0.0.1:8000/notice/${notice_id.id}/`,
         // url: `http://i5a205.p.ssafy.io:8000/notice/detail/${notice_id}/`,
         headers: this.headers,
       })
         .then((res) => {
-          console.log("res.data :", res.data);
+          // console.log("res.data :", res.data);
           this.notice = res.data;
-          console.log("this.notice :", this.notice);
+
+          // 모든 notice의 registertime 데이터를 가공한다.
+          var temp = this.notice.registertime;
+          // console.log(temp);
+
+          this.notice.registertime =
+            temp.substring(5, 7) +
+            "월 " +
+            temp.substring(8, 10) +
+            "일 " +
+            temp.substring(11, 13) +
+            "시 " +
+            temp.substring(14, 16) +
+            "분";
+          // console.log("this.notice :", this.notice);
         })
         .catch((err) => {
           console.log(err);
