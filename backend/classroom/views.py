@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404, get_list_or_404
 from rest_framework import status
 from rest_framework.response import Response
@@ -78,14 +79,27 @@ def timetable_detail(request, timetabledetail_id):
 @permission_classes([IsAuthenticated])
 def home(request):
     classroom = request.user.classroom
+    # user = get_object_or_404(get_user_model(), pk=request.data.get('user_id'))
+    # classroom = user.classroom
 
-    homeworks = HomeworkSerializer(get_list_or_404(Homework, classroom=classroom), many=True)
-    timetable = TimetableListSerializer(get_object_or_404(Timetable, classroom=classroom))
-    notices = NoticeListSerializer(get_list_or_404(Notice, classroom=classroom), many=True)
+    if Homework.objects.filter(classroom=classroom):
+        homeworks = HomeworkSerializer(get_list_or_404(Homework, classroom=classroom), many=True)
+    else:
+        homeworks = []
+
+    if Timetable.objects.filter(classroom=classroom):
+        timetable = TimetableListSerializer(get_object_or_404(Timetable, classroom=classroom)).data
+    else:
+        timetable = {}
+
+    if Notice.objects.filter(classroom=classroom):
+        notices = NoticeListSerializer(get_list_or_404(Notice, classroom=classroom), many=True)
+    else:
+        notices = []
 
     data = {
         'homeworks': homeworks.data[:-6:-1],
         'notices': notices.data[:-6:-1],
-        'timetable': timetable.data,
+        'timetable': timetable,
     }
     return JsonResponse(data)

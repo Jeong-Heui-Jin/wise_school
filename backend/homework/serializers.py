@@ -27,7 +27,8 @@ class HomeworkFileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = HomeworkFile
-        fields = '__all__'
+        fields = ('image',)
+        read_only_fields = ('homework',)
 
 
 class HomeworkSerializer(serializers.ModelSerializer):

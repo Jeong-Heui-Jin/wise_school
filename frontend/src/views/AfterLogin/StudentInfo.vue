@@ -80,6 +80,7 @@ export default {
     },
     data() {
         return {
+            data: '',
             student_id: this.$route.params.id,
             student: { ID: 1234, name: '목상원', number: '16', phone: '010-3542-8554', address: '서울시 강남구 테헤란로 212' },
             parents: [
@@ -88,42 +89,44 @@ export default {
         }
     },
     mounted() {
-        const studentName = document.querySelector('#student-name');
-        const studentNumber = document.querySelector('#student-number');
-        const studentPhone = document.querySelector('#student-phone');
-        const studentAddress = document.querySelector('#student-address');
-
-        studentName.value = this.student.name;
-        studentNumber.value = this.student.number;
-        studentPhone.value = this.student.phone;
-        studentAddress.value = this.student.address;
-
-        const parentInfo = document.querySelectorAll('#parent-info');
-
-        for (var i = 0; i < this.parents.length; i++) {
-            parentInfo[i].children[0].children[0].children[0].value = this.parents[i].relation;
-            parentInfo[i].children[0].children[1].children[0].value = this.parents[i].name;
-            parentInfo[i].children[0].children[2].children[0].value = this.parents[i].phone;
-        }
+        this.setToken();
+        this.getStudentInfo();
     },
     methods: {
         setToken: function () {
             this.$store.dispatch('setToken')
         },
-        getNoticeList: function () {
-        axios({
-            method: "get",
-            // url: "http://i5a205.p.ssafy.io:8081/homework/list/",
-            url: 'http://i5a205.p.ssafy.io:8000/accounts/info/2',
-            headers: this.headers,
-        })
-            .then((res) => {
-            console.log(res.data);
-            console.log(this.student_id);
+        getStudentInfo: function () {
+            axios({
+                method: "get",
+                url: `http://i5a205.p.ssafy.io:8000/accounts/info/${this.student_id}`,
+                headers: this.headers,
             })
-            .catch((err) => {
-            console.log(err);
-            });
+                .then((res) => {
+                this.data = Object.assign([], res.data);
+                console.log(this.data);
+                const studentName = document.querySelector('#student-name');
+                const studentNumber = document.querySelector('#student-number');
+                const studentPhone = document.querySelector('#student-phone');
+                const studentAddress = document.querySelector('#student-address');
+
+                studentName.value = this.data.name;
+                studentNumber.value = this.data.info.number;
+                studentPhone.value = this.data.phone;
+                studentAddress.value = this.data.info.address;
+
+                const parentInfo = document.querySelectorAll('#parent-info');
+
+                console.log(this.data.parents[0]);
+                for (var i = 0; i < this.data.parents.length; i++) {
+                    parentInfo[i].children[0].children[0].children[0].value = this.data.parents[i].relation;
+                    parentInfo[i].children[0].children[1].children[0].value = this.data.parents[i].name;
+                    parentInfo[i].children[0].children[2].children[0].value = this.data.parents[i].phone;
+                }
+            })
+                .catch((err) => {
+                console.log(err);
+                });
         },
         // 기존의 정보로 되돌리기
         infoRecovery() {
@@ -132,10 +135,10 @@ export default {
             const studentPhone = document.querySelector('#student-phone');
             const studentAddress = document.querySelector('#student-address');
 
-            studentName.value = this.student.name;
-            studentNumber.value = this.student.number;
-            studentPhone.value = this.student.phone;
-            studentAddress.value = this.student.address;
+            studentName.value = this.data.name;
+            studentNumber.value = this.data.info.number;
+            studentPhone.value = this.data.phone;
+            studentAddress.value = this.data.address;
         },
         // 학생 정보 수정 하기
         infoChange() {
@@ -210,10 +213,6 @@ export default {
             'headers'
         ]),
         },
-        created: function() {
-            this.setToken()
-            this.getNoticeList()
-        }
 };
 </script>
 
