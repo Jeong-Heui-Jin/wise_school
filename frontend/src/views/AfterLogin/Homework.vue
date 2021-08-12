@@ -1,7 +1,7 @@
 <template>
   <div style="font-family: 'Jua', sans-serif" variant="light">
-    <NavSideBar />
     <NavBar />
+    <NavSideBar />
 
     <h1 id="homeworkTitle">숙제 검사</h1>
 
@@ -50,7 +50,7 @@
 
 <script>
 import axios from "axios";
-import NavSideBar from "@/components/NavSideBarTeacher.vue";
+import NavSideBar from '@/components/NavSideBar.vue'
 import NavBar from "@/components/NavBar.vue";
 import { mapState } from "vuex";
 
@@ -69,6 +69,7 @@ export default {
       ],
       items: [],
       classNum: 1,
+      usertype: 2,
     };
   },
   components: {
@@ -170,6 +171,7 @@ export default {
     this.setToken();
     this.getHomeworkList();
     this.getClassNum();
+    this.usertype = this.now_user.usertype
   },
 };
 </script>
