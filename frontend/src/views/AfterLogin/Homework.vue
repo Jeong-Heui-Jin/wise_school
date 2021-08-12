@@ -1,7 +1,7 @@
 <template>
   <div style="font-family: 'Jua', sans-serif" variant="light">
-    <NavSideBar />
     <NavBar />
+    <NavSideBar />
 
     <h1 id="homeworkTitle">숙제 검사</h1>
 
@@ -30,6 +30,9 @@
 
         <!-- Button -->
         <template #cell(submitHomework)="data">
+          <div v-if="usertype===1">
+            <b-button> {{ data.item.submitHomework }} </b-button>
+          </div>
           <b-button> {{ data.item.submitHomework }} </b-button>
         </template>
       </b-table>
@@ -50,7 +53,7 @@
 
 <script>
 import axios from "axios";
-import NavSideBar from "@/components/NavSideBarTeacher.vue";
+import NavSideBar from '@/components/NavSideBar.vue'
 import NavBar from "@/components/NavBar.vue";
 import { mapState } from "vuex";
 
@@ -58,7 +61,7 @@ export default {
   name: "Homework",
   data: function () {
     return {
-      perPage: 10,
+      perPage: 8,
       currentPage: 1,
       fields: [
         // Title name 변경
@@ -69,6 +72,7 @@ export default {
       ],
       items: [],
       classNum: 1,
+      usertype: 2,
     };
   },
   components: {
@@ -137,12 +141,6 @@ export default {
     goHomeworkView: function (homework) {
       this.$store.dispatch("selectHomework", homework);
       this.$router.push({ name: "HomeworkView" });
-      // router.push({
-      //   path: "/homework_view",
-      //   query: { title: this.items.Title, Content: this.items.Content },
-      // });
-      // setTimeout(() => console.log("after"), 30000); // test
-      // window.open("/homework_view", "_self");
     },
     getClassNum: function () {
       axios({
@@ -170,6 +168,7 @@ export default {
     this.setToken();
     this.getHomeworkList();
     this.getClassNum();
+    this.usertype = this.now_user.usertype
   },
 };
 </script>
@@ -179,6 +178,8 @@ export default {
   position: fixed;
   top: 10px;
   left: 120px;
+  margin-left: 220px;
+  margin-top: 20px;
 }
 
 #homeworkForm {

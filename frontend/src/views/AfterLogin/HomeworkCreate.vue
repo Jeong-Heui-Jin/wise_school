@@ -29,7 +29,6 @@
 
       <!-- 파일 업로드 -->
       <h2 id="fileUploadTitle" style="font-size: 32px">파일 첨부</h2>
-      <!-- <input multiple="multiple" type="file" accept="image/*" id="fileUploadText" name="filename[]" /> -->
       <input type="file" id="files" ref="files" accept="image/*" multiple v-on:change="handleFileUpload()" enctype="multipart/form-data">
 
       <!-- 취소/저장 버튼 -->
@@ -41,7 +40,7 @@
 
 <script>
 import axios from "axios";
-import NavSideBar from "@/components/NavSideBarTeacher.vue";
+import NavSideBar from '@/components/NavSideBar.vue'
 import NavBar from "@/components/NavBar.vue";
 import { mapState } from "vuex";
 
@@ -82,7 +81,6 @@ export default {
             formData.append('files', this.files)
 
             for( var i = 0; i < this.files.length; i++ ){
-              // var name = 'files[' + `${i}` + ']'
               formData.append('files', this.files[i]);
             }
 
@@ -101,28 +99,6 @@ export default {
                 console.log(err);
               });
           }
-          // var formData = new FormData();
-          // formData.append('files', this.files)
-
-          // for( var i = 0; i < this.files.length; i++ ){
-          //   // var name = 'files[' + `${i}` + ']'
-          //   formData.append('files', this.files[i]);
-          // }
-
-          // axios({
-          //   method: "post",
-          //   url: `http://127.0.0.1:8000/homework/file/${res.data.id}/`,
-          //   // url: `http://i5a205.p.ssafy.io:8000/homework/file/${res.data.id}/`,
-          //   data: formData,
-          //   headers: { 'Content-Type': 'multipart/form-data' },
-          // })
-          //   .then(function(res){
-          //     console.log(res)
-          //     console.log('SUCCESS!!');
-          //   })
-          //   .catch(function(err){
-          //     console.log(err);
-          //   });
 
           this.$router.push({ name: "HomeworkView" });
         })
@@ -132,29 +108,6 @@ export default {
     },
     handleFileUpload() {
       this.files = this.$refs.files.files;
-    },
-    submitFiles(){
-      var formData = new FormData();
-
-      for( var i = 0; i < this.files.length; i++ ){
-        var file = this.files[i];
-        formData.append('files[' + i + ']', file);
-      }
-
-      console.log(formData)
-
-      // axios({
-      //   method: "post",
-      //   url: "http://http://127.0.0.1:8000/homework/file/",
-      //   headers: { 'enctype': 'multipart/form-data' },
-      //   data: formData,
-      // })
-      //   .then(function(){
-      //     console.log('SUCCESS!!');
-      //   })
-      //   .catch(function(){
-      //     console.log('FAILURE!!');
-      //   });
     },
   },
   computed: {

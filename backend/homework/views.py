@@ -73,9 +73,9 @@ def homeworkfile(request, homework_id):
 
 
 # 숙제 상세 조회 / 수정 / 삭제
-@api_view(['GET', 'PUT', 'DELETE',])
-@authentication_classes([JSONWebTokenAuthentication])
-@permission_classes([IsAuthenticated])
+@api_view(['GET', 'PUT', 'DELETE', 'POST',])
+# @authentication_classes([JSONWebTokenAuthentication])
+# @permission_classes([IsAuthenticated])
 def homework_detail(request, homework_id):
     homework = get_object_or_404(Homework, pk=homework_id)
 
@@ -95,6 +95,12 @@ def homework_detail(request, homework_id):
             'delete': '삭제되었습니다.'
         }
         return Response(data, status=status.HTTP_204_NO_CONTENT)
+
+    elif request.method == 'POST':
+        serializer = SubmitHomeworkSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(student=request.user, homework=homework)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
     
 
 # 제출한 숙제 상세 조회 / 수정 / 삭제
@@ -121,17 +127,11 @@ def submit_detail(request, submithomework_id):
         return Response(data, status=status.HTTP_204_NO_CONTENT)
 
 
-# (학생 기준) 제출한 숙제 목록 조회 / 새로운 숙제 제출
-@api_view(['GET', 'POST',])
+# (학생 기준) 제출한 숙제 목록 조회
+@api_view(['GET',])
 @authentication_classes([JSONWebTokenAuthentication])
 @permission_classes([IsAuthenticated])
 def submit(request):
-    if request.method == 'GET':
-        submits = get_list_or_404(SubmitHomework, student=request.user)
-        serializer = SubmitHomeworkSerializer(submits, many=True)
-        return Response(serializer.data)
-    elif request.method == 'POST':
-        serializer = SubmitHomeworkSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save(student=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+    submits = get_list_or_404(SubmitHomework, student=request.user)
+    serializer = SubmitHomeworkSerializer(submits, many=True)
+    return Response(serializer.data)
