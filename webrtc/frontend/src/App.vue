@@ -137,6 +137,7 @@ export default {
 			this.session.on('streamCreated', ({ stream }) => {
 				const subscriber = this.session.subscribe(stream);
 				this.subscribers.push(subscriber);
+				console.log("subscriber>>>>>>>",subscriber);
 			});
 
 			// On every Stream destroyed...
