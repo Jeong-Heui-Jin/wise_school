@@ -401,7 +401,7 @@ a:hover .demo-logo {
 	width: 500px;
 	height: 300px;
 	transform: translate(-250px, -150px);
-	background-image: url("resources/images/memo2.png");
+	/* background-image: url("resources/images/memo2.png"); */
 	align-items: center;
 	box-shadow: 0 0 5px -1px #000000;
 }
