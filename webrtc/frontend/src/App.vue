@@ -71,6 +71,7 @@
 		<div class="alert-message-wrapper" v-if='alertMessage' @click="closeModal">
 			<div class="alert-message-background"></div>
 			<div class="alert-message-modal" >
+				<img src="resources/images/memo2.png" alt="">
 				<div class="alert-message-title">선생님이 쪽지를 보냈어요</div>
 				<div class="alert-message-content"> {{alertMessage}} </div>
 			</div>
@@ -79,6 +80,7 @@
 		<div class="alert-message-write-wrapper no-drag" v-if="isAlertWriting">
 			<div class="alert-message-write">
 				<div class="alert-message-write-nav">
+					<img src="resources/images/circlesqure2.png" alt="">
 					<div class="alert-message-write-to">{{alertTo}}</div><div class="alert-message-write-close" @click="closeWriter">X</div>
 				</div>
 				<div class="alert-message-write-foot">
