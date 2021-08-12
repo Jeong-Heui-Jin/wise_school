@@ -53,24 +53,17 @@ export default {
   name: "Homework",
   data: function () {
     return {
-      perPage: 8,
+      perPage: 10,
       currentPage: 1,
       fields: [
         // Title name 변경
         { key: "id", label: "번호" },
         { key: "title", label: "숙제 제목" },
         { key: "end", label: "종료일" },
-        // { key: "submitInfo", label: "제출" },
+        { key: "submithomework_count", label: "제출 인원" },
       ],
-      items: [
-        // {
-        //   homework_id: "17",
-        //   title: "수학익힘책 16쪽 풀기",
-        //   end: "7.19(월)",
-        //   // submitInfo: "1/6",
-        //   content: "수학익힘책 16쪽 풀기",
-        // },
-      ],
+      items: [],
+      classNum: 1,
     };
   },
   components: {
@@ -89,6 +82,7 @@ export default {
       })
         .then((res) => {
           this.items = res.data;
+          console.log(this.now_user)
 
           // 모든 items의 end 데이터를 가공한다.
           for (let i = 0; i < this.items.length; ++i) {
@@ -104,6 +98,9 @@ export default {
               "시 " +
               temp.substring(14, 16) +
               "분";
+
+            var submit = this.items[i].submithomework_count
+            this.items[i].submithomework_count = String(submit) + '/' + String(this.classNum)
           }
       })
         .catch((err) => {
@@ -123,17 +120,35 @@ export default {
       // setTimeout(() => console.log("after"), 30000); // test
       // window.open("/homework_view", "_self");
     },
+    getClassNum: function () {
+      axios({
+        method: "get",
+        url: 'http://i5a205.p.ssafy.io:8000/accounts/class-members/',
+        headers: this.headers,
+      })
+        .then((res) => {
+          // 선생님을 제외한 학생의 수 저장
+          this.classNum = res.data.length - 1
+          console.log(this.classNum)
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
   computed: {
     rows() {
       return this.items.length;
     },
-    ...mapState(["headers"]),
+    ...mapState([
+      "headers",
+      "now_user",
+    ]),
   },
   created: function () {
     this.setToken();
     this.getHomeworkList();
-    
+    this.getClassNum();
   },
 };
 </script>
