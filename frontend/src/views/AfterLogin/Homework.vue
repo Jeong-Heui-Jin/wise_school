@@ -58,7 +58,7 @@ export default {
   name: "Homework",
   data: function () {
     return {
-      perPage: 10,
+      perPage: 8,
       currentPage: 1,
       fields: [
         // Title name 변경
@@ -138,12 +138,6 @@ export default {
     goHomeworkView: function (homework) {
       this.$store.dispatch("selectHomework", homework);
       this.$router.push({ name: "HomeworkView" });
-      // router.push({
-      //   path: "/homework_view",
-      //   query: { title: this.items.Title, Content: this.items.Content },
-      // });
-      // setTimeout(() => console.log("after"), 30000); // test
-      // window.open("/homework_view", "_self");
     },
     getClassNum: function () {
       axios({
@@ -181,6 +175,8 @@ export default {
   position: fixed;
   top: 10px;
   left: 120px;
+  margin-left: 220px;
+  margin-top: 20px;
 }
 
 #homeworkForm {
