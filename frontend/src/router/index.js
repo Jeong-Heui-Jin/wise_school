@@ -11,6 +11,7 @@ import Homework from '../views/AfterLogin/Homework'
 import HomeworkCreate from '../views/AfterLogin/HomeworkCreate'
 import HomeworkView from '../views/AfterLogin/HomeworkView'
 import HomeworkChange from '../views/AfterLogin/HomeworkChange'
+import HomeworkStatus from '../views/AfterLogin/HomeworkStatus'
 import Notice from '../views/AfterLogin/Notice'
 import NoticeCreate from '../views/AfterLogin/NoticeCreate'
 import NoticeView from '../views/AfterLogin/NoticeView'
@@ -93,6 +94,11 @@ const routes = [
     path: '/homework_change',
     name: 'HomeworkChange',
     component: HomeworkChange,
+  },
+  {
+    path: '/homework_status',
+    name: 'HomeworkStatus',
+    component: HomeworkStatus,
   },
   {
     path: '/notice',
