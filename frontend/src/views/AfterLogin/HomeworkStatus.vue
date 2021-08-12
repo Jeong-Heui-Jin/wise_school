@@ -2,10 +2,11 @@
   <div style="font-family: 'Jua', sans-serif" variant="light">
     <NavSideBar />
     <NavBar />
+  </div>
 </template>
 
 <script>
-import axios from "axios";
+// import axios from "axios";
 import NavSideBar from "@/components/NavSideBarTeacher.vue";
 import NavBar from "@/components/NavBar.vue";
 
