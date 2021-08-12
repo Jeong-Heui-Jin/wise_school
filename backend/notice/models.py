@@ -17,7 +17,7 @@ def notice_file_path(instance, filename):
 
 class NoticeFile(models.Model):
     notice = models.ForeignKey(Notice, on_delete=models.CASCADE)
-    path = models.ImageField(blank=True, upload_to=notice_file_path)
+    image = models.ImageField(blank=True, upload_to=notice_file_path)
 
 
 class Notification(models.Model):

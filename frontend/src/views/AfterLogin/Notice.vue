@@ -40,7 +40,7 @@
 
 <script>
 import axios from "axios";
-import NavSideBar from "@/components/NavSideBarTeacher.vue";
+import NavSideBar from "@/components/NavSideBar.vue";
 import NavBar from "@/components/NavBar.vue";
 import { mapState } from "vuex";
 

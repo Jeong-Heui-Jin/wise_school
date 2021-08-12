@@ -2,13 +2,26 @@
   <div style="font-family: 'Jua', sans-serif;" class="sidenav con w3-sidebar w3-bar-block fixed-top" aria-label="Sidebar with custom footer" no-header shadow>      
     <img class="navbar-logo" src="@/assets/슬학생_로고.png" alt="슬학생_로고">
     <div style="margin-top:10%; font-size: 16px;">
-      <router-link class="w3-bar-item w3-button tablink text-decoration-none" to="/home">홈</router-link><br>
-      <router-link class="w3-bar-item w3-button text-decoration-none" to="/class">우리반 보기</router-link><br>
-      <router-link class="w3-bar-item w3-button text-decoration-none" to="/timetable">시간표</router-link><br>
-      <router-link class="w3-bar-item w3-button text-decoration-none" to="/homework">숙제</router-link><br>
-      <router-link class="w3-bar-item w3-button text-decoration-none" to="/notice">공지사항</router-link><br>
-      <router-link class="w3-bar-item w3-button text-decoration-none" to="/attendance">출석관리</router-link><br>
-      <router-link class="w3-bar-item w3-button text-decoration-none" to="/attitude">학생 태도 관리</router-link><br>
+      <div v-if="usertype===0">
+        <router-link class="w3-bar-item w3-button tablink text-decoration-none" to="/home">선생님 관리</router-link><br>
+        <router-link class="w3-bar-item w3-button text-decoration-none" to="/class">학생 관리</router-link><br>
+      </div>
+      <div v-else-if="usertype===1">
+        <router-link class="w3-bar-item w3-button tablink text-decoration-none" to="/home">홈</router-link><br>
+        <router-link class="w3-bar-item w3-button text-decoration-none" to="/class">우리반 보기</router-link><br>
+        <router-link class="w3-bar-item w3-button text-decoration-none" to="/timetable">시간표</router-link><br>
+        <router-link class="w3-bar-item w3-button text-decoration-none" to="/homework">숙제</router-link><br>
+        <router-link class="w3-bar-item w3-button text-decoration-none" to="/notice">공지사항</router-link><br>
+        <router-link class="w3-bar-item w3-button text-decoration-none" to="/attendance">출석관리</router-link><br>
+        <router-link class="w3-bar-item w3-button text-decoration-none" to="/attitude">학생 태도 관리</router-link><br>
+      </div>
+      <div v-else>
+        <router-link class="w3-bar-item w3-button tablink text-decoration-none" to="/home">홈</router-link><br>
+        <router-link class="w3-bar-item w3-button text-decoration-none" to="/class">우리반 보기</router-link><br>
+        <router-link class="w3-bar-item w3-button text-decoration-none" to="/timetable">시간표</router-link><br>
+        <router-link class="w3-bar-item w3-button text-decoration-none" to="/homework">숙제</router-link><br>
+        <router-link class="w3-bar-item w3-button text-decoration-none" to="/notice">공지사항</router-link><br>
+      </div>
     </div>
     <!-- <footer id="navFooter">슬기로운 학교생활</footer> -->
   </div>
@@ -16,8 +29,15 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   name: 'NavsidebarTeacher',
+  data: function () {
+    return {
+      usertype: 2,
+    }
+  },
   methods: {
     myDropFunc: function () {
       var x = document.getElementById("demoDrop")
@@ -30,6 +50,14 @@ export default {
         x.previousElementSibling.className.replace(" w3-green", "")
       }
     }
+  },
+  computed: {
+    ...mapState([
+      "now_user",
+    ]),
+  },
+  created: function() {
+    this.usertype = this.now_user.usertype
   }
 }
 
@@ -39,7 +67,7 @@ export default {
 /* The sidebar menu */
 .sidenav {
   height: 100%; /* Full-height: remove this if you want "auto" height */
-  min-width: 300px; /* Set the width of the sidebar */
+  width: 300px; /* Set the width of the sidebar */
   position: fixed; /* Fixed Sidebar (stay in place on scroll) */
   z-index: 1; /* Stay on top */
   top: 0; /* Stay at the top */

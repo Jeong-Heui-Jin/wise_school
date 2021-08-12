@@ -39,7 +39,7 @@
 
 <script>
 import axios from "axios";
-import NavSideBar from "@/components/NavSideBarTeacher.vue";
+import NavSideBar from "@/components/NavSideBar.vue";
 import NavBar from "@/components/NavBar.vue";
 import { mapState } from "vuex";
 
@@ -59,11 +59,11 @@ export default {
       this.$store.dispatch("setToken");
     },
     getNoticeDetail: function () {
-      const notice_id = this.selected_notice;
+      const notice = this.selected_notice;
       // console.log(notice_id); // undefined
       axios({
         method: "get",
-        url: `http://127.0.0.1:8000/notice/${notice_id.id}/`,
+        url: `http://127.0.0.1:8000/notice/${notice.id}/`,
         // url: `http://i5a205.p.ssafy.io:8000/notice/detail/${notice_id}/`,
         headers: this.headers,
       })
@@ -96,7 +96,7 @@ export default {
   },
   created: function () {
     this.setToken();
-    this.getNoticeDetail();
+    this.notice = this.selected_notice
   },
 };
 </script>

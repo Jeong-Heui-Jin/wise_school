@@ -342,23 +342,39 @@ a:hover .demo-logo {
 	background-repeat: no-repeat;
 	background-position: center;
 	/* box-shadow: inset 0 0 2px 1px #777777; */
-	box-shadow: inset 0 0 1px 1px #cccbcb;
+	/* box-shadow: inset 0 0 1px 1px #cccbcb; */
+	box-shadow: 1px -3px 3px #999 inset;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
-#student-mute {
-	background-image: url("resources/images/mute.png");
-	background-size: 20px;
+.student-function:active {
+	/* background-color: #71ff94; */
+	background-color: #39e464 !important;
+	box-shadow: inset 0 0 3px 1px #000000;
 }
 
-#student-hand-up {
-	background-image: url("resources/images/hand_up.png");
-	background-size: 20px;
-	background-position: 60% !important;
+.student-function:hover {
+	/* background-color: #71ff94; */
+	background-color: #acabab;
 }
 
-#student-alert {
-	background-image: url("resources/images/chat.png");
-	background-size: 20px;
+.student-hand-up-clicked {
+	/* background-color: #99fdb2; */
+	background-color: rgb(42, 243, 92);
+	/* box-shadow: inset 0 0 3px 1px #000000; */
+	box-shadow: 0 1px 2px #424440 inset, 0 -1px 0px #777 inset;;
+}
+
+.student-function img {
+	width: 20px;
+	height: 20px;
+}
+
+#student-hand-up img {
+	margin-left: 2px !important;
+	margin-bottom: 1px !important;
 }
 
 .alert-message-wrapper {
@@ -385,9 +401,13 @@ a:hover .demo-logo {
 	width: 500px;
 	height: 300px;
 	transform: translate(-250px, -150px);
-	background-image: url("resources/images/memo2.png");
+	/* background-image: url("resources/images/memo2.png"); */
 	align-items: center;
 	box-shadow: 0 0 5px -1px #000000;
+}
+.alert-message-modal img {
+	position: absolute;
+	z-index: -1;
 }
 
 .alert-message-title {
@@ -419,12 +439,20 @@ a:hover .demo-logo {
 
 .alert-message-write-nav {
 	display: flex;
-	background-image: url("resources/images/circlesqure2.png");
+	/* background-image: url("resources/images/circlesqure2.png"); */
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: 100% 100%;
 	justify-content: space-between;
 	color:whitesmoke;
+}
+
+.alert-message-write-nav img{
+	position:absolute;
+	top: -5%;
+	z-index: -1;
+	width:100.3%;
+	height: 48.5%;
 }
 
 .alert-message-write-to {

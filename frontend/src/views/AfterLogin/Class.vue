@@ -1,7 +1,7 @@
 <template>
   <div id="class" style="font-family: 'Jua', sans-serif">
-    <NavSideBar />
     <NavBar />
+    <NavSideBar />
 
     <h1 id="title">우리반 친구들</h1>
 
@@ -28,8 +28,9 @@
 
 <script>
 import axios from "axios";
-import NavSideBar from "@/components/NavSideBarTeacher.vue";
+import NavSideBar from '@/components/NavSideBar.vue';
 import NavBar from "@/components/NavBar.vue";
+import { mapState } from 'vuex'
 import Whale from "@/assets/whale.png";
 import Beaver from "@/assets/beaver.png";
 import Cat from "@/assets/cat.png";
@@ -51,6 +52,7 @@ export default {
         class: "2학년 2반",
       },
       students: [],
+      usertype: 2,
     };
   },
 
@@ -74,54 +76,60 @@ export default {
           const cardBody = document.querySelector("#content");
           // const imgName = "@/assets/whale.png"
 
-        cardBody.innerHTML = this.students
-        .map((li) => {
-          var img;
+          cardBody.innerHTML = this.students
+          .map((li) => {
+            var img;
 
-          if (Number(li.id) % 9 === 0) {
-            img = Whale;
-          } else if (Number(li.id) % 9 === 1) {
-            img = Beaver;
-          } else if (Number(li.id) % 9 === 2) {
-            img = Cat;
-          } else if (Number(li.id) % 9 === 3) {
-            img = Elephant;
-          } else if (Number(li.id) % 9 === 4) {
-            img = Frog;
-          } else if (Number(li.id) % 9 === 5) {
-            img = Koala;
-          } else if (Number(li.id) % 9 === 6) {
-            img = Shark;
-          } else if (Number(li.id) % 9 === 7) {
-            img = Sheep;
-          } else {
-            img = Squirrel;
-          }
-          return `
-          <div id="card">
-            <h3>${li.name}</h3>
-            <img id="img" src=${img} alt="프로필"/>
-            <br/>
-            <div class="d-flex" id="button-field">
-              <button onclick="window.open('/student_info/${li.id}', '_self')" id="student-button">학생정보</button>
-              <button href="#" id="message-button">메시지 보내기</button>
-            </div>
-          </div>`;
-        })
-        .join("");
+            if (Number(li.id) % 9 === 0) {
+              img = Whale;
+            } else if (Number(li.id) % 9 === 1) {
+              img = Beaver;
+            } else if (Number(li.id) % 9 === 2) {
+              img = Cat;
+            } else if (Number(li.id) % 9 === 3) {
+              img = Elephant;
+            } else if (Number(li.id) % 9 === 4) {
+              img = Frog;
+            } else if (Number(li.id) % 9 === 5) {
+              img = Koala;
+            } else if (Number(li.id) % 9 === 6) {
+              img = Shark;
+            } else if (Number(li.id) % 9 === 7) {
+              img = Sheep;
+            } else {
+              img = Squirrel;
+            }
+            return `
+            <div id="card">
+              <h3>${li.name}</h3>
+              <img id="img" src=${img} alt="프로필"/>
+              <br/>
+              <div class="d-flex" id="button-field">
+                <button onclick="window.open('/student_info/${li.id}', '_self')" id="student-button">학생정보</button>
+                <button href="#" id="message-button">메시지 보내기</button>
+              </div>
+            </div>`;
+          })
+          .join("");
         })
         .catch((err) => {
           console.log(err);
         });
     }
   },
-
   created: function() {
     this.getMembers()
+    this.usertype = this.now_user.usertype
   },
   components: {
     NavSideBar,
     NavBar,
+  },
+  computed: {
+    ...mapState([
+      'headers',
+      'now_user',
+    ]),
   },
 };
 </script>

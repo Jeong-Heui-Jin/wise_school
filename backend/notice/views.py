@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .models import Notice, Notification
+from .models import Notice, NoticeFile, Notification
 from .serializers import NoticeSerializer, NoticeListSerializer, NotificationSerializer
 from django.db.models import Q
 
@@ -49,6 +49,17 @@ def notice(request):
                     student.info.save()
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+# 공지 파일 저장
+@api_view(['POST',])
+def noticefile(request, notice_id):
+    notice = get_object_or_404(Notice, pk=notice_id)
+
+    for image in request.FILES.getlist('files'):
+       NoticeFile.objects.create(image=image, notice=notice)
+   
+    return Response(status=status.HTTP_201_CREATED)
 
 
 # 해당 공지사항 상세 보기

@@ -29,22 +29,41 @@
 		</div>
 		<!-- 학생 리스트 창 -->
 		<div class="student-hide" id="student-wrapper">
+			<!-- 내 계정. 최상단에 위치 -->
 			<div class="student">
 				<div class="student-profile"></div>
 				<div class="student-name">{{myUserName}}</div>
 				<div class="student-function-wrapper">
-					<div class="student-function" id="student-mute" @click="muteMyVoice"></div>
-					<div class="student-function" id="student-hand-up" @click="raiseMyHand"></div>
-					<div class="student-function" id="student-alert"></div>
+					<div class="student-function" id="student-mute" @click="muteMyVoice">
+						<img src="resources/images/mute.png" alt="" v-if="!muted">
+						<img src="resources/images/unmute.png" alt="" v-else>
+					</div>
+					<div class="student-function" id="student-hand-up" @click="raiseMyHand">
+						<img src="resources/images/hand_up.png" alt="">
+					</div>
+					<div class="student-function" id="student-alert" @click="makeMessage(null)">
+						<img src="resources/images/chat.png" alt="">
+					</div>
 				</div>
 			</div>
+			<!-- 다른 사람 계정. -->
 			<div class="student" v-for="sub in subscribers" :key="sub.stream.connection.connectionId">
 				<div class="student-profile"></div>
 				<div class="student-name"> {{ JSON.parse(sub.stream.connection.data).clientData }} </div>
 				<div class="student-function-wrapper">
-					<div class="student-function" id="student-mute" @click="muteStudent(sub.stream.connection)"></div>
-					<div class="student-function" id="student-hand-up" @click="downHand"></div>
-					<div class="student-function" id="student-alert" @click="makeMessage(sub.stream.connection)"></div>
+					<div class="student-function" id="student-mute" @click="muteStudent(sub.stream.connection)">
+						<img src="resources/images/unmute.png" alt="" v-if="sub.muted">
+						<img src="resources/images/mute.png" alt="" v-else>
+					</div>
+					<div class="student-function student-hand-up-clicked" id="student-hand-up" @click="downHand(sub)" v-if="sub.handUp">
+						<img src="resources/images/hand_up.png" alt="">
+					</div>
+					<div class="student-function" id="student-hand-up" @click="downHand(sub)" v-else>
+						<img src="resources/images/hand_up.png" alt="">
+					</div>
+					<div class="student-function" id="student-alert" @click="makeMessage(sub.stream.connection)">
+						<img src="resources/images/chat.png" alt="">
+					</div>
 				</div>
 			</div>
 		</div>
@@ -52,6 +71,7 @@
 		<div class="alert-message-wrapper" v-if='alertMessage' @click="closeModal">
 			<div class="alert-message-background"></div>
 			<div class="alert-message-modal" >
+				<img src="resources/images/memo2.png" alt="">
 				<div class="alert-message-title">선생님이 쪽지를 보냈어요</div>
 				<div class="alert-message-content"> {{alertMessage}} </div>
 			</div>
@@ -60,7 +80,8 @@
 		<div class="alert-message-write-wrapper no-drag" v-if="isAlertWriting">
 			<div class="alert-message-write">
 				<div class="alert-message-write-nav">
-					<div class="alert-message-write-to">{{JSON.parse(alertTo.data).clientData}}</div><div class="alert-message-write-close" @click="closeWriter">X</div>
+					<img src="resources/images/circlesqure2.png" alt="">
+					<div class="alert-message-write-to">{{alertTo}}</div><div class="alert-message-write-close" @click="closeWriter">X</div>
 				</div>
 				<div class="alert-message-write-foot">
 					<div><textarea v-model="sendMessage" class="alert-message-write-content" placeholder="내용을 입력하세요."></textarea></div>
@@ -108,17 +129,19 @@ export default {
 			// 사용자 정보
 			mySessionId: '0110121', // 학급 코드(0110121) 및 webRTC 룸 number
 			myUserName: 'SSAFY' + Math.floor(Math.random() * 100), // 사용자 이름, webRTC 상에서 표시될 이름
-			myUserType: 2,			// 사용자 등급. 관리자 선생님 학생
+			myUserType: '2',			// 사용자 등급. 관리자 선생님 학생
 
 			// 상태 관리 변수
 			menu: false,			// 메뉴 오픈상태
 			isScreenShared: false,	// 화면공유 상태
 			isAlertWriting:false,	// 메시지 작성 상태
-			muted: null,			// 음소거 상태 
+			muted: false,			// 음소거 상태 
+			handUp: false,			// 손들기 상태
 			screenShareName: "Screen Sharing",	// 화면 공유 스트림의 이름
 			alertMessage:"",	// 선생님에게서 도착한 메시지 내용
 			sendMessage:"",		// 작성중인 메시지 내용
-			alertTo:"",			// 마지막으로 메시지를 작성중이던 학생의 정보
+			target:"",			// 마지막으로 메시지를 작성중이던 학생의 정보
+			alertTo:"",			// 메시지를 받을 학생 이름
 
 			
 		}
@@ -137,6 +160,8 @@ export default {
 			// On every new Stream received...
 			this.session.on('streamCreated', ({ stream }) => {
 				const subscriber = this.session.subscribe(stream);
+				subscriber.muted = JSON.parse(subscriber.stream.connection.data).clientVoice
+				subscriber.handUp = false;
 				this.subscribers.push(subscriber);
 			});
 
@@ -150,12 +175,13 @@ export default {
 
 			// On alert from teacher to you
 			this.session.on('signal:alert', (msg)=>{
-				console.log(msg.data)
-				this.alertMessage=msg.data;
+				if(msg.from.connectionId !== this.publisher.stream.connection.connectionId) {
+					this.alertMessage=msg.data;
+				}
 			})
 
 			// On request mute from teacher to you
-			this.session.on('signal:mute', ()=>{
+			this.session.on('signal:muteRequest', ()=>{
 				// 음소거를 해제시킬 때는 학생에게 물어봄.
 				if(this.muted) {
 					this.requestCancleMuted();
@@ -163,6 +189,32 @@ export default {
 				}
 				// 음소거 시킬 때는 바로 마이크를 끔
 				this.muteMyVoice();
+			})
+
+			// On someone mute own voice
+			this.session.on('signal:mute', (msg)=>{				
+				const data = JSON.parse(msg.data);
+				console.log(msg)
+				// console.log(data);
+				this.subscribers.forEach((sub)=>{
+					if(data.connectionId === sub.stream.connection.connectionId) {
+						sub.muted = data.muted;
+					}
+				})
+			})
+
+			// On someone raise hand
+			this.session.on('signal:handUp', (msg)=>{				
+				this.subscribers.forEach((sub)=>{
+					if(msg.from.connectionId === sub.stream.connection.connectionId) {
+						sub.handUp = msg.data==='true'?true:false;
+					}
+				})
+			})
+
+			// On request down hand from teacher to you
+			this.session.on('signal:handDown', ()=>{
+				this.raiseMyHand();
 			})
 
 			if (window.user) {
@@ -173,10 +225,14 @@ export default {
 
 			// --- Connect to the session with a valid user token ---
 
+			if (this.myUserType==='2') {
+				this.muted = !this.muted;
+			}
+
 			// 'getToken' method is simulating what your server-side should do.
 			// 'token' parameter should be retrieved and returned by your own backend
 			this.getToken(this.mySessionId).then(token => {
-				this.session.connect(token, { clientData: this.myUserName })
+				this.session.connect(token, { clientData: this.myUserName, clientType: this.myUserType, clientVoice: this.muted, })
 					.then(() => {
 
 						// --- Get your own camera stream with the desired properties ---
@@ -198,12 +254,10 @@ export default {
 						// --- Publish your stream ---
 
 						this.session.publish(this.publisher);
+
 						// 선생님은 마이크 켜진상태, 학생은 꺼진 상태로 들어옴
-						if(this.user.type===2) {
-							this.publisher.publishAudio(false);
-							this.muted=true;
-						} else {
-							this.muted=false;
+						if(this.myUserType==="2") {
+							setTimeout(()=>publisher.publishAudio(false), 1000);
 						}
 					})
 					.catch(error => {
@@ -315,13 +369,10 @@ export default {
 		},
 
 		muteStudent (connection) {
-			const studentConnectionId = connection.connectionId;
-			const studentName = JSON.parse(connection.data).clientData;
-
 			this.session.signal({
 				data: "",  // 내용
 				to: [connection],		// 상대방 정보(connection으로 전송)
-				type: 'mute'			// 소켓 메시지 제목
+				type: 'muteRequest'			// 소켓 메시지 제목
 			})
 			.then(() => {
 				console.log('mute request successfully sent');
@@ -329,13 +380,19 @@ export default {
 			.catch(error => {
 				console.error(error);
 			});
-
-			console.log(studentConnectionId, studentName);
 		},
 		
 		makeMessage (connection) {
 			// 메시지 작성 창 열기
-			this.alertTo = connection;
+			this.target=connection;
+
+			if (this.target==null) {
+				this.alertTo = "ALL";
+				this.target="";
+			} else {
+				this.alertTo = JSON.parse(connection.data).clientData;
+			}
+
 			this.isAlertWriting=true;
 		},
 
@@ -347,7 +404,7 @@ export default {
 
 			this.session.signal({
 				data: this.sendMessage,  // Any string (optional)
-				to: [this.alertTo],                     // Array of Connection objects (optional. Broadcast to everyone if empty)
+				to: [this.target],                     // Array of Connection objects (optional. Broadcast to everyone if empty)
 				type: 'alert'             // The type of message (optional)
 			})
 			.then(() => {
@@ -436,6 +493,23 @@ export default {
 		muteMyVoice () {
 			this.publisher.publishAudio(this.muted);
 			this.muted = !this.muted;
+
+			const status = {
+				connectionId: this.publisher.stream.connection.connectionId,
+				muted: this.muted,
+			}
+			
+			this.session.signal({
+				data: JSON.stringify(status),  // Any string (optional)
+				to: [],
+				type: 'mute'             // The type of message (optional)
+			})
+			.then(() => {
+				console.log('Message successfully sent');
+			})
+			.catch(error => {
+				console.error(error);
+			});
 		},
 		
 		requestCancleMuted () {
@@ -447,19 +521,37 @@ export default {
 		},
 
 		raiseMyHand () {
-			alert("손을 들었습니다.")
+			// alert("손을 들었습니다.")
+			document.getElementById("student-hand-up").classList.toggle("student-hand-up-clicked");
+			this.handUp = !this.handUp;
+
+			this.session.signal({
+				data: `${this.handUp}`,  // Any string (optional)
+				to: [],
+				type: 'handUp'             // The type of message (optional)
+			})
 		},
 
-		downHand () {
-			alert("손을 내렸습니다.")
+		downHand (sub) {
+			// alert("손을 내렸습니다.")
+			if(sub.handUp) {
+				this.session.signal({
+					data: "",  // Any string (optional)
+					to: [sub.stream.connection],
+					type: 'handDown'             // The type of message (optional)
+				})
+			}
 		},
 	},
 
 	created() {
+		document.createElement("img").src = "resources/images/memo2.png"	// 이미지 preload
+		document.createElement("img").src = "resources/images/circlesqure2.png"	// 이미지 preload
+		
 		if (!window.opener) { // 직접 주소를 사용해서 들어왔을 때
 			this.joinSession();
 		} else {		// 학사 페이지를 통해 들어왔을 때
-			document.createElement("img").src = "resources/images/memo2.png"	// 이미지 preload
+			
 			
 			window.timer=setTimeout(()=>{			// 응답 없을 시 창 종료
 				alert("연결 상태가 좋지 않습니다. 다시 시도해주세요!");
