@@ -1,5 +1,10 @@
 <template>
-  <div style="font-family: 'Jua', sans-serif" variant="light">
+  <!-- 선생님 페이지 -->
+  <div
+    style="font-family: 'Jua', sans-serif"
+    variant="light"
+    v-if="this.now_user.usertype === 1"
+  >
     <NavSideBar />
     <NavBar />
 
@@ -30,7 +35,9 @@
 
         <!-- Button -->
         <template #cell(submitHomework)="data">
-          <b-button> {{ data.item.submitHomework }} </b-button>
+          <b-button v-on:click="goHomeworkStatus(item)">
+            {{ data.item.submitHomework }}
+          </b-button>
         </template>
       </b-table>
 
@@ -89,7 +96,7 @@ export default {
         headers: this.headers,
       })
         .then((res) => {
-          // console.log(res.data);
+          console.log("res.data :", res.data);
           for (let i = 0; i < res.data.length; ++i) {
             temp = {
               id: res.data[i].id,
@@ -100,7 +107,7 @@ export default {
                 "/" +
                 String(this.classNum),
             };
-            console.log(temp);
+            // console.log(temp);
             this.items.push(temp);
           }
           // this.items = res.data;
@@ -121,10 +128,6 @@ export default {
               "시 " +
               temp.substring(14, 16) +
               "분";
-
-            // var submit = this.items[i].submithomework_count;
-            // this.items[i].submithomework_count =
-            //   String(submit) + "/" + String(this.classNum);
           }
         })
         .catch((err) => {
@@ -137,12 +140,10 @@ export default {
     goHomeworkView: function (homework) {
       this.$store.dispatch("selectHomework", homework);
       this.$router.push({ name: "HomeworkView" });
-      // router.push({
-      //   path: "/homework_view",
-      //   query: { title: this.items.Title, Content: this.items.Content },
-      // });
-      // setTimeout(() => console.log("after"), 30000); // test
-      // window.open("/homework_view", "_self");
+    },
+    goHomeworkStatus: function (homework) {
+      this.$store.dispatch("selectHomework", homework);
+      this.$router.push({ name: "HomeworkStatus" });
     },
     getClassNum: function () {
       axios({
@@ -170,6 +171,8 @@ export default {
     this.setToken();
     this.getHomeworkList();
     this.getClassNum();
+    // console.log("this.now_user :", this.now_user);
+    // this.now_user = 1 // test
   },
 };
 </script>
