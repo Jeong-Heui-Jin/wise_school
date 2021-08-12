@@ -16,15 +16,6 @@
         </button>
       </div>
       <b-list-group id="groupPosition">
-        <!-- <b-list-group-item
-          id="textNoticeImportant"
-          v-for="(important_item, index) in important_items"
-          v-bind:key="index"
-        >
-          <a id="noticeImportant" href="/notice"
-            >🎈 {{ important_item.name }}</a
-          >
-        </b-list-group-item> -->
         <!-- 📗📘📔📙📒📕 -->
         <b-list-group-item
           id="textNoticeImportant"
@@ -43,24 +34,6 @@
           📙 {{ item.title }}
         </b-list-group-item>
       </b-list-group>
-      <!-- <b-table
-        id="my-table textNotice"
-        :hover="true"
-        :small="false"
-        :borderless="true"
-        :items="items"
-        :fields="fields"
-        :per-page="perPage"
-        :current-page="currentPage"
-        :tbody-tr-class="rowClass"
-      >
-        <template #cell(items)="data">
-          <b-link v-if="data.items.is_important === true">{{
-            data.items
-          }}</b-link>
-          <b-link v-else>안 중요!</b-link>
-        </template>
-      </b-table> -->
     </div>
   </div>
 </template>
@@ -102,7 +75,7 @@ export default {
         headers: this.headers,
       })
         .then((res) => {
-          console.log(res.data)
+          console.log(res.data);
           // id 기준 내림차순
           res.data.sort(function (a, b) {
             if (a.id > b.id) {
@@ -155,12 +128,12 @@ export default {
     },
   },
   computed: {
-    ...mapState(["headers", 'now_user']),
+    ...mapState(["headers", "now_user"]),
   },
   created: function () {
     this.setToken();
     this.getNoticeList();
-    console.log(this.now_user)
+    console.log(this.now_user);
   },
 };
 </script>

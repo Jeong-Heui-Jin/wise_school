@@ -1,7 +1,12 @@
 <template>
-  <div style="font-family: 'Jua', sans-serif" variant="light">
-    <NavBar />
+  <!-- 선생님 페이지 -->
+  <div
+    style="font-family: 'Jua', sans-serif"
+    variant="light"
+    v-if="this.now_user.usertype === 1"
+  >
     <NavSideBar />
+    <NavBar />
 
     <h1 id="homeworkTitle">숙제 검사</h1>
 
@@ -52,7 +57,7 @@
 
 <script>
 import axios from "axios";
-import NavSideBar from "@/components/NavSideBar.vue";
+import NavSideBar from "@/components/NavSideBarTeacher.vue";
 import NavBar from "@/components/NavBar.vue";
 import { mapState } from "vuex";
 
@@ -71,7 +76,6 @@ export default {
       ],
       items: [],
       classNum: 1,
-      usertype: 2,
     };
   },
   components: {
@@ -167,7 +171,8 @@ export default {
     this.setToken();
     this.getHomeworkList();
     this.getClassNum();
-    this.usertype = this.now_user.usertype;
+    // console.log("this.now_user :", this.now_user);
+    // this.now_user = 1 // test
   },
 };
 </script>
