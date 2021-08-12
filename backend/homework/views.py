@@ -2,10 +2,11 @@ from django.shortcuts import get_object_or_404, get_list_or_404
 from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.response import Response
+from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from .models import Homework, SubmitHomework, HomeworkFile
 from classroom.models import Classroom
-from .serializers import HomeworkSerializer, HomeworkListSerializer, HomeworkFileSerializer, SubmitHomeworkSerializer
+from .serializers import HomeworkSerializer, HomeworkListSerializer, SubmitHomeworkSerializer
 from notice.serializers import NotificationSerializer
 from django.db.models import Q
 
@@ -63,17 +64,12 @@ def homework_list(request):
 def homeworkfile(request, homework_id):
     homework = get_object_or_404(Homework, pk=homework_id)
 
-    images = request.data.get('files')
+    # images = request.data
 
-    for image in images:
-        data = {
-            'image': image,
-        }
-        serializer = HomeworkFileSerializer(data=data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save(homework=homework)
-    
-    return Response(serializer.data)
+    for image in request.FILES.getlist('files'):
+       HomeworkFile.objects.create(image=image, homework=homework)
+   
+    return Response(status=status.HTTP_201_CREATED)
 
 
 # 숙제 상세 조회 / 수정 / 삭제
