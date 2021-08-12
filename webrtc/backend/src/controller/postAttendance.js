@@ -7,23 +7,23 @@ require('moment-timezone');
 mmt.tz.setDefault("Asia/Seoul");
 
 router.post('/', async (req, res) => {
-    const attendance_query = 'INSERT INTO student_manage_attendance (status, registertime, student_id, classroom_id) VALUES (?)';
+    const attendance_query = 'INSERT INTO student_manage_attendance(status, registertime, student_id, classroom_id) VALUES (?)';
     
     const {student_id, classroom_id} = req.body;
-    const now_at = mmt().format("yyyy-MM-DD hh:mm:ss");
-    var attendance_data = {
-        status: '1',
-        registertime: now_at,
+    const now_at = mmt().format("yyyy-MM-DD HH:mm:ss");
+    let attendance_data = {
+        status: '출석',
+        registertime: now_at.toString(),
         student_id: student_id,
-        classroom_id: classroom_id
+        classroom_id: classroom_id,
     }
 
-    connect.query(attendance_query, attendance_data,(error, result) => {
+    await connect.query(attendance_query, attendance_data,(error, result) => {
         if(error) throw error;
         console.log(result);
         res.render("logic", {type:"attendance", result:true});
 
-    })
+    });
     
 
 
