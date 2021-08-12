@@ -15,12 +15,20 @@ class SubmitHomeworkFileSerializer(serializers.ModelSerializer):
 
 
 class SubmitHomeworkSerializer(serializers.ModelSerializer):
-    file_set = SubmitHomeworkFileSerializer(many=True)
+    submithomeworkfile_set = SubmitHomeworkFileSerializer(many=True, read_only=True)
 
     class Meta:
         model = SubmitHomework
-        fields = ('id', 'content', 'registertime', 'file_set',)
+        fields = ('id', 'content', 'registertime', 'submithomeworkfile_set',)
         read_only_fields = ('homework', 'student',)
+
+
+class SubmitHomeworkListSerializer(serializers.ModelSerializer):
+    submithomeworkfile_set = SubmitHomeworkFileSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = SubmitHomework
+        fields = '__all__'
 
 
 class HomeworkFileSerializer(serializers.ModelSerializer):
@@ -41,7 +49,7 @@ class HomeworkSerializer(serializers.ModelSerializer):
 
 class HomeworkListSerializer(serializers.ModelSerializer):
     homeworkfile_set = HomeworkFileSerializer(many=True, read_only=True)
-    submithomework_set = SubmitHomeworkSerializer(many=True, read_only=True)
+    submithomework_set = SubmitHomeworkListSerializer(many=True, read_only=True)
     submithomework_count = serializers.IntegerField(source='submithomework_set.count', read_only=True)
 
     class Meta:

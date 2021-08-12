@@ -30,9 +30,10 @@
 
         <!-- Button -->
         <template #cell(submitHomework)="data">
-          <b-button v-on:click="goHomeworkStatus(item)">
-            {{ data.item.submitHomework }}
-          </b-button>
+          <div v-if="usertype===1">
+            <b-button> {{ data.item.submitHomework }} </b-button>
+          </div>
+          <b-button> {{ data.item.submitHomework }} </b-button>
         </template>
       </b-table>
 
@@ -52,7 +53,7 @@
 
 <script>
 import axios from "axios";
-import NavSideBar from "@/components/NavSideBar.vue";
+import NavSideBar from '@/components/NavSideBar.vue'
 import NavBar from "@/components/NavBar.vue";
 import { mapState } from "vuex";
 
@@ -60,7 +61,7 @@ export default {
   name: "Homework",
   data: function () {
     return {
-      perPage: 10,
+      perPage: 8,
       currentPage: 1,
       fields: [
         // Title name 변경
@@ -92,7 +93,7 @@ export default {
         headers: this.headers,
       })
         .then((res) => {
-          console.log("res.data :", res.data);
+          // console.log(res.data);
           for (let i = 0; i < res.data.length; ++i) {
             temp = {
               id: res.data[i].id,
@@ -103,7 +104,7 @@ export default {
                 "/" +
                 String(this.classNum),
             };
-            // console.log(temp);
+            console.log(temp);
             this.items.push(temp);
           }
           // this.items = res.data;
@@ -124,6 +125,10 @@ export default {
               "시 " +
               temp.substring(14, 16) +
               "분";
+
+            // var submit = this.items[i].submithomework_count;
+            // this.items[i].submithomework_count =
+            //   String(submit) + "/" + String(this.classNum);
           }
         })
         .catch((err) => {
@@ -136,10 +141,6 @@ export default {
     goHomeworkView: function (homework) {
       this.$store.dispatch("selectHomework", homework);
       this.$router.push({ name: "HomeworkView" });
-    },
-    goHomeworkStatus: function (homework) {
-      this.$store.dispatch("selectHomework", homework);
-      this.$router.push({ name: "HomeworkStatus" });
     },
     getClassNum: function () {
       axios({
@@ -167,7 +168,7 @@ export default {
     this.setToken();
     this.getHomeworkList();
     this.getClassNum();
-    this.usertype = this.now_user.usertype;
+    this.usertype = this.now_user.usertype
   },
 };
 </script>
@@ -177,6 +178,8 @@ export default {
   position: fixed;
   top: 10px;
   left: 120px;
+  margin-left: 220px;
+  margin-top: 20px;
 }
 
 #homeworkForm {
