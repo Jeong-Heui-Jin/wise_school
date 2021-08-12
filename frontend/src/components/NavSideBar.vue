@@ -32,7 +32,7 @@
 import { mapState } from "vuex";
 
 export default {
-  name: 'NavsidebarTeacher',
+  name: 'NavSideBar',
   data: function () {
     return {
       usertype: 2,
