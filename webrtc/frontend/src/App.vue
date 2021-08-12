@@ -14,7 +14,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="menu-wrapper" id="menu-wrapper">
+		<div class="menu-wrapper no-drag" id="menu-wrapper">
 			<!-- 우하단 플로팅 메뉴 -->
 			<div class="menu-opener" id="menu-opener-shadow" @click="showMenus">
 				<!-- 그림자효과 -->
@@ -28,7 +28,7 @@
 			<div class="menu-hide menu" id="menu-exit" @click="leaveSession"></div>
 		</div>
 		<!-- 학생 리스트 창 -->
-		<div class="student-hide" id="student-wrapper">
+		<div class="student-hide no-drag" id="student-wrapper">
 			<!-- 내 계정. 최상단에 위치 -->
 			<div class="student">
 				<div class="student-profile"></div>
@@ -253,12 +253,18 @@ export default {
 
 						// --- Publish your stream ---
 
-						this.session.publish(this.publisher);
-
-						// 선생님은 마이크 켜진상태, 학생은 꺼진 상태로 들어옴
-						if(this.myUserType==="2") {
-							setTimeout(()=>publisher.publishAudio(false), 1000);
+						this.session.publish(this.publisher)
+						.then(()=>{
+							if(this.myUserType==="2") {
+								publisher.publishAudio(false);
 						}
+						});
+
+						// // 선생님은 마이크 켜진상태, 학생은 꺼진 상태로 들어옴
+						// if(this.myUserType==="2") {
+						// 	// 마이크 불러오는 타이밍을 감안해서 2초 후 작동
+						// 	setTimeout(()=>publisher.publishAudio(false), 2000);
+						// }
 					})
 					.catch(error => {
 						console.log('There was an error connecting to the session:', error.code, error.message);
