@@ -71,8 +71,8 @@ export default {
   min-height: 60px;
   max-height: 60px;
   height: 60px;
-  top: 0px;
-  left: 1000px;
+  top: 10px;
+  left: 1100px;
 }
 
 #nav-bar #button {

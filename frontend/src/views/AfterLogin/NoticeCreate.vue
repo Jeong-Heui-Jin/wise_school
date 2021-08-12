@@ -1,170 +1,214 @@
 <template>
   <div style="font-family: 'Jua', sans-serif" variant="light">
+    <!-- left/top navbar -->
     <NavSideBar />
     <NavBar />
 
-    <h1 id="noticeCreateTitle">공지사항 작성</h1>
+    <!-- 작성 Form -->
+    <b-form id="noticeCreateForm">
+      <h1 id="noticeTitle">공지 작성</h1>
 
-    <b-form id="createForm">
-      <h2 id="title">제목</h2>
-      <b-form-input id="titleName" size="lg"
-        >8월 급식 안내 및 메뉴표</b-form-input
-      >
+      <!-- 제목 -->
+      <h2 id="sub-title" style="font-size: 32px">제목</h2>
+      <b-form-input id="titleName" v-model="createValue.title"></b-form-input>
+
+      <!-- 중요도 -->
+      <h2 id="isImportant">중요도</h2>
+      <b-form-select v-model="createValue.is_important" :options="options" id="select">
+      </b-form-select>
 
       <!-- 내용 -->
-      <h2 id="content">내용</h2>
-      <b-form-textarea id="contentText"> </b-form-textarea>
+      <h2 id="content" style="font-size: 32px">내용</h2>
+      <b-form-textarea
+        id="contentText"
+        v-model="createValue.content"
+      ></b-form-textarea>
 
-      <!-- 파일 첨부 -->
-      <h2 id="fileName">파일 첨부</h2>
-      <input type="file" accept="image/*" id="fileUpload" />
-      <!-- <button id="fileUploadBtn">파일첨부</button> -->
+      <!-- 파일 업로드 -->
+      <h2 id="fileUploadTitle" style="font-size: 32px">파일 첨부</h2>
+      <input type="file" id="files" ref="files" accept="image/*" multiple v-on:change="handleFileUpload()" enctype="multipart/form-data">
 
-      <h3>
-        <button id="cancelBtn">취소</button>
-        <button id="saveBtn">저장</button>
-      </h3>
+      <!-- 취소/저장 버튼 -->
+      <button id="saveBtn" @click="noticeCreate">저장</button>
+      <button id="cancelBtn">취소</button>
     </b-form>
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import NavSideBar from "@/components/NavSideBarTeacher.vue";
+import NavSideBar from '@/components/NavSideBar.vue'
 import NavBar from "@/components/NavBar.vue";
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 
 export default {
-  name: "NoticeCreate",
-  data: function () {
-    return {
-      contents: `8월 1일부터 31일 까지 급식표가 첨부되어 있습니다.
-        메뉴 확인 부탁드립니다.
-
-        또한 급식비가 인상되어 기존 130,000원의 급식비가
-        1,300,000원으로 변경되었으니 참고 부탁드립니다.`,
-      createValue: {
-        
-      }
-    };
-  },
+  name: "HomeworkCreate",
   components: {
     NavSideBar,
     NavBar,
   },
+  data: function () {
+    return {
+      createValue: {
+        title: "",
+        is_important: 0,
+        content: "",
+      },
+      files: "",
+      options: [
+        { text: '일반', value: 0 },
+        { text: '중요', value: 1 }
+      ]
+    };
+  },
   methods: {
     setToken: function () {
-      this.$store.dispatch('setToken')
+      this.$store.dispatch("setToken");
     },
-    noticeCreate: function () {
+    noticeCreate: function (event) {
+      event.preventDefault();
       axios({
         method: "post",
-        url: 'http://i5a205.p.ssafy.io:8000/notice/',
+        url: "http://127.0.0.1:8000/notice/",
         headers: this.headers,
         data: this.createValue,
       })
         .then((res) => {
-          // console.log(res.data)
           this.$store.dispatch('selectNotice', res.data)
-          // window.open("/notice_view", "_self");
+
+          // 파일 저장
+          if (this.files) {
+            var formData = new FormData();
+            formData.append('files', this.files)
+
+            for( var i = 0; i < this.files.length; i++ ){
+              formData.append('files', this.files[i]);
+            }
+
+            axios({
+              method: "post",
+              url: `http://127.0.0.1:8000/notice/file/${res.data.id}/`,
+              // url: `http://i5a205.p.ssafy.io:8000/homework/file/${res.data.id}/`,
+              data: formData,
+              headers: { 'Content-Type': 'multipart/form-data' },
+            })
+              .then(function(res){
+                console.log(res)
+                console.log('SUCCESS!!');
+              })
+              .catch(function(err){
+                console.log(err);
+              });
+          }
+
+          this.$router.push({ name: "NoticeView" });
         })
         .catch((err) => {
           console.log(err);
         });
     },
+    handleFileUpload() {
+      this.files = this.$refs.files.files;
+    },
   },
   computed: {
-    ...mapState([
-      'headers'
-    ]),
+    ...mapState(["headers"]),
   },
-  created: function() {
-    this.setToken()
-  }
+  created: function () {
+    this.setToken();
+  },
 };
 </script>
 
 <style>
-#createForm #cancelBtn {
-  position: absolute;
-  top: 90%;
-  left: 36%;
-
-  border-radius: 12px;
-
-  color: red;
-  background-color: #fcb6b6;
-
-  min-width: 11%;
-}
-
-#createForm #saveBtn {
-  position: absolute;
-  top: 90%;
-  left: 53%;
-
-  border-radius: 12px;
-
-  color: rgb(38, 38, 255);
-  background-color: #a8aafd;
-
-  min-width: 11%;
-}
-
-#noticeCreateTitle {
+#noticeCreateForm #select {
   position: fixed;
-  left: 22%;
-}
 
-#createForm {
-  position: absolute;
-
-  min-width: 70%;
-  min-height: 75%;
+  width: 1100px;
+  height: 600px;
 
   top: 112px;
-  left: 25%;
+  left: 370px;
 
   background-color: #e0edd4;
   border-radius: 10px;
-  /* z-index: 1; */
 
   font-size: 160%;
 }
 
-#createForm #title {
+#noticeCreateForm #noticeTitle {
   position: absolute;
-  left: 10%;
-  top: 120px;
+  top: -92px;
+  left: -20px;
 }
 
-#createForm #titleName {
+#noticeCreateForm #sub-title {
   position: absolute;
-  left: 30%;
-  top: 110px;
+  left: 100px;
+  top: 70px;
+}
 
-  width: 42vw;
+#noticeCreateForm #titleName {
+  position: absolute;
+  left: 250px;
+  top: 60px;
+
+  width: 700px;
   font-size: 100%;
 
   background-color: rgb(248, 236, 196);
   border-radius: 10px;
-  /* z-index: 0; */
 }
 
-#content {
+#noticeCreateForm #isImportant {
   position: absolute;
-  left: 10%;
-  top: 220px;
+  left: 100px;
+  top: 135px;
 }
 
-#contentText {
+#noticeCreateForm #select {
   position: absolute;
-  left: 30%;
-  top: 220px;
+  left: 250px;
+  top: 130px;
+  width: 700px;
+  height: 50px;
+  font-size: 30px;
+  padding: 5px;
+  background-color: rgb(248, 236, 196);
+}
 
-  max-width: 60%;
-  min-width: 60%;
-  min-height: 40%;
+.select {
+  width: 80px;
+  padding: 5px;
+}
+
+#noticeCreateForm #endDate {
+  position: absolute;
+  left: 250px;
+  top: 135px;
+
+  width: 700px;
+  font-size: 90%;
+
+  background-color: rgb(248, 236, 196);
+  border-radius: 10px;
+}
+
+#noticeCreateForm #content {
+  position: absolute;
+  left: 100px;
+  top: 200px;
+}
+
+#noticeCreateForm #contentText {
+  position: absolute;
+  left: 250px;
+  top: 200px;
+
+  max-width: 700px;
+  min-width: 700px;
+  max-height: 220px;
+  min-height: 220px;
 
   padding: 10px;
 
@@ -174,36 +218,52 @@ export default {
   border-radius: 10px;
 }
 
-#fileName {
+#noticeCreateForm #fileUploadTitle {
   position: absolute;
-  left: 10%;
-  top: 560px;
+  left: 100px;
+  top: 445px;
+  background-color: transparent;
 }
 
-#fileUpload {
+#noticeCreateForm #files {
   position: absolute;
-  left: 30%;
-  top: 560px;
+  left: 250px;
+  top: 440px;
 
-  max-width: 60%;
-  min-width: 60%;
+  max-width: 700px;
+  min-width: 700px;
 
   background-color: rgb(248, 236, 196);
   border-radius: 13px;
 
   text-align: left;
   padding-left: 15px;
+  padding: 10px;
 }
 
-#fileUploadBtn {
+#noticeCreateForm #cancelBtn {
   position: absolute;
-  left: 85%;
+  top: 550px;
+  left: 670px;
 
-  min-width: 14%;
+  border-radius: 12px;
+  border: 0px;
+  color: red;
+  background-color: #fcb6b6;
 
-  background-color: rgb(187, 187, 187);
-  border-radius: 13px;
+  min-width: 11%;
+}
 
-  font-size: 80%;
+#noticeCreateForm #saveBtn {
+  position: absolute;
+  top: 550px;
+  left: 330px;
+
+  border-radius: 12px;
+  border: 0px;
+  color: rgb(38, 38, 255);
+  background-color: #a8aafd;
+
+  min-width: 11%;
 }
 </style>
