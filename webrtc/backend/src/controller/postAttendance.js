@@ -10,10 +10,11 @@ router.post('/', async (req, res) => {
     const attendance_query = 'INSERT INTO student_manage_attendance(status, registertime, student_id, classroom_id) VALUES (?)';
     
     const {student_id, classroom_id} = req.body;
-    const now_at = mmt().format("yyyy-MM-DD HH:mm:ss");
+    const now_at = mmt().format("yyyy-MM-DD HH:mm:ss.ssssss");
+    // const now_at = Date.now();
     let attendance_data = {
         status: '출석',
-        registertime: now_at.toString(),
+        registertime: now_at,
         student_id: student_id,
         classroom_id: classroom_id,
     }
