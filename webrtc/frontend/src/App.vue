@@ -553,6 +553,8 @@ export default {
 	created() {
 		document.createElement("img").src = "resources/images/memo2.png"	// 이미지 preload
 		document.createElement("img").src = "resources/images/circlesqure2.png"	// 이미지 preload
+		document.createElement("img").src = "resources/images/mute.png"	// 이미지 preload
+		document.createElement("img").src = "resources/images/unmute.png"	// 이미지 preload
 		
 		if (!window.opener) { // 직접 주소를 사용해서 들어왔을 때
 			this.joinSession();
