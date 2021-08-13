@@ -35,14 +35,14 @@
 				<div class="student-name">{{myUserName}}</div>
 				<div class="student-function-wrapper">
 					<div class="student-function" id="student-mute" @click="muteMyVoice">
-						<img src="resources/images/mute.png" alt="" v-if="!muted">
-						<img src="resources/images/unmute.png" alt="" v-else>
+						<img src="../public/resources/images/mute.png" alt="" v-if="!muted">
+						<img src="../public/resources/images/unmute.png" alt="" v-else>
 					</div>
 					<div class="student-function" id="student-hand-up" @click="raiseMyHand">
 						<img src="../public/resources/images/hand_up.png" alt="">
 					</div>
 					<div class="student-function" id="student-alert" @click="makeMessage(null)">
-						<img src="resources/images/chat.png" alt="">
+						<img src="../public/resources/images/chat.png" alt="">
 					</div>
 				</div>
 			</div>
@@ -52,17 +52,17 @@
 				<div class="student-name"> {{ JSON.parse(sub.stream.connection.data).clientData }} </div>
 				<div class="student-function-wrapper">
 					<div class="student-function" id="student-mute" @click="muteStudent(sub.stream.connection)">
-						<img src="resources/images/unmute.png" alt="" v-if="sub.muted">
-						<img src="resources/images/mute.png" alt="" v-else>
+						<img src="../public/resources/images/unmute.png" alt="" v-if="sub.muted">
+						<img src="../public/resources/images/mute.png" alt="" v-else>
 					</div>
 					<div class="student-function student-hand-up-clicked" id="student-hand-up" @click="downHand(sub)" v-if="sub.handUp">
-						<img src="resources/images/hand_up.png" alt="">
+						<img src="../public/resources/images/hand_up.png" alt="">
 					</div>
 					<div class="student-function" id="student-hand-up" @click="downHand(sub)" v-else>
-						<img src="resources/images/hand_up.png" alt="">
+						<img src="../public/resources/images/hand_up.png" alt="">
 					</div>
 					<div class="student-function" id="student-alert" @click="makeMessage(sub.stream.connection)">
-						<img src="resources/images/chat.png" alt="">
+						<img src="../public/resources/images/chat.png" alt="">
 					</div>
 				</div>
 			</div>
@@ -583,10 +583,10 @@ export default {
 	},
 
 	created() {
-		document.createElement("img").src = "resources/images/memo2.png"	// 이미지 preload
-		document.createElement("img").src = "resources/images/circlesqure2.png"	// 이미지 preload
-		document.createElement("img").src = "resources/images/mute.png"	// 이미지 preload
-		document.createElement("img").src = "resources/images/unmute.png"	// 이미지 preload
+		document.createElement("img").src = "../public/resources/images/memo2.png"	// 이미지 preload
+		document.createElement("img").src = "../public/resources/images/circlesqure2.png"	// 이미지 preload
+		document.createElement("img").src = "../public/resources/images/mute.png"	// 이미지 preload
+		document.createElement("img").src = "../public/resources/images/unmute.png"	// 이미지 preload
 		
 		if (!window.opener) { // 직접 주소를 사용해서 들어왔을 때
 			this.joinSession();
