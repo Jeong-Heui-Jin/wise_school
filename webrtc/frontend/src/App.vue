@@ -613,6 +613,7 @@ export default {
 					},"http://i5a205.p.ssafy.io:8081");
 
 					window.user=e.data;
+					localStorage.setItem('jwt', e.data.userToken);
 					window.joinSession();	// 데이터 수신 시 연결설정 시작.
 				}
 			});
