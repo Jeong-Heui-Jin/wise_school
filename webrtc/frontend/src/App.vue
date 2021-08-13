@@ -8,11 +8,13 @@
 				<!-- <user-video :stream-manager="teacher" @click.native="updateMainVideoStreamManager(teacher)" v-if="teacher"/> -->
 				<user-video :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
 				<div v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub">
-					<div v-if="JSON.parse(sub.stream.connection.data).clientData === 'Screen Sharing'">
-						<user-video style="width:1280px; height:720px;" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
-					</div>
-					<div v-else>
+					<div v-if="JSON.parse(sub.stream.connection.data).clientData !== 'Screen Sharing'">
 						<user-video :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+					</div>
+				</div>
+				<div v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub">
+					<div class="video-screen-sharing" v-if="JSON.parse(sub.stream.connection.data).clientData === 'Screen Sharing'">
+						<user-video style="min-width: 300%; " :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
 					</div>
 				</div>
 			</div>
@@ -51,22 +53,24 @@
 				</div>
 			</div>
 			<!-- 다른 사람 계정. -->
-			<div class="student" v-for="sub in subscribers" :key="sub.stream.connection.connectionId">
-				<div class="student-profile"></div>
-				<div class="student-name"> {{ JSON.parse(sub.stream.connection.data).clientData }} </div>
-				<div class="student-function-wrapper">
-					<div class="student-function" id="student-mute" @click="muteStudent(sub.stream.connection)">
-						<img src="../public/resources/images/unmute.png" alt="" v-if="sub.muted">
-						<img src="../public/resources/images/mute.png" alt="" v-else>
-					</div>
-					<div class="student-function student-hand-up-clicked" id="student-hand-up" @click="downHand(sub)" v-if="sub.handUp">
-						<img src="../public/resources/images/hand_up.png" alt="">
-					</div>
-					<div class="student-function" id="student-hand-up" @click="downHand(sub)" v-else>
-						<img src="../public/resources/images/hand_up.png" alt="">
-					</div>
-					<div class="student-function" id="student-alert" @click="makeMessage(sub.stream.connection)">
-						<img src="../public/resources/images/chat.png" alt="">
+			<div v-for="sub in subscribers" :key="sub.stream.connection.connectionId">
+				<div class="student" v-if="JSON.parse(sub.stream.connection.data).clientData !== 'Screen Sharing'">
+					<div class="student-profile"></div>
+					<div class="student-name"> {{ JSON.parse(sub.stream.connection.data).clientData }} </div>
+					<div class="student-function-wrapper">
+						<div class="student-function" id="student-mute" @click="muteStudent(sub.stream.connection)">
+							<img src="../public/resources/images/unmute.png" alt="" v-if="sub.muted">
+							<img src="../public/resources/images/mute.png" alt="" v-else>
+						</div>
+						<div class="student-function student-hand-up-clicked" id="student-hand-up" @click="downHand(sub)" v-if="sub.handUp">
+							<img src="../public/resources/images/hand_up.png" alt="">
+						</div>
+						<div class="student-function" id="student-hand-up" @click="downHand(sub)" v-else>
+							<img src="../public/resources/images/hand_up.png" alt="">
+						</div>
+						<div class="student-function" id="student-alert" @click="makeMessage(sub.stream.connection)">
+							<img src="../public/resources/images/chat.png" alt="">
+						</div>
 					</div>
 				</div>
 			</div>

@@ -41,6 +41,8 @@ nav i.fa:hover {
 
 #main-container {
 	padding-bottom: 80px;
+	max-height: 100%;
+	overflow: hidden;
 }
 
 /*vertical-center {
@@ -544,6 +546,11 @@ a:hover .demo-logo {
 	color: #777777;
 	font-weight: bold;
 	border-bottom-right-radius: 4px;
+}
+
+.video-screen-sharing {
+	left:0px !important;
+	display: block;
 }
 
 video {
