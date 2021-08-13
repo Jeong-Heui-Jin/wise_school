@@ -153,7 +153,7 @@ export default {
         classroom: this.now_user.classroom,
         userName: this.now_user.name,
         userType: this.now_user.usertype,
-        userToken: localStorage.getItem(jwt)
+        userToken: localStorage.getItem('jwt')
       }
       // setTimeout(()=> window.class.postMessage(user, 'https://i5a205.p.ssafy.io:8080'), 2000);
       window.addEventListener('message', function(e) {
