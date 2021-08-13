@@ -6,13 +6,16 @@
 			</div>
 			<div id="video-container" class="col-md-6" >
 				<user-video :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
-				<user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
-			</div>
-			<div v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub">
-				<div v-if="JSON.parse(sub.stream.connection.data).clientData === 'Screen Sharing'">
-					<user-video style="width:1280px; height:720px;" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+				<div v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub">
+					<div v-if="JSON.parse(sub.stream.connection.data).clientData === 'Screen Sharing'">
+						<user-video style="width:1280px; height:720px;" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+					</div>
+					<div v-else>
+						<user-video :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+					</div>
 				</div>
 			</div>
+			
 		</div>
 		<div class="menu-wrapper no-drag" id="menu-wrapper">
 			<!-- 우하단 플로팅 메뉴 -->

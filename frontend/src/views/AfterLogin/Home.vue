@@ -82,7 +82,12 @@ export default {
         {subject: '사회', book: '사회과부도', time:'11:00 ~ 11:50'},
         {subject: '과학', book: '관찰', time:'13:00 ~ 13:50'},
         {subject: '영어', book: 'Elementary School', time:'14:00 ~ 14:50'},
-      ]
+      ],
+      attendanceValue: {  // 학생 출석체크 상태 정보
+				status:"",
+				student_id: this.now_user.id,
+				classroom_id:this.now_user.classroom
+			}
     }
   },
   methods: {
@@ -145,6 +150,19 @@ export default {
       })
     },
     enterRoom: function () {
+      axios({
+				method: "post",
+				url: "http://i5a205.p.ssafy.io:8000/student-manage/attendance/",
+				data: this.attendanceValue,
+				headers: localStorage.getItem("jwt")
+			})
+			.then((res) => {
+				console.log(res, "success postAttendance");
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+
       window.class = window.open("https://i5a205.p.ssafy.io:8080");
       
       // window.class = window.open("https://localhost:8081");
@@ -157,7 +175,6 @@ export default {
       }
       // setTimeout(()=> window.class.postMessage(user, 'https://i5a205.p.ssafy.io:8080'), 2000);
       window.addEventListener('message', function(e) {
-
         if (e.data.msgType === "connection_fail") {
           console.log("Connection refused: Time Out!")
           clearInterval(window.interval1);
@@ -167,6 +184,10 @@ export default {
         } else if (e.data.msgType === "connect") {
           console.log("Connect to Classroom Successfully.")
           clearInterval(window.interval1);
+        } else if (e.data.msgType === "leave_class") {
+          console.log("Leave Classroom Successfully.")
+          window.class.close();
+          window.class="";
         }
       });
 
