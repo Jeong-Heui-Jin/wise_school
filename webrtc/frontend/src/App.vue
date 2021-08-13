@@ -22,7 +22,7 @@
 			</div>
 			<!-- 학생 리스트 -->
 			<div class="menu-hide menu" id="menu-student-list" @click="showStudents"></div>
-			<!-- 화면공유 -->
+			<!-- 화면공유 -->														
 			<div class="menu-hide menu" id="menu-other" @click="startScreenSharing">+</div>
 			<!-- 나가기 버튼 -->
 			<div class="menu-hide menu" id="menu-exit" @click="leaveSession"></div>
@@ -149,7 +149,7 @@ export default {
 			}
 
 
-			
+
 		}
 	},
 
