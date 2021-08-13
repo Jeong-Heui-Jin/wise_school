@@ -5,6 +5,7 @@
 				<h1 id="session-title">{{ mySessionId }}</h1>
 			</div>
 			<div id="video-container" class="col-md-6" >
+				<!-- <user-video :stream-manager="teacher" @click.native="updateMainVideoStreamManager(teacher)" v-if="teacher"/> -->
 				<user-video :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
 				<div v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub">
 					<div v-if="JSON.parse(sub.stream.connection.data).clientData === 'Screen Sharing'">
@@ -149,8 +150,8 @@ export default {
 				status:"",
 				student_id:"4",
 				classroom_id:"1"
-			}
-
+			},
+			teacher:"",
 
 
 		}
@@ -171,6 +172,9 @@ export default {
 				const subscriber = this.session.subscribe(stream);
 				subscriber.muted = JSON.parse(subscriber.stream.connection.data).clientVoice
 				subscriber.handUp = false;
+				if(JSON.parse(subscriber.stream.connection.data).clientType==="1") {
+					this.teacher=subscriber;
+				}
 				this.subscribers.push(subscriber);
 			});
 
