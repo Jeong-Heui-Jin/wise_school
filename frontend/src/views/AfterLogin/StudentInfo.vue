@@ -151,13 +151,27 @@ export default {
             let body = { Name: studentName.value, Number: studentNumber.value, Phone: studentPhone.value, Address: studentAddress.value };
             console.log(body);
             // axios POST
+            axios({
+              method: "post",
+              url: `http://127.0.0.1:8000/notice/file/${res.data.id}/`,
+              // url: `http://i5a205.p.ssafy.io:8000/homework/file/${res.data.id}/`,
+              data: formData,
+              headers: this.headers,
+            })
+              .then(function(res){
+                console.log(res)
+                console.log('SUCCESS!!');
+              })
+              .catch(function(err){
+                console.log(err);
+              });
         },
         parentInfoDelete(e) {
             // console.log(e.target.id);
             // console.log(Number(e.target.id[8]));
             // console.log(this.parents[Number(e.target.id[8]) - 1].ID);
             this.parents.splice(Number(e.target.id[8]) - 1, 1);
-            // axios DELETE                    
+            // axios DELETE
             // 해당 this.parents[Number(e.target.id[8]) - 1].ID로 parent Info data delete
             // parents ID -> this.parents[idx].ID
             // 

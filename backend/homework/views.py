@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from .models import Homework, SubmitHomework, HomeworkFile
 from classroom.models import Classroom
-from .serializers import HomeworkSerializer, HomeworkListSerializer, SubmitHomeworkSerializer
+from .serializers import HomeworkSerializer, HomeworkListSerializer, SubmitHomeworkSerializer, SubmitHomeworkListSerializer
 from notice.serializers import NotificationSerializer
 from django.db.models import Q
 
@@ -110,7 +110,7 @@ def homework_detail(request, homework_id):
 def submit_detail(request, submithomework_id):
     submit = get_object_or_404(SubmitHomework, pk=submithomework_id)
     if request.method == 'GET':
-        serializer = SubmitHomeworkSerializer(submit)    
+        serializer = SubmitHomeworkListSerializer(submit)    
         return Response(serializer.data)
 
     elif request.method == 'PUT':
@@ -133,5 +133,5 @@ def submit_detail(request, submithomework_id):
 @permission_classes([IsAuthenticated])
 def submit(request):
     submits = get_list_or_404(SubmitHomework, student=request.user)
-    serializer = SubmitHomeworkSerializer(submits, many=True)
+    serializer = SubmitHomeworkListSerializer(submits, many=True)
     return Response(serializer.data)
