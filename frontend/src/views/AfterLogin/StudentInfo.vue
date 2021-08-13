@@ -148,19 +148,19 @@ export default {
             const studentAddress = document.querySelector('#student-address');
 
             // POST BODY
-            let body = { Name: studentName.value, Number: studentNumber.value, Phone: studentPhone.value, Address: studentAddress.value };
+            let body = { name: studentName.value, number: studentNumber.value, phone: studentPhone.value, address: studentAddress.value };
             console.log(body);
             // axios POST
             axios({
               method: "post",
-              url: `http://127.0.0.1:8000/notice/file/${res.data.id}/`,
+              url: `http://127.0.0.1:8000/accounts/info/${this.student_id}/`,
               // url: `http://i5a205.p.ssafy.io:8000/homework/file/${res.data.id}/`,
-              data: formData,
+              data: body,
               headers: this.headers,
             })
               .then(function(res){
-                console.log(res)
-                console.log('SUCCESS!!');
+                console.log(res.data)
+                alert('등록되었습니다');
               })
               .catch(function(err){
                 console.log(err);

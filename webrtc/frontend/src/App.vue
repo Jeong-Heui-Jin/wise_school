@@ -294,7 +294,13 @@ export default {
 			this.subscribers = [];
 			this.OV = undefined;
 
-			window.removeEventListener('beforeunload', this.leaveSession);
+			window.removeEventListener('beforeunload', this.leaveSession)
+			.then(()=>{
+				window.opener.postMessage({
+					msgType: "leave_class",
+				// },"http://localhost:8080");
+			},"http://i5a205.p.ssafy.io:8081");
+			})
 		},
 
 		updateMainVideoStreamManager (stream) {

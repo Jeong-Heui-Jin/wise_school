@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, get_list_or_404
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import ParentSerializer, StudentInfoSerializer, UserSerializer, UserListSerializer, ServiceRequestSerializer, SignupSerializer
+from .serializers import ParentSerializer, StudentInfoSerializer, UserSerializer, UserListSerializer, ServiceRequestSerializer, SignupSerializer, StudentInfoSerializer
 from django.contrib.auth import get_user_model
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
@@ -83,7 +83,22 @@ def info(request, user_id):
         return Response(serializer.data)
 
     elif request.method == 'PUT':
-        serializer = UserListSerializer(user, data=request.data)
+        # student.info 정보 수정
+        info_data = {
+            'number' : request.data.get('number'),
+            'address' : request.data.get('address'),
+            # 'is_notification' : user.is_notification,
+        }
+        serializer = StudentInfoSerializer(user.info, data=info_data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+
+        # user 정보 수정
+        user_data = {
+            'name' : request.data.get('name'),
+            'phone' : request.data.get('phone'),
+        }
+        serializer = UserListSerializer(user, data=user_data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data)
