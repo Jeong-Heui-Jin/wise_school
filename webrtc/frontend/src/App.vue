@@ -144,8 +144,8 @@ export default {
 			alertTo:"",			// 메시지를 받을 학생 이름
 			attendanceValue: {  // 학생 출석체크 상태 정보
 				status:"",
-				student_id:"",
-				classroom_id:""
+				student_id:"4",
+				classroom_id:"1"
 			}
 
 
@@ -261,9 +261,10 @@ export default {
 
 						this.session.publish(this.publisher)
 						.then(()=>{
+							this.getAttendanceStatus();
 							if(this.myUserType==="2") { 
 								publisher.publishAudio(false);	// 학생은 마이크 꺼진 상태로 들어옴
-								this.getAttendanceStatus();		// 학생 출석체크
+								// this.getAttendanceStatus();		// 학생 출석체크
 						}
 						});
 
@@ -557,25 +558,30 @@ export default {
 		},
 
 		getAttendanceStatus() {
+			console.log("출석체크");
 			const now_at = new Date();
 			let hour = now_at.getHours();
 			let minutes = now_at.getMinutes();
 
 			if (hour===9 && 0<=minutes<=10) {
-				this.attendance_status.status = "출석";	
+				this.attendanceValue.status = "출석";	
 			} else  {
-				this.attendance_status.status = "지각";
+				this.attendanceValue.status = "지각";
 			} 
+			console.log("출석", this.attendanceValue);
 			axios({
 				method: "post",
 				url: "http://i5a205.p.ssafy.io:8000/student-manage/attendance/",
-				data: this.attendance_status,
-				headers: { 'Content-Type': 'multipart/form-data' },
+				data: this.attendanceValue,
+				// headers: localStorage.getItem("jwt")
+				headers: {'Authorization' : 'JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo0LCJ1c2VybmFtZSI6InN0dWRlbnQ0IiwiZXhwIjoxNjI4OTEyOTUzLCJlbWFpbCI6IiJ9.HdqUDf-Ey5kn4hkiFobFbbRMk6h9cz8zlIQQyunrKVY'}
 			})
 			.then((res) => {
+				console.log("성공");
 				console.log(res, "success postAttendance");
 			})
 			.catch((err) => {
+				console.log("실패");
 				console.log(err);
 			});
 			
