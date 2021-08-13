@@ -39,7 +39,7 @@
 						<img src="resources/images/unmute.png" alt="" v-else>
 					</div>
 					<div class="student-function" id="student-hand-up" @click="raiseMyHand">
-						<img src="resources/images/hand_up.png" alt="">
+						<img src="../public/resources/images/hand_up.png" alt="">
 					</div>
 					<div class="student-function" id="student-alert" @click="makeMessage(null)">
 						<img src="resources/images/chat.png" alt="">
@@ -71,7 +71,7 @@
 		<div class="alert-message-wrapper" v-if='alertMessage' @click="closeModal">
 			<div class="alert-message-background"></div>
 			<div class="alert-message-modal" >
-				<img src="resources/images/memo2.png" alt="">
+				<img src="../public/resources/images/memo2.png" alt="">
 				<div class="alert-message-title">선생님이 쪽지를 보냈어요</div>
 				<div class="alert-message-content"> {{alertMessage}} </div>
 			</div>
@@ -80,7 +80,7 @@
 		<div class="alert-message-write-wrapper no-drag" v-if="isAlertWriting">
 			<div class="alert-message-write">
 				<div class="alert-message-write-nav">
-					<img src="resources/images/circlesqure2.png" alt="">
+					<img src="../public/resources/images/circlesqure2.png" alt="">
 					<div class="alert-message-write-to">{{alertTo}}</div><div class="alert-message-write-close" @click="closeWriter">X</div>
 				</div>
 				<div class="alert-message-write-foot">
