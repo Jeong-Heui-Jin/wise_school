@@ -83,11 +83,7 @@ export default {
         {subject: '과학', book: '관찰', time:'13:00 ~ 13:50'},
         {subject: '영어', book: 'Elementary School', time:'14:00 ~ 14:50'},
       ],
-      attendanceValue: {  // 학생 출석체크 상태 정보
-				status:"",
-				student_id: this.now_user.id,
-				classroom_id:this.now_user.classroom
-			}
+      attendanceValue: "", // 출석체크
     }
   },
   methods: {
@@ -150,49 +146,66 @@ export default {
       })
     },
     enterRoom: function () {
+      const now_at = new Date();
+			let hour = now_at.getHours();
+			let minutes = now_at.getMinutes();
+
+			if (hour===9 && 0<=minutes<=10) {
+				this.attendanceValue = "출석";	
+			} else  {
+				this.attendanceValue = "지각";
+			} 
+			// console.log("출석", this.attendanceValue);
       axios({
 				method: "post",
 				url: "http://i5a205.p.ssafy.io:8000/student-manage/attendance/",
-				data: this.attendanceValue,
-				headers: localStorage.getItem("jwt")
+				data: {
+          status: this.attendanceValue,
+          student_id: this.now_user.id,
+          classroom_id: this.now_user.classroom
+        },
+				headers: this.headers
 			})
 			.then((res) => {
+        // console.log("출석 성공");
 				console.log(res, "success postAttendance");
+        window.class = window.open("https://i5a205.p.ssafy.io:8080");
+      
+        // window.class = window.open("https://localhost:8081");
+        const user = {
+          msgType: "init_classroom",
+          classroom: this.now_user.classroom,
+          userName: this.now_user.name,
+          userType: this.now_user.usertype,
+          userToken: localStorage.getItem('jwt')
+        }
+        // setTimeout(()=> window.class.postMessage(user, 'https://i5a205.p.ssafy.io:8080'), 2000);
+        window.addEventListener('message', function(e) {
+          if (e.data.msgType === "connection_fail") {
+            console.log("Connection refused: Time Out!")
+            clearInterval(window.interval1);
+            window.class.close();
+            window.class=""
+
+          } else if (e.data.msgType === "connect") {
+            console.log("Connect to Classroom Successfully.")
+            clearInterval(window.interval1);
+          } else if (e.data.msgType === "leave_class") {
+            console.log("Leave Classroom Successfully.")
+            window.class.close();
+            window.class="";
+          }
+        });
+
+        window.interval1=setInterval(()=> window.class.postMessage(user, 'https://i5a205.p.ssafy.io:8080'), 500); // 0.5초 간격으로 정보 전송
+        // window.interval1=setInterval(()=> window.class.postMessage(user, 'https://localhost:8081'), 500); // 0.5초 간격으로 정보 전송
+      
 			})
 			.catch((err) => {
+        console.log("실패");
 				console.log(err);
 			});
 
-      window.class = window.open("https://i5a205.p.ssafy.io:8080");
-      
-      // window.class = window.open("https://localhost:8081");
-      const user = {
-        msgType: "init_classroom",
-        classroom: this.now_user.classroom,
-        userName: this.now_user.name,
-        userType: this.now_user.usertype,
-        userToken: localStorage.getItem('jwt')
-      }
-      // setTimeout(()=> window.class.postMessage(user, 'https://i5a205.p.ssafy.io:8080'), 2000);
-      window.addEventListener('message', function(e) {
-        if (e.data.msgType === "connection_fail") {
-          console.log("Connection refused: Time Out!")
-          clearInterval(window.interval1);
-          window.class.close();
-          window.class=""
-
-        } else if (e.data.msgType === "connect") {
-          console.log("Connect to Classroom Successfully.")
-          clearInterval(window.interval1);
-        } else if (e.data.msgType === "leave_class") {
-          console.log("Leave Classroom Successfully.")
-          window.class.close();
-          window.class="";
-        }
-      });
-
-      window.interval1=setInterval(()=> window.class.postMessage(user, 'https://i5a205.p.ssafy.io:8080'), 500); // 0.5초 간격으로 정보 전송
-      // window.interval1=setInterval(()=> window.class.postMessage(user, 'https://localhost:8081'), 500); // 0.5초 간격으로 정보 전송
     },
     goHomeworkView: function (homework) {
       this.$store.dispatch('selectHomework', homework);
