@@ -39,11 +39,13 @@ const routes = [
     path: '/password_reset',
     name: 'PasswordReset',
     component: PasswordReset,
+    props: true,
   },
   {
     path: '/password_change',
     name: 'PasswordChange',
     component: PasswordChange,
+    props: true,
   },
   {
     path: '/service_request',
