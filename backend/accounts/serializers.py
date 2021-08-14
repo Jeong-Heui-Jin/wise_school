@@ -39,8 +39,8 @@ class UserListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        # fields = ('id', 'classroom',)
-        fields = '__all__'
+        fields = ('id', 'classroom', 'name', 'phone')
+        # fields = '__all__'
 
 
 class ServiceRequestSerializer(serializers.ModelSerializer):

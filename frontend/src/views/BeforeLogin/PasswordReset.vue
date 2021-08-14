@@ -54,7 +54,9 @@
 </template>
 
 <script>
+import axios from 'axios'
 import Logo from "@/components/Logo";
+
 export default {
   name: "PasswordReset",
   data: () => ({
@@ -63,12 +65,32 @@ export default {
     userPhone: "",
   }),
   methods: {
-    certificateForm() {
-      // 아이디, 이름, 연락처와 매칭되는지 확인
+    certificateForm: function(event) {
+      event.preventDefault();
+      var confirmData = {
+        username: this.userId,
+        name: this.userName,
+        phone: this.userPhone,
+      }
+      axios({
+        method: 'post',
+        url: 'http://127.0.0.1:8000/accounts/user-confirm/',
+        // url: 'http://i5a205.p.ssafy.io:8000/accounts/user-confirm/',
+        data: confirmData,
+      })
+      .then((res) => {
+        alert("정보가 확인되었습니다! 비밀번호를 새로 설정해주세요 :)")
+        // window.open('/password_change', '_self')
+        console.log(res.data)
+        this.$router.push({ name:'PasswordChange', params:{'user':res.data} })
+      })
+      .catch(err => {
+        alert(err)
+      })
       // if 비정확
       // console.log("정보 재입력")
       if (this.validationPhone) {
-        window.open('/password_change', '_self');
+        // window.open('/password_change', '_self');
       }
       else {
         alert('전화번호를 재입력하세요');

@@ -1,4 +1,3 @@
-from accounts.views import Parents
 from .models import Timetable, TimetableDetail
 from rest_framework import serializers
 
@@ -8,7 +7,7 @@ class TimetableDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TimetableDetail
-        fields = ('id', 'period', 'mon', 'tue', 'wed', 'thu', 'fri',)
+        fields = ('id', 'time', 'mon', 'tue', 'wed', 'thu', 'fri', 'start', 'end',)
         read_only_fields = ('timetable',)
 
 
