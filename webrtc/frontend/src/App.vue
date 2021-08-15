@@ -1,90 +1,85 @@
 <template>
-	<div id="main-container" class="container">
-		<!-- <div id="join" v-if="!session">
-			<div id="img-div"><img src="resources/images/openvidu_grey_bg_transp_cropped.png" /></div>
-			<div id="join-dialog" class="jumbotron vertical-center">
-				<h1>Join a video session</h1>
-				<div class="form-group">
-					<p>
-						<label>Participant</label>
-						<input v-model="myUserName" class="form-control" type="text" required>
-					</p>
-					<p>
-						<label>Session</label>
-						<input v-model="mySessionId" class="form-control" type="text" required>
-					</p>
-					<p class="text-center">
-						<button class="btn btn-lg btn-success" @click="joinSession()">Join!</button>
-					</p>
-				</div>
-			</div>
-		</div> -->
-		
-
+	<div id="main-container" class="container">	
 		<div id="session" v-if="session">
 			<div id="session-header">
 				<h1 id="session-title">{{ mySessionId }}</h1>
-				
 			</div>
-			<!-- <div id="main-video" class="col-md-6">
-				<user-video :stream-manager="mainStreamManager"/>
-			</div> -->
 			<div id="video-container" class="col-md-6" >
+				<!-- <user-video :stream-manager="teacher" @click.native="updateMainVideoStreamManager(teacher)" v-if="teacher"/> -->
 				<user-video :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
-				<user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
-			</div>
-			<div v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub">
-				<div v-if="JSON.parse(sub.stream.connection.data).clientData === 'Screen Sharing'">
-					<user-video style="width:1280px; height:720px;" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+				<div v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub">
+					<div v-if="JSON.parse(sub.stream.connection.data).clientData !== 'Screen Sharing'">
+						<user-video :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+					</div>
+				</div>
+				<div v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub">
+					<div class="video-screen-sharing" v-if="JSON.parse(sub.stream.connection.data).clientData === 'Screen Sharing'">
+						<user-video style="min-width: 300%; " :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+					</div>
 				</div>
 			</div>
+			
 		</div>
-		<div class="menu-wrapper" id="menu-wrapper">
+		<div class="menu-wrapper no-drag" id="menu-wrapper">
+			<!-- 우하단 플로팅 메뉴 -->
 			<div class="menu-opener" id="menu-opener-shadow" @click="showMenus">
 				<!-- 그림자효과 -->
 				<div class="menu-opener" id="menu-more">+</div>
 			</div>
+			<!-- 학생 리스트 -->
 			<div class="menu-hide menu" id="menu-student-list" @click="showStudents"></div>
-
-			<!-- 화면공유 -->
+			<!-- 화면공유 -->														
 			<div class="menu-hide menu" id="menu-other" @click="startScreenSharing">+</div>
-
 			<!-- 나가기 버튼 -->
 			<div class="menu-hide menu" id="menu-exit" @click="leaveSession"></div>
-			<!-- <input v-if="menu" class="btn btn-large btn-danger" type="button" id="buttonLeaveSession" @click="leaveSession" value="Leave session"> -->
 		</div>
-		<div class="student-hide" id="student-wrapper">
+		<!-- 학생 리스트 창 -->
+		<div class="student-hide no-drag" id="student-wrapper">
+			<!-- 내 계정. 최상단에 위치 -->
 			<div class="student">
 				<div class="student-profile"></div>
-				<div class="student-name">박명수</div>
+				<div class="student-name">{{myUserName}}</div>
 				<div class="student-function-wrapper">
-					<div class="student-function" id="student-mute"></div>
-					<div class="student-function" id="student-cam"></div>
-					<div class="student-function" id="student-alert"></div>
+					<div class="student-function" id="student-mute" @click="muteMyVoice">
+						<img src="../public/resources/images/mute.png" alt="" v-if="!muted">
+						<img src="../public/resources/images/unmute.png" alt="" v-else>
+					</div>
+					<div class="student-function" id="student-hand-up" @click="raiseMyHand">
+						<img src="../public/resources/images/hand_up.png" alt="">
+					</div>
+					<div class="student-function" id="student-alert" @click="makeMessage(null)">
+						<img src="../public/resources/images/chat.png" alt="">
+					</div>
 				</div>
 			</div>
-			<div class="student" v-for="sub in subscribers" :key="sub.stream.connection.connectionId">
-				<div class="student-profile"></div>
-				<div class="student-name"> {{ JSON.parse(sub.stream.connection.data).clientData }} </div>
-				<div class="student-function-wrapper">
-					<div class="student-function" id="student-mute" @click="muteStudent(sub.stream.connection)"></div>
-					<div class="student-function" id="student-cam"></div>
-					<div class="student-function" id="student-alert" @click="makeMessage(sub.stream.connection)"></div>
+			<!-- 다른 사람 계정. -->
+			<div v-for="sub in subscribers" :key="sub.stream.connection.connectionId">
+				<div class="student" v-if="JSON.parse(sub.stream.connection.data).clientData !== 'Screen Sharing'">
+					<div class="student-profile"></div>
+					<div class="student-name"> {{ JSON.parse(sub.stream.connection.data).clientData }} </div>
+					<div class="student-function-wrapper">
+						<div class="student-function" id="student-mute" @click="muteStudent(sub.stream.connection)">
+							<img src="../public/resources/images/unmute.png" alt="" v-if="sub.muted">
+							<img src="../public/resources/images/mute.png" alt="" v-else>
+						</div>
+						<div class="student-function student-hand-up-clicked" id="student-hand-up" @click="downHand(sub)" v-if="sub.handUp">
+							<img src="../public/resources/images/hand_up.png" alt="">
+						</div>
+						<div class="student-function" id="student-hand-up" @click="downHand(sub)" v-else>
+							<img src="../public/resources/images/hand_up.png" alt="">
+						</div>
+						<div class="student-function" id="student-alert" @click="makeMessage(sub.stream.connection)">
+							<img src="../public/resources/images/chat.png" alt="">
+						</div>
+					</div>
 				</div>
 			</div>
-			<!-- <div class="student-wrapper1"></div>
-			<div class="student-wrapper2"></div>
-			<div class="student-wrapper3"></div> -->
 		</div>
-
-		<!-- <div id="sharingvideo" style="width:1280px; height:720px;" v-if="isScreenShared" background-color="grey">
-			<user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
-		</div> -->
-
 		<!-- 경고 메시지 수신창 -->
 		<div class="alert-message-wrapper" v-if='alertMessage' @click="closeModal">
 			<div class="alert-message-background"></div>
 			<div class="alert-message-modal" >
+				<img src="../public/resources/images/memo2.png" alt="">
 				<div class="alert-message-title">선생님이 쪽지를 보냈어요</div>
 				<div class="alert-message-content"> {{alertMessage}} </div>
 			</div>
@@ -93,7 +88,8 @@
 		<div class="alert-message-write-wrapper no-drag" v-if="isAlertWriting">
 			<div class="alert-message-write">
 				<div class="alert-message-write-nav">
-					<div class="alert-message-write-to">{{JSON.parse(alertTo.data).clientData}}</div><div class="alert-message-write-close" @click="closeWriter">X</div>
+					<img src="../public/resources/images/circlesqure2.png" alt="">
+					<div class="alert-message-write-to">{{alertTo}}</div><div class="alert-message-write-close" @click="closeWriter">X</div>
 				</div>
 				<div class="alert-message-write-foot">
 					<div><textarea v-model="sendMessage" class="alert-message-write-content" placeholder="내용을 입력하세요."></textarea></div>
@@ -115,8 +111,6 @@ axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 //const OPENVIDU_SERVER_URL = "https://" + location.hostname + ":4443";
 const OPENVIDU_SERVER_URL = "https://" + "i5a205.p.ssafy.io";
-//console.log(location.hostname)
-//const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 const OPENVIDU_SERVER_SECRET = "1234";
 
 export default {
@@ -140,21 +134,30 @@ export default {
 			mainStreamManager2: undefined,
 			sharingPublisher: undefined,
 
-			// 학급코드 (X반)
-			mySessionId: '0110121',
-			// 사용자 이름 (조싸피)
-			myUserName: 'SSAFY' + Math.floor(Math.random() * 100),
-			// 메뉴 오픈상태
-			menu: false,
-			// 화면공유 상태
-			isScreenShared: false,
-			screenShareName: "Screen Sharing",
-			alertMessage:"",
-			sendMessage:"",
-			isAlertWriting:false,
-			alertTo:"",
+			// 사용자 정보
+			mySessionId: '0110121', // 학급 코드(0110121) 및 webRTC 룸 number
+			myUserName: 'SSAFY' + Math.floor(Math.random() * 100), // 사용자 이름, webRTC 상에서 표시될 이름
+			myUserType: '2',			// 사용자 등급. 관리자 선생님 학생
 
-			muted: null,
+			// 상태 관리 변수
+			menu: false,			// 메뉴 오픈상태
+			isScreenShared: false,	// 화면공유 상태
+			isAlertWriting:false,	// 메시지 작성 상태
+			muted: false,			// 음소거 상태 
+			handUp: false,			// 손들기 상태
+			screenShareName: "Screen Sharing",	// 화면 공유 스트림의 이름
+			alertMessage:"",	// 선생님에게서 도착한 메시지 내용
+			sendMessage:"",		// 작성중인 메시지 내용
+			target:"",			// 마지막으로 메시지를 작성중이던 학생의 정보
+			alertTo:"",			// 메시지를 받을 학생 이름
+			attendanceValue: {  // 학생 출석체크 상태 정보
+				status:"",
+				student_id:"4",
+				classroom_id:"1"
+			},
+			teacher:"",
+
+
 		}
 	},
 
@@ -171,6 +174,11 @@ export default {
 			// On every new Stream received...
 			this.session.on('streamCreated', ({ stream }) => {
 				const subscriber = this.session.subscribe(stream);
+				subscriber.muted = JSON.parse(subscriber.stream.connection.data).clientVoice
+				subscriber.handUp = false;
+				if(JSON.parse(subscriber.stream.connection.data).clientType==="1") {
+					this.teacher=subscriber;
+				}
 				this.subscribers.push(subscriber);
 			});
 
@@ -184,26 +192,64 @@ export default {
 
 			// On alert from teacher to you
 			this.session.on('signal:alert', (msg)=>{
-				console.log(msg.data)
-				this.alertMessage=msg.data;
+				if(msg.from.connectionId !== this.publisher.stream.connection.connectionId) {
+					this.alertMessage=msg.data;
+				}
 			})
 
 			// On request mute from teacher to you
-			this.session.on('signal:mute', ()=>{
+			this.session.on('signal:muteRequest', ()=>{
+				// 음소거를 해제시킬 때는 학생에게 물어봄.
 				if(this.muted) {
 					this.requestCancleMuted();
 					return;
 				}
-				this.publisher.publishAudio(this.muted);
-				this.muted=!this.muted;
+				// 음소거 시킬 때는 바로 마이크를 끔
+				this.muteMyVoice();
 			})
 
+			// On someone mute own voice
+			this.session.on('signal:mute', (msg)=>{				
+				const data = JSON.parse(msg.data);
+				console.log(msg)
+				// console.log(data);
+				this.subscribers.forEach((sub)=>{
+					if(data.connectionId === sub.stream.connection.connectionId) {
+						sub.muted = data.muted;
+					}
+				})
+			})
+
+			// On someone raise hand
+			this.session.on('signal:handUp', (msg)=>{				
+				this.subscribers.forEach((sub)=>{
+					if(msg.from.connectionId === sub.stream.connection.connectionId) {
+						sub.handUp = msg.data==='true'?true:false;
+					}
+				})
+			})
+
+			// On request down hand from teacher to you
+			this.session.on('signal:handDown', ()=>{
+				this.raiseMyHand();
+			})
+
+			if (window.user) {
+				this.myUserName= window.user.userName;
+				this.mySessionId = String(window.user.classroom);
+				this.myUserType = String(window.user.userType);
+			}
+
 			// --- Connect to the session with a valid user token ---
+
+			if (this.myUserType==='2') {
+				this.muted = !this.muted;
+			}
 
 			// 'getToken' method is simulating what your server-side should do.
 			// 'token' parameter should be retrieved and returned by your own backend
 			this.getToken(this.mySessionId).then(token => {
-				this.session.connect(token, { clientData: this.myUserName })
+				this.session.connect(token, { clientData: this.myUserName, clientType: this.myUserType, clientVoice: this.muted, })
 					.then(() => {
 
 						// --- Get your own camera stream with the desired properties ---
@@ -224,13 +270,19 @@ export default {
 
 						// --- Publish your stream ---
 
-						this.session.publish(this.publisher);
-						if(this.user.type===2) {
-							this.publisher.publishAudio(false);
-							this.muted=true;
-						} else {
-							this.muted=false;
+						this.session.publish(this.publisher)
+						.then(()=>{
+							if(this.myUserType==="2") { 
+								publisher.publishAudio(false);	// 학생은 마이크 꺼진 상태로 들어옴
+								// this.getAttendanceStatus();		// 학생 출석체크
 						}
+						});
+
+						// // 선생님은 마이크 켜진상태, 학생은 꺼진 상태로 들어옴
+						// if(this.myUserType==="2") {
+						// 	// 마이크 불러오는 타이밍을 감안해서 2초 후 작동
+						// 	setTimeout(()=>publisher.publishAudio(false), 2000);
+						// }
 					})
 					.catch(error => {
 						console.log('There was an error connecting to the session:', error.code, error.message);
@@ -250,7 +302,13 @@ export default {
 			this.subscribers = [];
 			this.OV = undefined;
 
-			window.removeEventListener('beforeunload', this.leaveSession);
+			window.removeEventListener('beforeunload', this.leaveSession)
+			.then(()=>{
+				window.opener.postMessage({
+					msgType: "leave_class",
+				// },"http://localhost:8080");
+			},"http://i5a205.p.ssafy.io:8081");
+			})
 		},
 
 		updateMainVideoStreamManager (stream) {
@@ -330,30 +388,21 @@ export default {
 		},
 
 		showStudents () {
-			var students = []
 			this.subscribers.forEach(student=>{
 				console.log(student.stream.connection.data["clientData"])
 			});
-			students
-			// console.log('Me:')
-			console.log(JSON.parse(this.publisher.stream.connection.data))
-			this.showMenus()
+			this.showMenus() // 메뉴 선택 후 메뉴상자 닫기
+			// 화면 변경
 			const studentList = document.getElementById("student-wrapper")
-			console.log(studentList.classList);
-			// 학생 목록 창 열기
-			studentList.classList.toggle("student-hide");
-			// 왼쪽으로 메뉴 밈
-			document.getElementById("menu-wrapper").classList.toggle("menu-move")
+			studentList.classList.toggle("student-hide");	// 학생 목록 창 열기
+			document.getElementById("menu-wrapper").classList.toggle("menu-move")	// 왼쪽으로 메뉴 밈
 		},
 
 		muteStudent (connection) {
-			const studentConnectionId = connection.connectionId;
-			const studentName = JSON.parse(connection.data).clientData;
-
 			this.session.signal({
-				data: "",  // Any string (optional)
-				to: [connection],                     // Array of Connection objects (optional. Broadcast to everyone if empty)
-				type: 'mute'             // The type of message (optional)
+				data: "",  // 내용
+				to: [connection],		// 상대방 정보(connection으로 전송)
+				type: 'muteRequest'			// 소켓 메시지 제목
 			})
 			.then(() => {
 				console.log('mute request successfully sent');
@@ -361,13 +410,19 @@ export default {
 			.catch(error => {
 				console.error(error);
 			});
-
-			console.log(studentConnectionId, studentName);
 		},
 		
 		makeMessage (connection) {
-			// this.alertTo = JSON.parse(connection.data).clientData;
-			this.alertTo = connection;
+			// 메시지 작성 창 열기
+			this.target=connection;
+
+			if (this.target==null) {
+				this.alertTo = "ALL";
+				this.target="";
+			} else {
+				this.alertTo = JSON.parse(connection.data).clientData;
+			}
+
 			this.isAlertWriting=true;
 		},
 
@@ -376,9 +431,10 @@ export default {
 				alert("메시지 내용이 없습니다.");
 				return;
 			}
+
 			this.session.signal({
 				data: this.sendMessage,  // Any string (optional)
-				to: [this.alertTo],                     // Array of Connection objects (optional. Broadcast to everyone if empty)
+				to: [this.target],                     // Array of Connection objects (optional. Broadcast to everyone if empty)
 				type: 'alert'             // The type of message (optional)
 			})
 			.then(() => {
@@ -387,15 +443,15 @@ export default {
 			.catch(error => {
 				console.error(error);
 			});
+
+			// 메시지 작성 창 닫기
 			this.isAlertWriting=false;
 			this.sendMessage="";
 		},
 
 		startScreenSharing () {
 			this.OVForScreenShare = new OpenVidu();
-			// this.OVForScreenShare.setAdvancedConfiguration(
-			// 	{ screenShareChromeExtension: "https://chrome.google.com/webstore/detail/EXTENSION_NAME/EXTENSION_ID" }
-			// );
+
 			this.sessionForScreenShare = this.OVForScreenShare.initSession();
 
 			var mySessionId = this.mySessionId;
@@ -412,9 +468,6 @@ export default {
                         mirror: false        
 					});
 					console.log("publisher",publisher);
-					// publisher.once('accessAllowed', () => {
-                    //     publisher.stream.getMediaStream().getVideoTracks()[0].addEventListener('ended', this.leaveSessionForScreenSharing)        
-                    // });
 					publisher.once('accessAllowed', () => {
 						try {
 							console.log("subscriber >>>>> ", this.subscribers);
@@ -423,8 +476,7 @@ export default {
 								console.log('User pressed the "Stop sharing" button');
 								this.leaveSessionForScreenSharing()
 								this.isScreenShared=false;
-							});
-                            // this.sessionScreen.publish(this.sharingPublisher);						
+							});					
 						} catch (error) {
 							console.error('Error applying constraints: ', error);
 						}
@@ -467,31 +519,125 @@ export default {
 		closeWriter () {
 			this.isAlertWriting=false;
 		},
+
+		muteMyVoice () {
+			this.publisher.publishAudio(this.muted);
+			this.muted = !this.muted;
+
+			const status = {
+				connectionId: this.publisher.stream.connection.connectionId,
+				muted: this.muted,
+			}
+			
+			this.session.signal({
+				data: JSON.stringify(status),  // Any string (optional)
+				to: [],
+				type: 'mute'             // The type of message (optional)
+			})
+			.then(() => {
+				console.log('Message successfully sent');
+			})
+			.catch(error => {
+				console.error(error);
+			});
+		},
 		
 		requestCancleMuted () {
-			const res = confirm("마이크를 킬까요?");
-			console.log(res);
+			const res = confirm("마이크를 킬까요?");	// 포커스가 있는 상태에서만 동작, 아니면 무조건 false 반환
+
 			if(res) {
-				this.publisher.publishAudio(true);
-				this.muted = !this.muted;
+				this.muteMyVoice();
 			}
 		},
+
+		raiseMyHand () {
+			// alert("손을 들었습니다.")
+			document.getElementById("student-hand-up").classList.toggle("student-hand-up-clicked");
+			this.handUp = !this.handUp;
+
+			this.session.signal({
+				data: `${this.handUp}`,  // Any string (optional)
+				to: [],
+				type: 'handUp'             // The type of message (optional)
+			})
+		},
+
+		downHand (sub) {
+			// alert("손을 내렸습니다.")
+			if(sub.handUp) {
+				this.session.signal({
+					data: "",  // Any string (optional)
+					to: [sub.stream.connection],
+					type: 'handDown'             // The type of message (optional)
+				})
+			}
+		},
+
+		getAttendanceStatus() {
+			// console.log("출석체크");
+			const now_at = new Date();
+			let hour = now_at.getHours();
+			let minutes = now_at.getMinutes();
+
+			if (hour===9 && 0<=minutes<=10) {
+				this.attendanceValue.status = "출석";	
+			} else  {
+				this.attendanceValue.status = "지각";
+			} 
+			// console.log("출석", this.attendanceValue);
+			axios({
+				method: "post",
+				url: "http://i5a205.p.ssafy.io:8000/student-manage/attendance/",
+				data: this.attendanceValue,
+				headers: localStorage.getItem("jwt")})
+			.then((res) => {
+				// console.log("성공");
+				console.log(res, "success postAttendance");
+			})
+			.catch((err) => {
+				// console.log("실패");
+				console.log(err);
+			});
+			
+		}
 	},
 
 	created() {
-		// 접속 시 바로 연결설정 시작.
-		this.joinSession()
-		// console.log(opener)
+		document.createElement("img").src = "../public/resources/images/memo2.png"	// 이미지 preload
+		document.createElement("img").src = "../public/resources/images/circlesqure2.png"	// 이미지 preload
+		document.createElement("img").src = "../public/resources/images/mute.png"	// 이미지 preload
+		document.createElement("img").src = "../public/resources/images/unmute.png"	// 이미지 preload
 		
-		// var child = window.open("https://localhost:8080");
-		// const user={
-		// 	name:"조동윤",
-		// 	id:"Token",
-		// 	type:"2"
-		// }
-		// window.ABC = user;
-		// child.ABCD = user;
-		document.createElement("img").src = "resources/images/memo2.png"
+		if (!window.opener) { // 직접 주소를 사용해서 들어왔을 때
+			this.joinSession();
+		} else {		// 학사 페이지를 통해 들어왔을 때
+			
+			
+			window.timer=setTimeout(()=>{			// 응답 없을 시 창 종료
+				alert("연결 상태가 좋지 않습니다. 다시 시도해주세요!");
+
+				window.opener.postMessage({
+					msgType: "connection_fail",
+				// },"http://localhost:8080");
+				},"http://i5a205.p.ssafy.io:8081");
+			}, 2000);
+
+			window.joinSession = this.joinSession;	// window 객체에 함수 연결
+			window.addEventListener('message', function(e) {
+
+				if (e.data.msgType === "init_classroom") {
+					clearTimeout(window.timer);		// 타이머 종료
+						window.opener.postMessage({
+						msgType: "connect",
+					// },"http://localhost:8080");
+					},"http://i5a205.p.ssafy.io:8081");
+
+					window.user=e.data;
+					localStorage.setItem('jwt', e.data.userToken);
+					window.joinSession();	// 데이터 수신 시 연결설정 시작.
+				}
+			});
+		}
 	}
 }
 </script>

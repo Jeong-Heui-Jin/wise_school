@@ -1,14 +1,19 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import createPersistedState from 'vuex-persistedstate';
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
+  plugins: [
+    createPersistedState()
+  ],
   state: {
     selectedMenu: 'Home',
     headers: null,
     selected_homework: null,
     selected_notice: null,
+    now_user: null,
   },
   mutations: {
     SET_TOKEN: function (state, config) {
@@ -20,6 +25,9 @@ export default new Vuex.Store({
     SELECT_NOTICE: function (state, notice) {
       state.selected_notice = notice
     },
+    SET_USER: function (state, user) {
+      state.now_user = user
+    }
   },
   actions: {
     setToken: function ({ commit }) {
@@ -34,6 +42,9 @@ export default new Vuex.Store({
     },
     selectNotice: function ({ commit }, notice) {
       commit('SELECT_NOTICE', notice)
+    },
+    setUser: function ({ commit }, user) {
+      commit('SET_USER', user)
     },
   },
   modules: {

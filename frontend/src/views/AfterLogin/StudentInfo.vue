@@ -59,7 +59,7 @@
                         </b-row>
                     </div>
                 </div>
-                <button type="button" style="min-width: 80px; min-height: 35px; border: 0px; border-radius: 10px; margin-top: 10px; margin-left: 10px;" @click="addForm">추가</button>
+                <button type="button" style="width: 80px; height: 35px; border: 0px; border-radius: 10px; margin-top: 10px; margin-left: 10px;" @click="addForm">추가</button>
             </div>
         </div>
     </b-form>
@@ -68,7 +68,7 @@
 
 <script>
 import axios from "axios";
-import NavSideBar from "@/components/NavSideBarTeacher.vue";
+import NavSideBar from "@/components/NavSideBar.vue";
 import NavBar from "@/components/NavBar.vue";
 import { mapState } from 'vuex'
 
@@ -148,21 +148,45 @@ export default {
             const studentAddress = document.querySelector('#student-address');
 
             // POST BODY
-            let body = { Name: studentName.value, Number: studentNumber.value, Phone: studentPhone.value, Address: studentAddress.value };
+            let body = { name: studentName.value, number: studentNumber.value, phone: studentPhone.value, address: studentAddress.value };
             console.log(body);
             // axios POST
+            axios({
+              method: "put",
+              url: `http://127.0.0.1:8000/accounts/info/${this.student_id}/`,
+              // url: `http://i5a205.p.ssafy.io:8000/accounts/info/${this.student_id}/`,
+              data: body,
+              headers: this.headers,
+            })
+              .then(function(){
+                alert('수정되었습니다 :)');
+              })
+              .catch(function(err){
+                console.log(err);
+              });
         },
         parentInfoDelete(e) {
+            console.log(this.parents)
             // console.log(e.target.id);
-            // console.log(Number(e.target.id[8]));
+            // console.log(this.parents[Number(e.target.id[8]) - 1].ID);
             // console.log(this.parents[Number(e.target.id[8]) - 1].ID);
             this.parents.splice(Number(e.target.id[8]) - 1, 1);
-            // axios DELETE                    
+            // axios DELETE
             // 해당 this.parents[Number(e.target.id[8]) - 1].ID로 parent Info data delete
             // parents ID -> this.parents[idx].ID
-            // 
-            // delete 코드 추가
-            // 
+
+            axios({
+              method: "delete",
+              url: `http://127.0.0.1:8000/accounts/parents/detail/${this.data.parents[Number(e.target.id[8]) - 1].id}/`,
+              // url: `http://i5a205.p.ssafy.io:8000/accounts/parents/detail/${this.data.parents[Number(e.target.id[8]) - 1].id}/`,
+              headers: this.headers,
+            })
+              .then(function(){
+                alert('삭제되었습니다 :(');
+              })
+              .catch(function(err){
+                console.log(err);
+              });
         },
         parentInfoUpdate(e) {
             if (e.target.parentElement.parentElement.children[0].children[0].value.length > 0 &&
@@ -177,7 +201,19 @@ export default {
                     phone: e.target.parentElement.parentElement.children[2].children[0].value};
                     console.log(bodyPost);
                     // POST axios
-                    alert('등록되었습니다');
+                    axios({
+                        method: "post",
+                        url: `http://127.0.0.1:8000/accounts/parents/${this.student_id}/`,
+                        // url: `http://i5a205.p.ssafy.io:8000/accounts/parents/${this.student_id}/`,
+                        data: bodyPost,
+                        headers: this.headers,
+                        })
+                        .then(function(){
+                            alert('등록되었습니다');
+                        })
+                        .catch(function(err){
+                            console.log(err);
+                        });
                 }
                 // UPDATE 경우
                 else {

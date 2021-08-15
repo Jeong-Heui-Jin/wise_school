@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, get_list_or_404
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import ParentSerializer, StudentInfoSerializer, UserSerializer, UserListSerializer, ServiceRequestSerializer, SignupSerializer
+from .serializers import ParentSerializer, StudentInfoSerializer, UserSerializer, UserListSerializer, ServiceRequestSerializer, SignupSerializer, StudentInfoSerializer
 from django.contrib.auth import get_user_model
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
@@ -49,7 +49,7 @@ def password_reset(request):
     user = get_object_or_404(get_user_model(), username=username)
     user.set_password(new_password)
     user.save()
-    return Response({'user':user,})
+    return Response(status=status.HTTP_200_OK)
 
 
 @api_view(['POST', 'GET',])
@@ -64,8 +64,20 @@ def change_password(request):
     return Response({'error': '비밀번호가 올바르지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
+# 현재 사용자의 정보 조회
+@api_view(['GET',])
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
+def profile(request):
+    user = request.user
+    serializer = UserSerializer(user)
+    return Response(serializer.data)
+
+
 # 해당 사용자의 정보 조회/수정/삭제
 @api_view(['GET', 'PUT','DELETE',])
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
 def info(request, user_id):
     user = get_object_or_404(User, pk=user_id)
     if request.method == 'GET':
@@ -73,7 +85,23 @@ def info(request, user_id):
         return Response(serializer.data)
 
     elif request.method == 'PUT':
-        serializer = UserListSerializer(user, data=request.data)
+        # student.info 정보 수정
+        info_data = {
+            'number' : request.data.get('number'),
+            'address' : request.data.get('address'),
+            'is_notification' : user.is_notification,
+        }
+        serializer = StudentInfoSerializer(user.info, data=info_data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+
+        # user 정보 수정
+        user_data = {
+            'name' : request.data.get('name'),
+            'phone' : request.data.get('phone'),
+            'classroom_id' : user.classroom.id,
+        }
+        serializer = UserListSerializer(user, data=user_data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data)
@@ -88,8 +116,8 @@ def info(request, user_id):
 
 # 해당 학생의 보호자들 목록 조회 / 추가
 @api_view(['GET', 'POST'])
-# @authentication_classes([JSONWebTokenAuthentication])
-# @permission_classes([IsAuthenticated])
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
 def parents_list(request, user_id):
     student = get_object_or_404(get_user_model(), pk=user_id)
     if request.method == 'GET':

@@ -1,7 +1,7 @@
 <template>
   <div style="font-family: 'Jua', sans-serif" variant="light">
-    <NavSideBar />
     <NavBar />
+    <NavSideBar />
 
     <h1 id="homeworkTitle">숙제 검사</h1>
 
@@ -24,8 +24,16 @@
         @row-clicked="goHomeworkView"
       >
         <!-- items column -->
-        <template #cell(items)="data">
-          <b-link>{{ data.items }}</b-link>
+        <!-- <template #cell(items)="data">
+          <b-link>{{ data.items.submitHomework }}</b-link>
+        </template> -->
+
+        <!-- Button -->
+        <template #cell(submitHomework)="data">
+          <div v-if="usertype===1">
+            <b-button> {{ data.item.submitHomework }} </b-button>
+          </div>
+          <b-button> {{ data.item.submitHomework }} </b-button>
         </template>
       </b-table>
 
@@ -45,7 +53,7 @@
 
 <script>
 import axios from "axios";
-import NavSideBar from "@/components/NavSideBarTeacher.vue";
+import NavSideBar from '@/components/NavSideBar.vue'
 import NavBar from "@/components/NavBar.vue";
 import { mapState } from "vuex";
 
@@ -60,17 +68,11 @@ export default {
         { key: "id", label: "번호" },
         { key: "title", label: "숙제 제목" },
         { key: "end", label: "종료일" },
-        // { key: "submitInfo", label: "제출" },
+        { key: "submitHomework", label: "제출 인원" },
       ],
-      items: [
-        // {
-        //   homework_id: "17",
-        //   title: "수학익힘책 16쪽 풀기",
-        //   end: "7.19(월)",
-        //   // submitInfo: "1/6",
-        //   content: "수학익힘책 16쪽 풀기",
-        // },
-      ],
+      items: [],
+      classNum: 1,
+      usertype: 2,
     };
   },
   components: {
@@ -78,17 +80,36 @@ export default {
     NavBar,
   },
   methods: {
+    btnClick: function () {
+      console.log("아야");
+    },
     setToken: function () {
       this.$store.dispatch("setToken");
     },
     getHomeworkList: function () {
       axios({
         method: "get",
-        url: 'http://i5a205.p.ssafy.io:8000/homework/list/',
+        url: "http://i5a205.p.ssafy.io:8000/homework/list/",
         headers: this.headers,
       })
         .then((res) => {
-          this.items = res.data;
+          // console.log(res.data);
+          for (let i = 0; i < res.data.length; ++i) {
+            temp = {
+              id: res.data[i].id,
+              title: res.data[i].title,
+              end: res.data[i].end,
+              submitHomework:
+                String(res.data[i].submithomework_count) +
+                "/" +
+                String(this.classNum),
+            };
+            console.log(temp);
+            this.items.push(temp);
+          }
+          // this.items = res.data;
+          // console.log(this.items);
+          // console.log(this.now_user);
 
           // 모든 items의 end 데이터를 가공한다.
           for (let i = 0; i < this.items.length; ++i) {
@@ -104,8 +125,12 @@ export default {
               "시 " +
               temp.substring(14, 16) +
               "분";
+
+            // var submit = this.items[i].submithomework_count;
+            // this.items[i].submithomework_count =
+            //   String(submit) + "/" + String(this.classNum);
           }
-      })
+        })
         .catch((err) => {
           console.log(err);
         });
@@ -114,25 +139,36 @@ export default {
       window.open("/homework_create", "_self");
     },
     goHomeworkView: function (homework) {
-      this.$store.dispatch('selectHomework', homework);
-      this.$router.push({ name: 'HomeworkView'})
-      // router.push({
-      //   path: "/homework_view",
-      //   query: { title: this.items.Title, Content: this.items.Content },
-      // });
-      // setTimeout(() => console.log("after"), 30000); // test
-      // window.open("/homework_view", "_self");
+      this.$store.dispatch("selectHomework", homework);
+      this.$router.push({ name: "HomeworkView" });
+    },
+    getClassNum: function () {
+      axios({
+        method: "get",
+        url: "http://i5a205.p.ssafy.io:8000/accounts/class-members/",
+        headers: this.headers,
+      })
+        .then((res) => {
+          // 선생님을 제외한 학생의 수 저장
+          this.classNum = res.data.length - 1;
+          console.log(this.classNum);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
   computed: {
     rows() {
       return this.items.length;
     },
-    ...mapState(["headers"]),
+    ...mapState(["headers", "now_user"]),
   },
   created: function () {
     this.setToken();
     this.getHomeworkList();
+    this.getClassNum();
+    this.usertype = this.now_user.usertype
   },
 };
 </script>
@@ -142,6 +178,8 @@ export default {
   position: fixed;
   top: 10px;
   left: 120px;
+  margin-left: 220px;
+  margin-top: 20px;
 }
 
 #homeworkForm {

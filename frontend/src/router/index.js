@@ -11,6 +11,8 @@ import Homework from '../views/AfterLogin/Homework'
 import HomeworkCreate from '../views/AfterLogin/HomeworkCreate'
 import HomeworkView from '../views/AfterLogin/HomeworkView'
 import HomeworkChange from '../views/AfterLogin/HomeworkChange'
+import HomeworkStatus from '../views/AfterLogin/HomeworkStatus'
+import HomeworkStudent from '../views/AfterLogin/HomeworkStudent'
 import Notice from '../views/AfterLogin/Notice'
 import NoticeCreate from '../views/AfterLogin/NoticeCreate'
 import NoticeView from '../views/AfterLogin/NoticeView'
@@ -37,11 +39,13 @@ const routes = [
     path: '/password_reset',
     name: 'PasswordReset',
     component: PasswordReset,
+    props: true,
   },
   {
     path: '/password_change',
     name: 'PasswordChange',
     component: PasswordChange,
+    props: true,
   },
   {
     path: '/service_request',
@@ -93,6 +97,16 @@ const routes = [
     path: '/homework_change',
     name: 'HomeworkChange',
     component: HomeworkChange,
+  },
+  {
+    path: '/homework_status',
+    name: 'HomeworkStatus',
+    component: HomeworkStatus,
+  },
+  {
+    path: '/homework_student',
+    name: 'HomeworkStudent',
+    component: HomeworkStudent,
   },
   {
     path: '/notice',

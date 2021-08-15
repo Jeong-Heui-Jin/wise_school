@@ -23,12 +23,13 @@
         id="textPassword"
         placeholder="비밀번호"
         size="lg"
+        @keypress.enter="login"
       ></b-form-input>
       <p style="color: red; text-align: left; padding: 0.2rem 0 0 3.2rem; margin: 0px;" id="error" v-if="isPasswordNull"> {{passwordMessage}} </p>
       
       <b-button block variant="warning" id="loginBtn" @click="login">로그인</b-button>
       <b-row id="link">
-        <b-col id="linkBtn"><b-button variant="link" href="password_reset">비밀번호 변경</b-button></b-col>
+        <b-col id="linkBtn"><b-button variant="link" href="password_reset">비밀번호 재설정</b-button></b-col>
         <b-col>|</b-col>
         <b-col id="linkBtn"><b-button variant="link" href="service_request">서비스 신청</b-button></b-col>
       </b-row>
@@ -85,8 +86,6 @@ export default {
       })
       .then((res) => {
         localStorage.setItem('jwt', res.data.token)
-        // console.log(res)
-        // this.$router.push({ name: 'Home' })
         window.open('/home', '_self')
       })
       .catch(err => {
@@ -102,7 +101,6 @@ export default {
       //   alert('로그인 실패');
       // }
     },
-
     isLogin: function() {
       // 로그인 되어있다면
       if(localStorage.getItem('jwt')){
