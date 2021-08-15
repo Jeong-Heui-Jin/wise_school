@@ -7,6 +7,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import ParentSerializer, StudentInfoSerializer, UserSerializer, UserListSerializer, ServiceRequestSerializer, SignupSerializer, StudentInfoSerializer
+from classroom.serializers import ClassroomSerializer
 from django.contrib.auth import get_user_model
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
@@ -160,8 +161,17 @@ def parent_detail(request, parent_id):
 def class_members(request):
     classroom = request.user.classroom
     class_members = get_list_or_404(User, classroom=classroom)
-    serializer = UserSerializer(class_members, many=True)
-    return Response(serializer.data)
+    members = UserSerializer(class_members, many=True).data
+
+    teacher = [member for member in members if member.get('usertype')==1][0]
+    students = [member for member in members if member.get('usertype')==2]
+
+    class_info = {
+        'teacher': teacher,
+        'students': students,
+        'classroom': ClassroomSerializer(classroom).data,
+    }
+    return JsonResponse(class_info)
 
 
 # 해당 학교의 선생님들 목록 조회 (학교 관리자)

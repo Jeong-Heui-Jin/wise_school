@@ -83,7 +83,7 @@ export default {
           console.log(err)
         })
       } else {
-        alert("양식이 맞지 않습니다 :(");
+        alert("비밀번호가 일치하지 않습니다 :(");
       }
     },
   },

@@ -116,22 +116,22 @@ export default {
   methods: {
     requestService: function(event) {
       if (!this.validationId) {
-        alert('아이디 양식 맞춰주세요');
+        alert('아이디 양식을 맞춰주세요!');
       }
       else if (!this.validationPassword) {
-        alert('비밀번호 양식 맞춰주세요');
+        alert('비밀번호 양식을 맞춰주세요!');
       }
       else if (!this.validationPasswordCheck) {
-        alert('비밀번호와 같은 값을 입력해주세요');
+        alert('비밀번호와 같은 값을 입력해주세요!');
       }
       else if (!this.validationPhone) {
-        alert('전화번호 양식 맞춰주세요');
+        alert('전화번호 양식을 맞춰주세요.');
       }
       else if (this.userSchoolName.length === 0) {
-        alert('학교 명을 똑바로 입력해주세요')
+        alert('학교 명을 똑바로 입력해주세요!')
       }
       else if (this.userSchoolRegion.length === 0) {
-        alert('학교 지역을 똑바로 입력해주세요')
+        alert('학교 지역을 똑바로 입력해주세요!')
       }
       else {
         event.preventDefault()
