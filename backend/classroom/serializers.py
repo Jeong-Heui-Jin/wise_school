@@ -1,4 +1,4 @@
-from .models import Timetable, TimetableDetail
+from .models import Timetable, TimetableDetail, Classroom
 from rest_framework import serializers
 
 
@@ -24,4 +24,11 @@ class TimetableListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Timetable
+        fields = '__all__'
+
+
+class ClassroomSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Classroom
         fields = '__all__'

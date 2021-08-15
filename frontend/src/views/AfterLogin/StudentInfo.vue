@@ -9,7 +9,7 @@
     <!-- 전체 Form -->
     <b-form id="student-info-form">
         <div class="d-flex justify-content-around" style="margin-top: 30px;">
-            <img src="@/assets/sheep.png" style="max-width: 200px;" alt="학생사진"/>
+            <img :src="image" style="max-width: 200px;" alt="학생사진"/>
             <div id="student-info-text" style="min-width: 500px; background-color: #fff2d5;  border-radius: 10px; padding: 15px; ">
                 <div class="d-flex justify-content-between">
                     <p style="margin-top: auto; margin-bottom: auto;">이   름</p>
@@ -70,6 +70,15 @@
 import axios from "axios";
 import NavSideBar from "@/components/NavSideBar.vue";
 import NavBar from "@/components/NavBar.vue";
+import Whale from "@/assets/whale.png";
+import Beaver from "@/assets/beaver.png";
+import Cat from "@/assets/cat.png";
+import Elephant from "@/assets/elephant.png";
+import Frog from "@/assets/frog.png";
+import Koala from "@/assets/koala.png";
+import Shark from "@/assets/shark.png";
+import Sheep from "@/assets/sheep.png";
+import Squirrel from "@/assets/squirrel.png";
 import { mapState } from 'vuex'
 
 export default {
@@ -83,6 +92,7 @@ export default {
             data: '',
             student_id: this.$route.params.id,
             student: { ID: 1234, name: '목상원', number: '16', phone: '010-3542-8554', address: '서울시 강남구 테헤란로 212' },
+            image: Sheep,
             parents: [
                 { ID: 123, student_id: 1234, relation: '어머니', name: '김다정', phone: '010-1234-5678' }
             ]
@@ -114,6 +124,26 @@ export default {
                 studentNumber.value = this.data.info.number;
                 studentPhone.value = this.data.phone;
                 studentAddress.value = this.data.info.address;
+
+                if (Number(res.data.id) % 9 === 0) {
+                this.image = Whale;
+                } else if (Number(res.data.id) % 9 === 1) {
+                this.image = Beaver;
+                } else if (Number(res.data.id) % 9 === 2) {
+                this.image = Cat;
+                } else if (Number(res.data.id) % 9 === 3) {
+                this.image = Elephant;
+                } else if (Number(res.data.id) % 9 === 4) {
+                this.image = Frog;
+                } else if (Number(res.data.id) % 9 === 5) {
+                this.image = Koala;
+                } else if (Number(res.data.id) % 9 === 6) {
+                this.image = Shark;
+                } else if (Number(res.data.id) % 9 === 7) {
+                this.image = Sheep;
+                } else {
+                this.image = Squirrel;
+                }
 
                 const parentInfo = document.querySelectorAll('#parent-info');
 
