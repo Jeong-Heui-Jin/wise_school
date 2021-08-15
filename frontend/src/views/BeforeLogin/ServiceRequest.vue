@@ -12,7 +12,7 @@
       <!-- ID 입력 폼 -->
       <div>
       <b-form-input
-        v-model="username"
+        v-model="requestForm.username"
         :state="validationId"
         id="text"
         placeholder="아이디"
@@ -27,7 +27,7 @@
 
       <!-- 비밀번호 입력 폼 -->
       <b-form-input
-        v-model="password"
+        v-model="requestForm.password"
         :state="validationPassword"
         type="password"
         id="text"
@@ -41,7 +41,7 @@
 
       <!-- 비밀번호 확인 입력 폼 -->
       <b-form-input
-        v-model="password_confirmation"
+        v-model="requestForm.password_confirmation"
         :state="validationPasswordCheck"
         type="password"
         id="text"
@@ -55,7 +55,7 @@
 
       <!-- 연락처 입력 폼 -->
       <b-form-input
-        v-model="phone"
+        v-model="requestForm.phone"
         :state="validationPhone"
         type="tel"
         id="text"
@@ -69,7 +69,7 @@
 
       <!-- 학교명 입력 폼 -->
       <b-form-input
-        v-model="school_name"
+        v-model="requestForm.school_name"
         id="text"
         placeholder="학교명(예시 : OO초등학교)"
         size="lg"
@@ -77,7 +77,7 @@
 
       <!-- 학교 지역 입력 폼 -->
       <b-form-input
-        v-model="area"
+        v-model="requestForm.area"
         id="text"
         placeholder="학교 지역(예시 : 서울 광진구/충북 서산)"
         size="lg"
@@ -157,6 +157,7 @@ export default {
   },
   computed: {
     validationId() {
+      console.log(this.requestForm.username.length);
       if (this.requestForm.username.length < 7) return false;
       else if (this.requestForm.username.length > 16) return false;
       else {
