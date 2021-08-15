@@ -1,8 +1,85 @@
 <template>
 	<div id="main-container" class="container">	
-		<div id="session" v-if="session">
+		<!-- 학생 리스트 창 -->
+		<!-- <div class="student-hide no-drag" id="student-wrapper"> -->
+		<div class="no-drag" id="student-wrapper">
+			<div class="side-wrapper">
+				<div id="logo">
+					<img src="../public/resources/images/logo.png" alt="">
+				</div>
+				<div id="clock">
+					<div id="noon"></div>
+					<div id="time"></div>
+				</div>
+			
+
+				<!-- 내 계정. 최상단에 위치 -->
+				<!-- <div class="student">
+					
+					<div class="student-profile"></div>
+					<div class="student-name">{{myUserName}}</div>
+					<div class="student-function-wrapper">
+						<div class="student-function" id="student-mute" @click="muteMyVoice">
+							<img src="../public/resources/images/mute.png" alt="" v-if="!muted">
+							<img src="../public/resources/images/unmute.png" alt="" v-else>
+						</div>
+						<div class="student-function" id="student-hand-up" @click="raiseMyHand">
+							<img src="../public/resources/images/hand_up.png" alt="">
+						</div>
+						<div class="student-function" id="student-alert" @click="makeMessage(null)">
+							<img src="../public/resources/images/chat.png" alt="">
+						</div>
+					</div>
+				</div> -->
+				<!-- 다른 사람 계정. -->
+				<!-- <div v-for="sub in subscribers" :key="sub.stream.connection.connectionId">
+					<div class="student" v-if="JSON.parse(sub.stream.connection.data).clientData !== 'Screen Sharing'">
+						<div class="student-profile"></div>
+						<div class="student-name"> {{ JSON.parse(sub.stream.connection.data).clientData }} </div>
+						<div class="student-function-wrapper">
+							<div class="student-function" id="student-mute" @click="muteStudent(sub.stream.connection)">
+								<img src="../public/resources/images/unmute.png" alt="" v-if="sub.muted">
+								<img src="../public/resources/images/mute.png" alt="" v-else>
+							</div>
+							<div class="student-function student-hand-up-clicked" id="student-hand-up" @click="downHand(sub)" v-if="sub.handUp">
+								<img src="../public/resources/images/hand_up.png" alt="">
+							</div>
+							<div class="student-function" id="student-hand-up" @click="downHand(sub)" v-else>
+								<img src="../public/resources/images/hand_up.png" alt="">
+							</div>
+							<div class="student-function" id="student-alert" @click="makeMessage(sub.stream.connection)">
+								<img src="../public/resources/images/chat.png" alt="">
+							</div>
+						</div>
+					</div>
+				</div> -->
+			</div>
+			<div class="exit" @click="leaveSession">
+				<img id="exit" src="../public/resources/images/opened-door-aperture.png" alt="">
+			</div>
+		</div>
+
+		<div class="no-drag" id="session" v-if="session">
 			<div id="session-header">
-				<h1 id="session-title">{{ mySessionId }}</h1>
+				<div class="session-title">
+					화목한 {{ mySessionId }}반
+					<div class="session-personel">
+						<div class="session-personel-image"><img src="../public/resources/images/class.png" alt=""></div>
+						<div id="session-count"></div>
+					</div>
+				</div>
+				<div class="my-function">
+					<div class="function" id="mic" @click="muteMyVoice">
+						<img src="../public/resources/images/mic.png" alt="" v-if="!muted">
+						<img src="../public/resources/images/mic_mute.png" alt="" v-else>
+					</div>
+					<div class="function"><img src="../public/resources/images/chat.png" alt=""></div>
+					<div class="function" id="hand-up" @click="raiseMyHand">
+						<img src="../public/resources/images/hand_up_lime.png" alt="" v-if="handUp">
+						<img src="../public/resources/images/hand_up.png" alt="" v-else>
+					</div>
+				</div>
+				<div class="session-title"></div>
 			</div>
 			<div id="video-container" class="col-md-6" >
 				<!-- <user-video :stream-manager="teacher" @click.native="updateMainVideoStreamManager(teacher)" v-if="teacher"/> -->
@@ -20,61 +97,7 @@
 			</div>
 			
 		</div>
-		<div class="menu-wrapper no-drag" id="menu-wrapper">
-			<!-- 우하단 플로팅 메뉴 -->
-			<div class="menu-opener" id="menu-opener-shadow" @click="showMenus">
-				<!-- 그림자효과 -->
-				<div class="menu-opener" id="menu-more">+</div>
-			</div>
-			<!-- 학생 리스트 -->
-			<div class="menu-hide menu" id="menu-student-list" @click="showStudents"></div>
-			<!-- 화면공유 -->														
-			<div class="menu-hide menu" id="menu-other" @click="startScreenSharing">+</div>
-			<!-- 나가기 버튼 -->
-			<div class="menu-hide menu" id="menu-exit" @click="leaveSession"></div>
-		</div>
-		<!-- 학생 리스트 창 -->
-		<div class="student-hide no-drag" id="student-wrapper">
-			<!-- 내 계정. 최상단에 위치 -->
-			<div class="student">
-				<div class="student-profile"></div>
-				<div class="student-name">{{myUserName}}</div>
-				<div class="student-function-wrapper">
-					<div class="student-function" id="student-mute" @click="muteMyVoice">
-						<img src="../public/resources/images/mute.png" alt="" v-if="!muted">
-						<img src="../public/resources/images/unmute.png" alt="" v-else>
-					</div>
-					<div class="student-function" id="student-hand-up" @click="raiseMyHand">
-						<img src="../public/resources/images/hand_up.png" alt="">
-					</div>
-					<div class="student-function" id="student-alert" @click="makeMessage(null)">
-						<img src="../public/resources/images/chat.png" alt="">
-					</div>
-				</div>
-			</div>
-			<!-- 다른 사람 계정. -->
-			<div v-for="sub in subscribers" :key="sub.stream.connection.connectionId">
-				<div class="student" v-if="JSON.parse(sub.stream.connection.data).clientData !== 'Screen Sharing'">
-					<div class="student-profile"></div>
-					<div class="student-name"> {{ JSON.parse(sub.stream.connection.data).clientData }} </div>
-					<div class="student-function-wrapper">
-						<div class="student-function" id="student-mute" @click="muteStudent(sub.stream.connection)">
-							<img src="../public/resources/images/unmute.png" alt="" v-if="sub.muted">
-							<img src="../public/resources/images/mute.png" alt="" v-else>
-						</div>
-						<div class="student-function student-hand-up-clicked" id="student-hand-up" @click="downHand(sub)" v-if="sub.handUp">
-							<img src="../public/resources/images/hand_up.png" alt="">
-						</div>
-						<div class="student-function" id="student-hand-up" @click="downHand(sub)" v-else>
-							<img src="../public/resources/images/hand_up.png" alt="">
-						</div>
-						<div class="student-function" id="student-alert" @click="makeMessage(sub.stream.connection)">
-							<img src="../public/resources/images/chat.png" alt="">
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+		
 		<!-- 경고 메시지 수신창 -->
 		<div class="alert-message-wrapper" v-if='alertMessage' @click="closeModal">
 			<div class="alert-message-background"></div>
@@ -156,8 +179,7 @@ export default {
 				classroom_id:"1"
 			},
 			teacher:"",
-
-
+			count:1,			// 현재 방 인원
 		}
 	},
 
@@ -180,6 +202,9 @@ export default {
 					this.teacher=subscriber;
 				}
 				this.subscribers.push(subscriber);
+
+				this.sessionCount();
+				document.getElementById("session-count").innerHTML = this.count;
 			});
 
 			// On every Stream destroyed...
@@ -188,6 +213,9 @@ export default {
 				if (index >= 0) {
 					this.subscribers.splice(index, 1);
 				}
+
+				this.sessionCount();
+				document.getElementById("session-count").innerHTML = this.count;
 			});
 
 			// On alert from teacher to you
@@ -523,6 +551,12 @@ export default {
 		muteMyVoice () {
 			this.publisher.publishAudio(this.muted);
 			this.muted = !this.muted;
+			if(!this.muted) {
+				document.getElementById("mic").classList.add("function-clicked")
+			} else {
+				document.getElementById("mic").classList.remove("function-clicked")
+			}
+				
 
 			const status = {
 				connectionId: this.publisher.stream.connection.connectionId,
@@ -552,7 +586,7 @@ export default {
 
 		raiseMyHand () {
 			// alert("손을 들었습니다.")
-			document.getElementById("student-hand-up").classList.toggle("student-hand-up-clicked");
+			document.getElementById("hand-up").classList.toggle("function-clicked");
 			this.handUp = !this.handUp;
 
 			this.session.signal({
@@ -599,7 +633,38 @@ export default {
 				console.log(err);
 			});
 			
-		}
+		},
+
+		clock () {
+			var currentDate = new Date();	// 현재시간
+			
+			var h = currentDate.getHours();
+			var amPm = '오전';
+			if(h >= 12){
+				amPm = '오후';
+				h = this.addZeros(h - 12);
+			}
+			var m = this.addZeros(currentDate.getMinutes() ,2);
+			var s =  this.addZeros(currentDate.getSeconds(),2);
+			
+			document.getElementById('noon').innerHTML = amPm;
+			document.getElementById('time').innerHTML = h+":"+m+":"+s;
+		},
+
+		addZeros (num) { // 자릿수 맞춰주기
+			num = num.toString();
+			return num.length < 2 ? "0"+num : num;
+		},
+
+		sessionCount () {
+			var buf = 1
+			this.subscribers.forEach((sub)=>{
+				if(JSON.parse(sub.stream.connection.data).clientData!=="Screen Sharing") {
+					buf +=1;
+				}
+			})
+			this.count = buf;
+		},
 	},
 
 	created() {
@@ -607,6 +672,7 @@ export default {
 		document.createElement("img").src = "../public/resources/images/circlesqure2.png"	// 이미지 preload
 		document.createElement("img").src = "../public/resources/images/mute.png"	// 이미지 preload
 		document.createElement("img").src = "../public/resources/images/unmute.png"	// 이미지 preload
+		setInterval(this.clock,1000);
 		
 		if (!window.opener) { // 직접 주소를 사용해서 들어왔을 때
 			this.joinSession();
