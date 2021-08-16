@@ -67,14 +67,18 @@ export default {
     getMembers: function () {
       axios({
         method: "get",
-        url: 'http://i5a205.p.ssafy.io:8000/accounts/class-members/',
+        url: 'http://127.0.0.1:8000/accounts/class-members/',
+        // url: 'http://i5a205.p.ssafy.io:8000/accounts/class-members/',
         headers: this.setToken(),
       })
         .then((res) => {
           console.log(res.data);
-          this.students = Object.assign([], res.data);
+          this.teacher.name = res.data.teacher.name
+          this.teacher.number = res.data.teacher.phone
+          this.teacher.class = String(res.data.classroom.grade)[0] + "학년 " + String(res.data.classroom.grade)[2] + "반"
+
+          this.students = Object.assign([], res.data.students);
           const cardBody = document.querySelector("#content");
-          // const imgName = "@/assets/whale.png"
 
           cardBody.innerHTML = this.students
           .map((li) => {
