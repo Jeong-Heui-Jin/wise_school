@@ -64,6 +64,8 @@ def noticefile(request, notice_id):
 
 # 해당 공지사항 상세 보기
 @api_view(['GET', 'PUT', 'DELETE',])
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
 def notice_detail(request, notice_id):
     notice = get_object_or_404(Notice, pk=notice_id)
     if request.method == 'GET':
@@ -87,6 +89,8 @@ def notice_detail(request, notice_id):
 # 해당 학생의 알림 목록 조회 / 새 알림 생성 / 해당 학생의 알림 전체 삭제
 # 알림 목록 조회시 해당 학생의 is_notification값 False로 바꿔주기
 @api_view(['GET', 'DELETE',])
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
 def notification(request, user_id):
     if request.method == 'GET':
         notifications = get_list_or_404(Notification, student=user_id)
@@ -102,6 +106,8 @@ def notification(request, user_id):
 
 # 알림 상세 보기
 @api_view(['GET', 'DELETE',])
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
 def notification_detail(request, notification_id):
     notification = get_object_or_404(Notification, pk=notification_id)
     if request.method == 'GET':
@@ -110,7 +116,4 @@ def notification_detail(request, notification_id):
 
     elif request.method == 'DELETE':
         notification.delete()
-        data = {
-            'delete': '삭제되었습니다.'
-        }
-        return Response(data, status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)

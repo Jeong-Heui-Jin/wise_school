@@ -110,7 +110,7 @@ export default {
           console.log(res.data)
           this.homeworks = res.data.homeworks
           this.notices = res.data.notices
-          this.timetable = res.data.timetable
+          // this.timeschedules = res.data.timetable.details
 
           // 숙제 제목 긴 경우 뒤 생략
           for (let i = 0; i < this.homeworks.length; ++i) {
@@ -120,13 +120,19 @@ export default {
             }
           }
 
-          // 공지 제목 긴 경우 뒤 생략
-          for (let i = 0; i < this.notices.length; ++i) {
-            var noticeTitle = this.notices[i].title;
-            if (noticeTitle.length > 30) {
-              this.homeworks[i].title = noticeTitle.substring(0, 30) + "..."
-            }
+          // 해당 요일의 시간표 가져오기
+          if (this.day == '월요일') {
+            this.timeschedules = res.data.timetable.details.mon
+          } else if (this.day == '화요일') {
+            this.timeschedules = res.data.timetable.details.tue
+          } else if (this.day == '수요일') {
+            this.timeschedules = res.data.timetable.details.wed
+          } else if (this.day == '목요일') {
+            this.timeschedules = res.data.timetable.details.thu
+          } else {
+            this.timeschedules = res.data.timetable.details.fri
           }
+          console.log(this.timeschedules)
         })
         .catch((err) => {
           console.log(err);
@@ -238,7 +244,6 @@ export default {
             </div>
             <div id="subject">
               <h3>${li.subject}</h3>
-              <p>${li.book}</p>
             </div>
           </div>
           `;
@@ -364,8 +369,13 @@ export default {
   border-radius: 20px;
   background-color:aquamarine;
   text-align: center;
-  padding-top: 12px;
+  padding-top: 25px;
 }
+
+#subject > h3 {
+  font-size: 30px;
+}
+
 #time-card #subject p {
   font-size: 12px;
 }

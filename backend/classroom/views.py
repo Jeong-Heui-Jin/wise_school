@@ -93,6 +93,18 @@ def home(request):
 
     if Timetable.objects.filter(classroom=classroom):
         timetable = TimetableListSerializer(get_object_or_404(Timetable, classroom=classroom)).data
+        details = {
+            'mon': [],
+            'tue': [],
+            'wed': [],
+            'thu': [],
+            'fri': [],
+        }
+        for detail in timetable.get('details'):
+            for day in list(details.keys()):
+                details[day].append({'subject':detail[day], 'time':detail['start'][:5]+' ~ '+detail['end'][:5]})
+        # timetable.update({'days':details})
+        timetable['details'] = details
     else:
         timetable = {}
 

@@ -103,16 +103,29 @@ export default {
             } else {
               img = Squirrel;
             }
-            return `
-            <div id="card">
-              <h3>${li.name}</h3>
-              <img id="img" src=${img} alt="프로필"/>
-              <br/>
-              <div class="d-flex" id="button-field">
-                <button onclick="window.open('/student_info/${li.id}', '_self')" id="student-button">학생정보</button>
-                <button href="#" id="message-button">메시지 보내기</button>
-              </div>
-            </div>`;
+
+            if (this.usertype == 1) {
+              return `
+              <div id="card">
+                <h3>${li.name}</h3>
+                <img id="img" src=${img} alt="프로필"/>
+                <br/>
+                <div class="d-flex" id="button-field">
+                  <button onclick="window.open('/student_info/${li.id}', '_self')" id="student-button">학생정보</button>
+                  <button href="#" id="message-button">메시지 보내기</button>
+                </div>
+              </div>`;
+            } else {
+                return `
+              <div id="card">
+                <h3>${li.name}</h3>
+                <img id="img" src=${img} alt="프로필"/>
+                <br/>
+                <div class="d-flex" id="button-field">
+                  <button href="#" id="message-button" style="margin-left:43px;">메시지 보내기</button>
+                </div>
+              </div>`;
+            }
           })
           .join("");
         })
@@ -122,8 +135,8 @@ export default {
     }
   },
   created: function() {
-    this.getMembers()
     this.usertype = this.now_user.usertype
+    this.getMembers()
   },
   components: {
     NavSideBar,
