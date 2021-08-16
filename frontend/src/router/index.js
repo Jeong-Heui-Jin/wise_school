@@ -21,6 +21,7 @@ import Attitude from '../views/AfterLogin/Attitude'
 import AttitudeInfo from '../views/AfterLogin/AttitudeInfo'
 import StudentInfo from '../views/AfterLogin/StudentInfo'
 import TimetableChange from '../views/AfterLogin/TimetableChange'
+import Notification from '../views/AfterLogin/Notification'
 
 
 Vue.use(VueRouter)
@@ -137,6 +138,11 @@ const routes = [
     path: '/attitude_info/:id',
     name: 'AttitudeInfo',
     component: AttitudeInfo,
+  },
+  {
+    path: '/notification',
+    name: 'Notification',
+    component: Notification,
   },
 ]
 

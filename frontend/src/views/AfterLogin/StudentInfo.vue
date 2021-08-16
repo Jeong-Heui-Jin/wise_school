@@ -32,7 +32,7 @@
         <button id="student-info-change" type="button" @click="infoChange">수정하기</button>
         <button id="student-info-recovery" type="button" @click="infoRecovery">되돌리기</button>
         <div id="parents-info-form">
-            <p style="font-size: 28px; margin-right: auto;">비상 연락망</p>
+            <p style="font-size: 28px; margin-right: auto;">보호자 연락처</p>
             <div style="min-width: 900px; min-height: 200px; background-color: #d6d6d6; border-radius: 20px; padding: 10px;">
                 <div id="parent-info-form-graph">
                     <b-row style="min-width: 800px; margin-bottom: 20px;">
@@ -94,7 +94,8 @@ export default {
             student: { ID: 1234, name: '목상원', number: '16', phone: '010-3542-8554', address: '서울시 강남구 테헤란로 212' },
             image: Sheep,
             parents: [
-                { ID: 123, student_id: 1234, relation: '어머니', name: '김다정', phone: '010-1234-5678' }
+                { ID: 123, student_id: 1234, relation: '어머니', name: '김다정', phone: '010-1234-5678' },
+                { ID: 123, student_id: 1234, relation: '어머니', name: '김다정', phone: '010-1234-5678' },
             ]
         }
     },
@@ -124,6 +125,8 @@ export default {
                 studentNumber.value = this.data.info.number;
                 studentPhone.value = this.data.phone;
                 studentAddress.value = this.data.info.address;
+
+                this.parents = res.data.parents
 
                 if (Number(res.data.id) % 9 === 0) {
                 this.image = Whale;
@@ -168,7 +171,7 @@ export default {
             studentName.value = this.data.name;
             studentNumber.value = this.data.info.number;
             studentPhone.value = this.data.phone;
-            studentAddress.value = this.data.address;
+            studentAddress.value = this.data.info.address;
         },
         // 학생 정보 수정 하기
         infoChange() {
@@ -196,23 +199,24 @@ export default {
               });
         },
         parentInfoDelete(e) {
-            console.log(this.parents)
+            console.log(this.parents[Number(e.target.id[8]) - 1].id)
             // console.log(e.target.id);
             // console.log(this.parents[Number(e.target.id[8]) - 1].ID);
             // console.log(this.parents[Number(e.target.id[8]) - 1].ID);
-            this.parents.splice(Number(e.target.id[8]) - 1, 1);
+            // this.parents.splice(Number(e.target.id[8]) - 1, 1);
             // axios DELETE
             // 해당 this.parents[Number(e.target.id[8]) - 1].ID로 parent Info data delete
             // parents ID -> this.parents[idx].ID
 
             axios({
               method: "delete",
-              url: `http://127.0.0.1:8000/accounts/parents/detail/${this.data.parents[Number(e.target.id[8]) - 1].id}/`,
-              // url: `http://i5a205.p.ssafy.io:8000/accounts/parents/detail/${this.data.parents[Number(e.target.id[8]) - 1].id}/`,
+              url: `http://127.0.0.1:8000/accounts/parents/detail/${this.parents[Number(e.target.id[8]) - 1].id}/`,
+              // url: `http://i5a205.p.ssafy.io:8000/accounts/parents/detail/${this.parents[Number(e.target.id[8]) - 1].id}/`,
               headers: this.headers,
             })
               .then(function(){
                 alert('삭제되었습니다 :(');
+                this.$router.go();
               })
               .catch(function(err){
                 console.log(err);
@@ -223,7 +227,7 @@ export default {
                 e.target.parentElement.parentElement.children[1].children[0].value.length > 0 &&
                 e.target.parentElement.parentElement.children[2].children[0].value.length > 0) {
                 // 처음 등록하는 경우
-                if(!this.parents[Number(e.target.id[8]) - 1].ID){
+                if(!this.parents || !this.parents[Number(e.target.id[8]) - 1].ID){
                     // POST
                     var bodyPost = { student_id: this.parents[Number(e.target.id[8]) - 1].student_id, 
                     relation: e.target.parentElement.parentElement.children[0].children[0].value,
@@ -239,7 +243,8 @@ export default {
                         headers: this.headers,
                         })
                         .then(function(){
-                            alert('등록되었습니다');
+                            alert('등록되었습니다 :)');
+                            this.$router.go();
                         })
                         .catch(function(err){
                             console.log(err);
@@ -255,6 +260,19 @@ export default {
                     console.log(body);
                     // axis UPDATE
                     // BODY key -> this.parents[Number(e.target.id[8]) - 1].ID
+                    axios({
+                        method: "put",
+                        url: `http://127.0.0.1:8000/accounts/parents/detail/${this.parents[Number(e.target.id[8]) - 1].ID}/`,
+                        // url: `http://i5a205.p.ssafy.io:8000/accounts/parents/${this.student_id}/`,
+                        data: bodyPost,
+                        headers: this.headers,
+                        })
+                        .then(function(){
+                            alert('수정되었습니다 :)');
+                        })
+                        .catch(function(err){
+                            console.log(err);
+                        });
 
                     this.parents[Number(e.target.id[8]) - 1].relation = e.target.parentElement.parentElement.children[0].children[0].value;
                     this.parents[Number(e.target.id[8]) - 1].name = e.target.parentElement.parentElement.children[1].children[0].value;
@@ -262,7 +280,7 @@ export default {
                 }
             }
             else {
-                alert('빈칸을 채워주세요');
+                alert('빈칸을 채워주세요!');
             }
         },
         addForm() {

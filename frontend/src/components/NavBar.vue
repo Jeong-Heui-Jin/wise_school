@@ -13,9 +13,9 @@
           id="logo"
           src="@/assets/alarm.png"
           alt="알람_로고"
-          @click="print"
+          @click="goNotification"
         />
-        <img id="logo" src="@/assets/mail.png" alt="알람_로고" />
+        <img id="logo" src="@/assets/mail.png" alt="편지_로고" />
         <b-button id="button" variant="faded" type="light" size="lg"
           >내 정보 보기</b-button
         >
@@ -41,8 +41,8 @@ export default {
     }
   },
   methods: {
-    print() {
-      console.log("alarm");
+    goNotification: function() {
+      window.open("/notification", "_self");
     },
     logout() {
       // 로그아웃
