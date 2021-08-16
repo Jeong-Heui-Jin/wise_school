@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
             name='TimetableDetail',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('period', models.IntegerField()),
+                ('time', models.IntegerField()),
                 ('mon', models.TextField(blank=True)),
                 ('tue', models.TextField(blank=True)),
                 ('wed', models.TextField(blank=True)),

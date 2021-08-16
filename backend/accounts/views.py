@@ -7,6 +7,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import ParentSerializer, StudentInfoSerializer, UserSerializer, UserListSerializer, ServiceRequestSerializer, SignupSerializer, StudentInfoSerializer
+from classroom.serializers import ClassroomSerializer
 from django.contrib.auth import get_user_model
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
@@ -49,7 +50,7 @@ def password_reset(request):
     user = get_object_or_404(get_user_model(), username=username)
     user.set_password(new_password)
     user.save()
-    return Response({'user':user,})
+    return Response(status=status.HTTP_200_OK)
 
 
 @api_view(['POST', 'GET',])
@@ -76,6 +77,8 @@ def profile(request):
 
 # 해당 사용자의 정보 조회/수정/삭제
 @api_view(['GET', 'PUT','DELETE',])
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
 def info(request, user_id):
     user = get_object_or_404(User, pk=user_id)
     if request.method == 'GET':
@@ -87,7 +90,7 @@ def info(request, user_id):
         info_data = {
             'number' : request.data.get('number'),
             'address' : request.data.get('address'),
-            # 'is_notification' : user.is_notification,
+            'is_notification' : user.is_notification,
         }
         serializer = StudentInfoSerializer(user.info, data=info_data)
         if serializer.is_valid(raise_exception=True):
@@ -97,6 +100,7 @@ def info(request, user_id):
         user_data = {
             'name' : request.data.get('name'),
             'phone' : request.data.get('phone'),
+            'classroom_id' : user.classroom.id,
         }
         serializer = UserListSerializer(user, data=user_data)
         if serializer.is_valid(raise_exception=True):
@@ -157,8 +161,17 @@ def parent_detail(request, parent_id):
 def class_members(request):
     classroom = request.user.classroom
     class_members = get_list_or_404(User, classroom=classroom)
-    serializer = UserSerializer(class_members, many=True)
-    return Response(serializer.data)
+    members = UserSerializer(class_members, many=True).data
+
+    teacher = [member for member in members if member.get('usertype')==1][0]
+    students = [member for member in members if member.get('usertype')==2]
+
+    class_info = {
+        'teacher': teacher,
+        'students': students,
+        'classroom': ClassroomSerializer(classroom).data,
+    }
+    return JsonResponse(class_info)
 
 
 # 해당 학교의 선생님들 목록 조회 (학교 관리자)

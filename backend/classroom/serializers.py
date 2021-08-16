@@ -1,5 +1,4 @@
-from accounts.views import Parents
-from .models import Timetable, TimetableDetail
+from .models import Timetable, TimetableDetail, Classroom
 from rest_framework import serializers
 
 
@@ -8,7 +7,7 @@ class TimetableDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TimetableDetail
-        fields = ('id', 'period', 'mon', 'tue', 'wed', 'thu', 'fri',)
+        fields = ('id', 'time', 'mon', 'tue', 'wed', 'thu', 'fri', 'start', 'end',)
         read_only_fields = ('timetable',)
 
 
@@ -25,4 +24,11 @@ class TimetableListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Timetable
+        fields = '__all__'
+
+
+class ClassroomSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Classroom
         fields = '__all__'

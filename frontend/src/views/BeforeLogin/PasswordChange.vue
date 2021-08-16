@@ -49,7 +49,9 @@
 </template>
 
 <script>
+import axios from 'axios'
 import Logo from "@/components/Logo";
+
 export default {
   name: "PasswordChange",
   data: () => ({
@@ -61,10 +63,27 @@ export default {
   },
   methods: {
     changePassword: function () {
+
       if (this.validationNewPassword && this.validationCheckPassword) {
-        window.open("/login", "_self");
+        var changeForm = {
+          'username': this.$route.params.user.username,
+          'password': this.newPassword,
+        }
+        axios({
+          method: 'post',
+          url: 'http://i5a205.p.ssafy.io:8000/accounts/password-reset/',
+          data: changeForm,
+        })
+        .then(() => {
+          alert("비밀번호가 변경되었습니다! 새롭게 로그인해주세요 :)")
+          window.open("/login", "_self");
+        })
+        .catch(err => {
+          alert(err)
+          console.log(err)
+        })
       } else {
-        alert("양식 변경 요청");
+        alert("비밀번호가 일치하지 않습니다 :(");
       }
     },
   },
@@ -109,6 +128,9 @@ export default {
       return false;
     },
   },
+  created: function() {
+    // console.log(this.$route.params.user)
+  }
 };
 </script>
 

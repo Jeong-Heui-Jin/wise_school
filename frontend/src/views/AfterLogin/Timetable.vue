@@ -6,30 +6,80 @@
     <h1 id="title"> {{ timetable.Title }}</h1>
     <b-container id="timetable-content">
       <!-- 요일 -->
-      <b-row id="period" >
-        <b-col id="subject" style="padding-bottom: 20px;"> </b-col>
-        <b-col id="subject" style="padding-bottom: 20px;">월</b-col>
-        <b-col id="subject" style="padding-bottom: 20px;">화</b-col>
-        <b-col id="subject" style="padding-bottom: 20px;">수</b-col>
-        <b-col id="subject" style="padding-bottom: 20px;">목</b-col>
-        <b-col id="subject" style="padding-bottom: 20px;">금</b-col>
+      <b-row class="period" >
+        <b-col class="subject" style="padding-bottom: 20px;"> </b-col>
+        <b-col class="subject" style="padding-bottom: 20px;">월</b-col>
+        <b-col class="subject" style="padding-bottom: 20px;">화</b-col>
+        <b-col class="subject" style="padding-bottom: 20px;">수</b-col>
+        <b-col class="subject" style="padding-bottom: 20px;">목</b-col>
+        <b-col class="subject" style="padding-bottom: 20px;">금</b-col>
       </b-row>
       <!-- 과목 -->
-      <b-row id="period" v-for="detail in timetableDetail" :key="detail.Period">
-        <b-col id="subject">
-          {{detail.Period}}교시
-          <div id="time" v-if="detail.Period === '1'">09:00 ~ 09:40</div>
-          <div id="time" v-else-if="detail.Period === '2'">09:50 ~ 10:30</div>
-          <div id="time" v-else-if="detail.Period === '3'">10:40 ~ 11:20</div>
-          <div id="time" v-else-if="detail.Period === '4'">11:30 ~ 12:10</div>
-          <div id="time" v-else-if="detail.Period === '5'">13:00 ~ 13:40</div>
-          <div id="time" v-else-if="detail.Period === '6'">13:50 ~ 14:30</div>
+      <b-row class="period 1-class" v-if="period >= 1">
+        <b-col class="subject">
+          1교시
+          <div class="time">09:00 ~ 09:40</div>
         </b-col>
-        <b-col id="subject">{{detail.Monday}}</b-col>
-        <b-col id="subject">{{detail.Tuesday}}</b-col>
-        <b-col id="subject">{{detail.Wednesday}}</b-col>
-        <b-col id="subject">{{detail.Thursday}}</b-col>
-        <b-col id="subject">{{detail.Friday}}</b-col>
+        <b-col class="subject"><div id="mon"></div></b-col>
+        <b-col class="subject"><div id="tue"></div></b-col>
+        <b-col class="subject"><div id="wed"></div></b-col>
+        <b-col class="subject"><div id="thu"></div></b-col>
+        <b-col class="subject"><div id="fri"></div></b-col>
+      </b-row>
+      <b-row class="period 2-class" v-if="period >= 2">
+        <b-col class="subject">
+          2교시
+          <div class="time">09:50 ~ 10:30</div>
+        </b-col>
+        <b-col class="subject"><div id="mon"></div></b-col>
+        <b-col class="subject"><div id="tue"></div></b-col>
+        <b-col class="subject"><div id="wed"></div></b-col>
+        <b-col class="subject"><div id="thu"></div></b-col>
+        <b-col class="subject"><div id="fri"></div></b-col>
+      </b-row>
+      <b-row class="period 3-class" v-if="period >= 3">
+        <b-col class="subject">
+          3교시
+          <div class="time">10:40 ~ 11:20</div>
+        </b-col>
+        <b-col class="subject"><div id="mon"></div></b-col>
+        <b-col class="subject"><div id="tue"></div></b-col>
+        <b-col class="subject"><div id="wed"></div></b-col>
+        <b-col class="subject"><div id="thu"></div></b-col>
+        <b-col class="subject"><div id="fri"></div></b-col>
+      </b-row>
+      <b-row class="period 4-class" v-if="period >= 4">
+        <b-col class="subject">
+          4교시
+          <div class="time">11:30 ~ 12:10</div>
+        </b-col>
+        <b-col class="subject"><div id="mon"></div></b-col>
+        <b-col class="subject"><div id="tue"></div></b-col>
+        <b-col class="subject"><div id="wed"></div></b-col>
+        <b-col class="subject"><div id="thu"></div></b-col>
+        <b-col class="subject"><div id="fri"></div></b-col>
+      </b-row>
+      <b-row class="period 5-class" v-if="period >= 5">
+        <b-col class="subject">
+          5교시
+          <div class="time">13:00 ~ 13:40</div>
+        </b-col>
+        <b-col class="subject"><div id="mon"></div></b-col>
+        <b-col class="subject"><div id="tue"></div></b-col>
+        <b-col class="subject"><div id="wed"></div></b-col>
+        <b-col class="subject"><div id="thu"></div></b-col>
+        <b-col class="subject"><div id="fri"></div></b-col>
+      </b-row>
+      <b-row class="period 6-class" v-if="period >= 6">
+        <b-col class="subject">
+          6교시
+          <div class="time">13:50 ~ 14:30</div>
+        </b-col>
+        <b-col class="subject"><div id="mon"></div></b-col>
+        <b-col class="subject"><div id="tue"></div></b-col>
+        <b-col class="subject"><div id="wed"></div></b-col>
+        <b-col class="subject"><div id="thu"></div></b-col>
+        <b-col class="subject"><div id="fri"></div></b-col>
       </b-row>
     </b-container>
     <div id="button-form">
@@ -55,13 +105,7 @@ export default {
       idx: 1,
       timetable: { Title: '1학기 시간표' },
       // 오름 차순 정렬 가정
-      timetableDetail : [
-        {Period : '1', Monday: '국어', Tuesday: '체육', Wednesday: '영어', Thursday: '사회', Friday: '수학'},
-        {Period : '2', Monday: '수학', Tuesday: '영어', Wednesday: '체육', Thursday: '국어', Friday: '과학'},
-        {Period : '3', Monday: '음악', Tuesday: '국어', Wednesday: '국어', Thursday: '수학', Friday: '도덕'},
-        {Period : '4', Monday: '과학', Tuesday: '과학', Wednesday: '음악', Thursday: '체육', Friday: '미술'},
-        {Period : '5', Monday: '사회', Tuesday: '사회', Wednesday: '창체', Thursday: '체육', Friday: '국어'},
-      ]
+      period: 0,
     }
   },
   methods: {
@@ -75,7 +119,15 @@ export default {
         headers: this.headers,
       })
         .then((res) => {
-          console.log(res.data)
+          console.log(res.data);
+          this.period=res.data.details.length;
+
+          for (var i = 0; i < res.data.details.length; i++) {
+            const timetableBody = document.getElementsByClassName(res.data.details[i].period+'-class');
+
+            console.log(res.data.details[i].period+'-class');
+            console.log(timetableBody[0]);
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -90,39 +142,8 @@ export default {
     },
   },
   mounted() {
-      var arr = [];
-      var color = ["lightblue", "lightcyan", "lightgoldenrodyellow", "lightseagreen", "lightyellow", "lightsalmon", "palegreen", "paleturquoise", "papayawhip", "lightpink"];
-      const subject = document.querySelectorAll('#subject');
-
-      for (var i = 0; i < this.timetableDetail.length; i++) {
-        if (!arr.find(e => e === this.timetableDetail[i].Monday)) {
-          arr.push(this.timetableDetail[i].Monday);
-        }
-        if(!arr.find(e => e === this.timetableDetail[i].Tuesday)) {
-          arr.push(this.timetableDetail[i].Tuesday);
-        }
-        if(!arr.find(e => e === this.timetableDetail[i].Wednesday)) {
-          arr.push(this.timetableDetail[i].Wednesday);
-        }
-        if(!arr.find(e => e === this.timetableDetail[i].Thursday)) {
-          arr.push(this.timetableDetail[i].Thursday);
-        }
-        if(!arr.find(e => e === this.timetableDetail[i].Friday)) {
-          arr.push(this.timetableDetail[i].Friday);
-        }
-      }
-      for (var err = 0; err < arr.length; err++) {
-        // console.log(arr[err]);
-      } 
-      for (var sub = 0; sub < subject.length; sub++) {
-        for (var find = 0; find < arr.length; find++) {
-          if (subject[sub].textContent === arr[find]) {
-            subject[sub].style.backgroundColor = color[find];
-            // console.log(color[find]);
-            break;
-          }
-        }
-      }
+    this.setToken()
+    this.getTimetable()
   },
   computed: {
     ...mapState([
@@ -130,8 +151,7 @@ export default {
     ]),
   },
   created: function() {
-    this.setToken()
-    this.getTimetable()
+
   }
 }
 </script>
@@ -146,7 +166,7 @@ export default {
   min-width: 800px;
 }
 
-#timetable-content #subject {
+#timetable-content .subject {
   min-width: 40px;
   font-size: 40px;
   text-align: center;
@@ -154,7 +174,7 @@ export default {
   border: 1px solid black;
 }
 
-#timetable-content #time {
+#timetable-content .time {
   font-size: 15px;
 }
 

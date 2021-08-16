@@ -27,7 +27,9 @@ class Timetable(models.Model):
 
 class TimetableDetail(models.Model):
     timetable = models.ForeignKey(Timetable, on_delete=models.CASCADE, related_name='details')
-    period = models.IntegerField()
+    time = models.IntegerField()
+    start = models.TimeField()
+    end = models.TimeField()
     mon = models.TextField(blank=True, null=True)
     tue = models.TextField(blank=True, null=True)
     wed = models.TextField(blank=True, null=True)

@@ -282,7 +282,7 @@ export default {
   font-size: 24px;
 }
 
-.subject #mon{
+#timetable-change .subject #mon{
     margin-top: auto; 
     margin-bottom: auto; 
     min-width:100px; 
@@ -292,7 +292,7 @@ export default {
     font-size: 32px; 
     border: 0px;
 }
-.subject #tue{
+#timetable-change .subject #tue{
     margin-top: auto; 
     margin-bottom: auto; 
     min-width:100px; 
@@ -302,7 +302,7 @@ export default {
     font-size: 32px; 
     border: 0px;
 }
-.subject #wed{
+#timetable-change .subject #wed{
     margin-top: auto; 
     margin-bottom: auto; 
     min-width:100px; 
@@ -312,7 +312,7 @@ export default {
     font-size: 32px; 
     border: 0px;
 }
-.subject #thu{
+#timetable-change .subject #thu{
     margin-top: auto; 
     margin-bottom: auto; 
     min-width:100px; 
@@ -322,7 +322,7 @@ export default {
     font-size: 32px; 
     border: 0px;
 }
-.subject #fri{
+#timetable-change .subject #fri{
     margin-top: auto; 
     margin-bottom: auto; 
     min-width:100px; 
@@ -333,13 +333,13 @@ export default {
     border: 0px;
 }
 
-.period .button-field{
+#timetable-change .period .button-field{
     margin-top: auto;
     min-width: 80px;
     max-width: 80px;
 }
 
-.period button{
+#timetable-change .period button{
     border: 0px;
     border-radius: 5px;
     min-width: 80px;

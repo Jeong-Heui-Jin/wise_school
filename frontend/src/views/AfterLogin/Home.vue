@@ -102,7 +102,8 @@ export default {
     getList: function () {
       axios({
         method: "get",
-        url: 'http://i5a205.p.ssafy.io:8000/classroom/home/',
+        url: 'http://127.0.0.1:8000/classroom/home/',
+        // url: 'http://i5a205.p.ssafy.io:8000/classroom/home/',
         headers: this.headers,
       })
         .then((res) => {
@@ -343,9 +344,9 @@ export default {
   left: 1100px;
   margin-right: 35px;
   border-radius: 20px;
-  min-width: 300px;
-  max-width: 300px;
-  height: 650px;
+  width: 300px;
+  width: 300px;
+  height: 690px;
   border: 2px solid aqua;
 }
 

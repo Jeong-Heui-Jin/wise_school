@@ -9,7 +9,7 @@
     <!-- 전체 Form -->
     <b-form id="student-info-form">
         <div class="d-flex justify-content-around" style="margin-top: 30px;">
-            <img src="@/assets/sheep.png" style="max-width: 200px;" alt="학생사진"/>
+            <img :src="image" style="max-width: 200px;" alt="학생사진"/>
             <div id="student-info-text" style="min-width: 500px; background-color: #fff2d5;  border-radius: 10px; padding: 15px; ">
                 <div class="d-flex justify-content-between">
                     <p style="margin-top: auto; margin-bottom: auto;">이   름</p>
@@ -59,7 +59,7 @@
                         </b-row>
                     </div>
                 </div>
-                <button type="button" style="min-width: 80px; min-height: 35px; border: 0px; border-radius: 10px; margin-top: 10px; margin-left: 10px;" @click="addForm">추가</button>
+                <button type="button" style="width: 80px; height: 35px; border: 0px; border-radius: 10px; margin-top: 10px; margin-left: 10px;" @click="addForm">추가</button>
             </div>
         </div>
     </b-form>
@@ -70,6 +70,15 @@
 import axios from "axios";
 import NavSideBar from "@/components/NavSideBar.vue";
 import NavBar from "@/components/NavBar.vue";
+import Whale from "@/assets/whale.png";
+import Beaver from "@/assets/beaver.png";
+import Cat from "@/assets/cat.png";
+import Elephant from "@/assets/elephant.png";
+import Frog from "@/assets/frog.png";
+import Koala from "@/assets/koala.png";
+import Shark from "@/assets/shark.png";
+import Sheep from "@/assets/sheep.png";
+import Squirrel from "@/assets/squirrel.png";
 import { mapState } from 'vuex'
 
 export default {
@@ -83,6 +92,7 @@ export default {
             data: '',
             student_id: this.$route.params.id,
             student: { ID: 1234, name: '목상원', number: '16', phone: '010-3542-8554', address: '서울시 강남구 테헤란로 212' },
+            image: Sheep,
             parents: [
                 { ID: 123, student_id: 1234, relation: '어머니', name: '김다정', phone: '010-1234-5678' }
             ]
@@ -114,6 +124,26 @@ export default {
                 studentNumber.value = this.data.info.number;
                 studentPhone.value = this.data.phone;
                 studentAddress.value = this.data.info.address;
+
+                if (Number(res.data.id) % 9 === 0) {
+                this.image = Whale;
+                } else if (Number(res.data.id) % 9 === 1) {
+                this.image = Beaver;
+                } else if (Number(res.data.id) % 9 === 2) {
+                this.image = Cat;
+                } else if (Number(res.data.id) % 9 === 3) {
+                this.image = Elephant;
+                } else if (Number(res.data.id) % 9 === 4) {
+                this.image = Frog;
+                } else if (Number(res.data.id) % 9 === 5) {
+                this.image = Koala;
+                } else if (Number(res.data.id) % 9 === 6) {
+                this.image = Shark;
+                } else if (Number(res.data.id) % 9 === 7) {
+                this.image = Sheep;
+                } else {
+                this.image = Squirrel;
+                }
 
                 const parentInfo = document.querySelectorAll('#parent-info');
 
@@ -152,31 +182,41 @@ export default {
             console.log(body);
             // axios POST
             axios({
-              method: "post",
+              method: "put",
               url: `http://127.0.0.1:8000/accounts/info/${this.student_id}/`,
-              // url: `http://i5a205.p.ssafy.io:8000/homework/file/${res.data.id}/`,
+              // url: `http://i5a205.p.ssafy.io:8000/accounts/info/${this.student_id}/`,
               data: body,
               headers: this.headers,
             })
-              .then(function(res){
-                console.log(res.data)
-                alert('등록되었습니다');
+              .then(function(){
+                alert('수정되었습니다 :)');
               })
               .catch(function(err){
                 console.log(err);
               });
         },
         parentInfoDelete(e) {
+            console.log(this.parents)
             // console.log(e.target.id);
-            // console.log(Number(e.target.id[8]));
+            // console.log(this.parents[Number(e.target.id[8]) - 1].ID);
             // console.log(this.parents[Number(e.target.id[8]) - 1].ID);
             this.parents.splice(Number(e.target.id[8]) - 1, 1);
             // axios DELETE
             // 해당 this.parents[Number(e.target.id[8]) - 1].ID로 parent Info data delete
             // parents ID -> this.parents[idx].ID
-            // 
-            // delete 코드 추가
-            // 
+
+            axios({
+              method: "delete",
+              url: `http://127.0.0.1:8000/accounts/parents/detail/${this.data.parents[Number(e.target.id[8]) - 1].id}/`,
+              // url: `http://i5a205.p.ssafy.io:8000/accounts/parents/detail/${this.data.parents[Number(e.target.id[8]) - 1].id}/`,
+              headers: this.headers,
+            })
+              .then(function(){
+                alert('삭제되었습니다 :(');
+              })
+              .catch(function(err){
+                console.log(err);
+              });
         },
         parentInfoUpdate(e) {
             if (e.target.parentElement.parentElement.children[0].children[0].value.length > 0 &&
@@ -191,7 +231,19 @@ export default {
                     phone: e.target.parentElement.parentElement.children[2].children[0].value};
                     console.log(bodyPost);
                     // POST axios
-                    alert('등록되었습니다');
+                    axios({
+                        method: "post",
+                        url: `http://127.0.0.1:8000/accounts/parents/${this.student_id}/`,
+                        // url: `http://i5a205.p.ssafy.io:8000/accounts/parents/${this.student_id}/`,
+                        data: bodyPost,
+                        headers: this.headers,
+                        })
+                        .then(function(){
+                            alert('등록되었습니다');
+                        })
+                        .catch(function(err){
+                            console.log(err);
+                        });
                 }
                 // UPDATE 경우
                 else {
