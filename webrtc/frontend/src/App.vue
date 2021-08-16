@@ -11,26 +11,6 @@
 					<div id="noon"></div>
 					<div id="time"></div>
 				</div>
-			
-
-				<!-- 내 계정. 최상단에 위치 -->
-				<!-- <div class="student">
-					
-					<div class="student-profile"></div>
-					<div class="student-name">{{myUserName}}</div>
-					<div class="student-function-wrapper">
-						<div class="student-function" id="student-mute" @click="muteMyVoice">
-							<img src="../public/resources/images/mute.png" alt="" v-if="!muted">
-							<img src="../public/resources/images/unmute.png" alt="" v-else>
-						</div>
-						<div class="student-function" id="student-hand-up" @click="raiseMyHand">
-							<img src="../public/resources/images/hand_up.png" alt="">
-						</div>
-						<div class="student-function" id="student-alert" @click="makeMessage(null)">
-							<img src="../public/resources/images/chat.png" alt="">
-						</div>
-					</div>
-				</div> -->
 				<!-- 다른 사람 계정. -->
 				<!-- <div v-for="sub in subscribers" :key="sub.stream.connection.connectionId">
 					<div class="student" v-if="JSON.parse(sub.stream.connection.data).clientData !== 'Screen Sharing'">
@@ -54,6 +34,7 @@
 					</div>
 				</div> -->
 			</div>
+			<!-- 나가기 버튼 -->
 			<div class="exit" @click="leaveSession">
 				<img id="exit" src="../public/resources/images/opened-door-aperture.png" alt="">
 			</div>
@@ -65,7 +46,7 @@
 					화목한 {{ mySessionId }}반
 					<div class="session-personel">
 						<div class="session-personel-image"><img src="../public/resources/images/class.png" alt=""></div>
-						<div id="session-count"></div>
+						<div id="session-count">{{count}} </div>
 					</div>
 				</div>
 				<div class="my-function">
@@ -73,7 +54,10 @@
 						<img src="../public/resources/images/mic.png" alt="" v-if="!muted">
 						<img src="../public/resources/images/mic_mute.png" alt="" v-else>
 					</div>
-					<div class="function"><img src="../public/resources/images/chat.png" alt=""></div>
+					<!-- 화면공유 -->														
+					<div class="function" id="screen-sharing" @click="startScreenSharing">
+						<img src="../public/resources/images/screen.png" alt="">
+					</div>
 					<div class="function" id="hand-up" @click="raiseMyHand">
 						<img src="../public/resources/images/hand_up_lime.png" alt="" v-if="handUp">
 						<img src="../public/resources/images/hand_up.png" alt="" v-else>
@@ -81,17 +65,48 @@
 				</div>
 				<div class="session-title"></div>
 			</div>
-			<div id="video-container" class="col-md-6" >
+			<div id="video-container" v-if="isScreenShared">
 				<!-- <user-video :stream-manager="teacher" @click.native="updateMainVideoStreamManager(teacher)" v-if="teacher"/> -->
-				<user-video :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
-				<div v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub">
-					<div v-if="JSON.parse(sub.stream.connection.data).clientData !== 'Screen Sharing'">
-						<user-video :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+				<div class="video-wrapper">
+					<div class="user-video-wrapper">
+						<user-video id="my-video" style="width:10%;" :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
+						<div id="user-video" style="width:10%;" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub">
+							<div class="test" v-if="JSON.parse(sub.stream.connection.data).clientData !== 'Screen Sharing'">
+								<user-video :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+							</div>
+						</div>
+					</div>
+					<div style="width:80%;" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub">
+						<div class="video-screen-sharing" v-if="JSON.parse(sub.stream.connection.data).clientData === 'Screen Sharing'">
+							<user-video style="width: 300%; " :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+						</div>
 					</div>
 				</div>
-				<div v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub">
-					<div class="video-screen-sharing" v-if="JSON.parse(sub.stream.connection.data).clientData === 'Screen Sharing'">
-						<user-video style="min-width: 300%; " :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+			</div>
+			<div id="video-container" v-else>
+				<!-- <user-video :stream-manager="teacher" @click.native="updateMainVideoStreamManager(teacher)" v-if="teacher"/> -->
+				<div style="width:30%;" >
+					<user-video id="my-video" :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
+				</div>
+				
+				<div id="user-video" style="width:30%;" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub">
+					<div class="test">
+						<user-video :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+						<div class="video-function">
+							<div class="student-function" id="student-mute" @click="muteStudent(sub.stream.connection)">
+								<img style="width:25px; height:25px;" src="../public/resources/images/unmute.png" alt="" v-if="sub.muted">
+								<img style="width:25px; height:25px;" src="../public/resources/images/mute.png" alt="" v-else>
+							</div>
+							<div class="student-function student-hand-up-clicked" id="student-hand-up" @click="downHand(sub)" v-if="sub.handUp">
+								<img style="width:25px; height:25px;" src="../public/resources/images/hand_up_black.png" alt="">
+							</div>
+							<div class="student-function" id="student-hand-up" @click="downHand(sub)" v-else>
+								<img style="width:25px; height:25px;" src="../public/resources/images/hand_up_black.png" alt="">
+							</div>
+							<div class="student-function" id="student-alert" @click="makeMessage(sub.stream.connection)">
+								<img style="width:25px; height:25px;" src="../public/resources/images/chat.png" alt="">
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -262,6 +277,16 @@ export default {
 				this.raiseMyHand();
 			})
 
+			// On start screen share
+			this.session.on('signal:startScreenSharing', ()=>{
+				this.isScreenShared = true;
+			})
+
+			// On stop screen share
+			this.session.on('signal:stopScreenSharing', ()=>{
+				this.isScreenShared = false;
+			})
+
 			if (window.user) {
 				this.myUserName= window.user.userName;
 				this.mySessionId = String(window.user.classroom);
@@ -287,7 +312,7 @@ export default {
 							videoSource: undefined, // The source of video. If undefined default webcam
 							publishAudio: true,  	// Whether you want to start publishing with your audio unmuted or not
 							publishVideo: true,  	// Whether you want to start publishing with your video enabled or not
-							resolution: '640x480',  // The resolution of your video
+							resolution: '1920x1440',  // The resolution of your video
 							frameRate: 30,			// The frame rate of your video
 							insertMode: 'APPEND',	// How the video is inserted in the target element 'video-container'
 							mirror: false       	// Whether to mirror your local video or not
@@ -500,8 +525,18 @@ export default {
 						try {
 							console.log("subscriber >>>>> ", this.subscribers);
 							this.isScreenShared=true;
+							this.session.signal({
+								data: JSON.stringify(status),  // Any string (optional)
+								to: [],
+								type: 'startScreenSharing'             // The type of message (optional)
+							})
 							publisher.stream.getMediaStream().getVideoTracks()[0].addEventListener('ended', () => {
 								console.log('User pressed the "Stop sharing" button');
+								this.session.signal({
+									data: JSON.stringify(status),  // Any string (optional)
+									to: [],
+									type: 'stopScreenSharing'             // The type of message (optional)
+								})
 								this.leaveSessionForScreenSharing()
 								this.isScreenShared=false;
 							});					
@@ -642,7 +677,9 @@ export default {
 			var amPm = '오전';
 			if(h >= 12){
 				amPm = '오후';
-				h = this.addZeros(h - 12);
+				h = h==12? h.toString() : this.addZeros(h - 12);
+			} else {
+				h = this.addZeros(h);
 			}
 			var m = this.addZeros(currentDate.getMinutes() ,2);
 			var s =  this.addZeros(currentDate.getSeconds(),2);
