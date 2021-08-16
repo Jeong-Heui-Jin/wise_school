@@ -14,6 +14,9 @@ from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
+import boto3
+import MediaStorage
+
 
 
 # 전체 숙제 조회 / (선생님) 새로운 숙제 생성
@@ -60,7 +63,7 @@ def homework_list(request):
 
 
 # 숙제 파일 저장
-@api_view(['POST',])
+@api_view(['POST'])
 def homeworkfile(request, homework_id):
     homework = get_object_or_404(Homework, pk=homework_id)
 
