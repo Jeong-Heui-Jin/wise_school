@@ -63,7 +63,8 @@ export default {
     getHomeworkStatusDetail: function () {
       axios({
         method: "get",
-        url: `http://i5a205.p.ssafy.io:8000/homework/submit-detail/1/`,
+        url: `http://127.0.0.1:8000/homework/submit-detail/1/`,
+        // url: `http://i5a205.p.ssafy.io:8000/homework/submit-detail/1/`,
         headers: this.headers,
       })
         .then((res) => {
@@ -89,7 +90,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(["infomation_homework"]),
+    ...mapState(["headers", "infomation_homework"]),
   },
   created: function () {
     this.setToken();
