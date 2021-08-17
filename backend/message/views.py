@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .models import Message
-from .serializers import MessageSerializer
+from .serializers import MessageSerializer, MessageListSerializer
 from django.db.models import Q
 from itertools import chain
 from django.contrib.auth import get_user_model
@@ -18,8 +18,8 @@ from django.contrib.auth import get_user_model
 def message_list(request, user_id):
     user = get_object_or_404(get_user_model(), pk=user_id)
     # 해당 학생과 대화한 상대 모두 가져오기
-    senders = Message.objects.filter(receiver=user).values_list('sender', flat=True).dinstinct()
-    receivers = Message.objects.filter(sender=user).values_list('receiver', flat=True).dinstinct()
+    senders = Message.objects.filter(receiver=user).values_list('sender', flat=True).distinct()
+    receivers = Message.objects.filter(sender=user).values_list('receiver', flat=True).distinct()
     # 두 명단 합치기
     buddies = list(chain(senders, receivers))
     # buddies = list(chain(senders, receivers)).remove(user)
@@ -32,7 +32,7 @@ def message_list(request, user_id):
         # 그 중 읽지 않은 메시지 갯수
         unread_cnt = messages.filter(Q(is_checked=False)&Q(sender=buddy)).count()
         # 그 중 가장 최근 메시지
-        latest = messages[0]
+        latest = MessageListSerializer(messages, many=True).data[0]
         # 그 대화 상대와의 대화 정보 담은 딕셔너리를 messages_list 리스트에 차례대로 넣어줌.
         chat_info = {
             'latest': latest,
