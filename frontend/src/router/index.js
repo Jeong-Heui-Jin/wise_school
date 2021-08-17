@@ -22,6 +22,7 @@ import AttitudeInfo from '../views/AfterLogin/AttitudeInfo'
 import StudentInfo from '../views/AfterLogin/StudentInfo'
 import TimetableChange from '../views/AfterLogin/TimetableChange'
 import Notification from '../views/AfterLogin/Notification'
+import HomeworkSubmit from '../views/AfterLogin/HomeworkSubmit'
 
 
 Vue.use(VueRouter)
@@ -143,6 +144,11 @@ const routes = [
     path: '/notification',
     name: 'Notification',
     component: Notification,
+  },
+  {
+    path: '/homework-submit/:id',
+    name: 'HomeworkSubmit',
+    component: HomeworkSubmit,
   },
 ]
 
