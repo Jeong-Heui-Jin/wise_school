@@ -367,12 +367,6 @@ export default {
 
 		leaveSession () {
 			// --- Leave the session by calling 'disconnect' method over the Session object ---;
-			(()=>{
-				console.log("@@@@@@@@")
-				window.opener.postMessage({
-					msgType: "leave_class",
-				},"http://i5a205.p.ssafy.io:8081");
-			})();
 			if (this.session) this.session.disconnect()
 
 			this.session = undefined;
@@ -382,7 +376,12 @@ export default {
 			this.OV = undefined;
 
 			window.removeEventListener('beforeunload', this.leaveSession);
-			
+			(()=>{
+				console.log("@@@@@@@@")
+				window.opener.postMessage({
+					msgType: "leave_class",
+				},"http://i5a205.p.ssafy.io:8081");
+			})();
 		},
 
 		updateMainVideoStreamManager (stream) {
