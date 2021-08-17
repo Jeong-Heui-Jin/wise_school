@@ -153,6 +153,10 @@ export default {
       });
     },
     enterRoom: function () {
+      if(window.class) {
+        alert("이미 교실에 접속한 상태입니다.");
+        return;
+      }
       const now_at = new Date();
 			let hour = now_at.getHours();
 			let minutes = now_at.getMinutes();
