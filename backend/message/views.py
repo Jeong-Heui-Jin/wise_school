@@ -15,19 +15,20 @@ from django.contrib.auth import get_user_model
 # 해당 학생의 전체 메시지 목록 조회 (+ 시간 순서대로 최근꺼를 맨 위로 / 안 읽은 갯수 표시)
 # 해당 사용자의 is_message값 true로 바꿔주기
 @api_view(['GET',])
-def message_list(request):
+def message_list(request, user_id):
+    user = get_object_or_404(get_user_model(), pk=user_id)
     # 해당 학생과 대화한 상대 모두 가져오기
-    senders = Message.objects.filter(receiver=request.user).dinstinct('sender')
-    receivers = Message.objects.filter(sender=request.user).dinstinct('receiver')
+    senders = Message.objects.filter(receiver=user).values_list('sender', flat=True).dinstinct()
+    receivers = Message.objects.filter(sender=user).values_list('receiver', flat=True).dinstinct()
     # 두 명단 합치기
     buddies = list(chain(senders, receivers))
-    # buddies = list(chain(senders, receivers)).remove(request.user)
+    # buddies = list(chain(senders, receivers)).remove(user)
 
     # 각 대화상대마다, 안읽은갯수+가장최근대화 묶어서 딕셔너리 형태로 저장한 것들을 리스트에 넣어줌.
     messages_list = []
     for buddy in buddies:
         # 그 상대와 나눈 대화 전부 가져오기
-        messages = Message.objects.filter((Q(receiver=request.user)&Q(sender=buddy))|(Q(receiver=buddy)&Q(sender=request.user))).order_by('-sendtime')
+        messages = Message.objects.filter((Q(receiver=user)&Q(sender=buddy))|(Q(receiver=buddy)&Q(sender=user))).order_by('-sendtime')
         # 그 중 읽지 않은 메시지 갯수
         unread_cnt = messages.filter(Q(is_checked=False)&Q(sender=buddy)).count()
         # 그 중 가장 최근 메시지
@@ -67,7 +68,7 @@ def talk(request, buddy_id):
     elif request.method == 'POST':
         serializer = MessageSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save(sender=request.user, receiver=buddy)
+            serializer.save(sender=request.user, receiver=buddy, is_checked=False)
 
             buddy.is_message = True
             buddy.save()
