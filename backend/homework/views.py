@@ -15,7 +15,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 import boto3
-import MediaStorage
+from SHS.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
 
 
 
@@ -35,10 +35,33 @@ def homework_list(request):
         if serializer.is_valid(raise_exception=True):
             homework = serializer.save(classroom=classroom)
 
+            # image
+            s3_client = boto3.client(
+                's3',
+                aws_access_key_id     = AWS_ACCESS_KEY_ID,
+                aws_secret_access_key = AWS_SECRET_ACCESS_KEY
+            )
+
             image_list = request.FILES.getlist('image_path')
             for image in image_list:
-                item = HomeworkFile.objects.create(homework=homework, image=image)
+                # item = HomeworkFile.objects.create(homework=homework, image=image)
+                # item.save()
+                image_time = (str(datetime.now())).replace(" ","") # 이미지이름을 시간으로 설정하기 위해 datetime를 사용했다.
+                image_type = (image.content_type).split("/")[1]
+                s3_client.upload_fileobj(
+                    image,
+                    "dycho96", # 버킷이름
+                    image_time+"."+image_type,
+                    ExtraArgs = {
+                        "ContentType" : image.content_type
+                    }
+                )
+                image_url = "https://dycho96.s3.ap-northeast-2.amazonaws.com/"+image_time+"."+image_type  # 업로드된 이미지의 url이 설정값으로 저장됨
+                image_url = image_url.replace(" ","/")
+                logger.warning('image - ',image_url)
+                item = HomeworkFile.objects.create(homework=homework, image=image_url)
                 item.save()
+                    
             # 사진파일까지 저장되도록 한 번 더 저장
             serializer.save()
 
