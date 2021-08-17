@@ -1,6 +1,10 @@
 from django.db import models
 from django.conf import settings
 
+from datetime import datetime
+import boto3
+from SHS.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
+
 
 class Notice(models.Model):
     teacher = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)

@@ -11,7 +11,16 @@ from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
+from datetime import datetime
+import boto3
+from SHS.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
 
+# image
+s3_client = boto3.client(
+    's3',
+    aws_access_key_id     = AWS_ACCESS_KEY_ID,
+    aws_secret_access_key = AWS_SECRET_ACCESS_KEY
+)
 
 # 해당 반의 공지사항 목록 조회 / 새 공지사항 작성
 @api_view(['GET', 'POST',])
