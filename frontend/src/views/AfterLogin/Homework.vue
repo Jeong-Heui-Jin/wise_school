@@ -31,7 +31,7 @@
         <template #cell(submitHomework)="data">
           <b-button
             variant="outline-primary"
-            @click="goHomeworkStatus(data.item.submitHomework)"
+            @click="goHomeworkStatus(data.item)"
           >
             {{ data.item.submitHomework }}</b-button
           >
@@ -98,13 +98,13 @@ export default {
           if (this.now_user.usertype === 2) {
             this.fields.splice(3, 1);
             // print
-            console.log(this.fields);
+            // console.log(this.fields);
           } else {
             this.fields.splice(4, 1);
             // print
-            console.log(this.fields);
+            // console.log(this.fields);
           }
-          // console.log("res.data in axios get :", res.data);
+          console.log("res.data in axios get :", res.data);
           for (let i = 0; i < res.data.length; ++i) {
             // console.log("hi");
             temp = {
@@ -121,7 +121,7 @@ export default {
                 String(this.classNum),
               isSubmit: false,
             };
-            console.log("this.now_user.usertype :", this.now_user.usertype);
+            // console.log("this.now_user.usertype :", this.now_user.usertype);
             if (this.now_user.usertype === 2) {
               console.log(this.fields);
               for (let j = 0; j < res.data[i].submithomework_set.length; ++j) {
@@ -162,6 +162,7 @@ export default {
       window.open("/homework_create", "_self");
     },
     goHomeworkView: function (homework) {
+      console.log("homework :", homework);
       this.$store.dispatch("selectHomework", homework);
       this.$router.push({ name: "HomeworkView" });
     },
@@ -176,6 +177,7 @@ export default {
         headers: this.headers,
       })
         .then((res) => {
+          // this.$store.dispatch("selectInfoHomework", info_homework);
           // console.log("res :", res);
           // 선생님을 제외한 학생의 수 저장
           this.classNum = res.data.students.length;
