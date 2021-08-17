@@ -10,25 +10,31 @@ from django.db.models import Q
 from itertools import chain
 from django.contrib.auth import get_user_model
 
+from rest_framework.decorators import authentication_classes, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+
 
 
 # 해당 학생의 전체 메시지 목록 조회 (+ 시간 순서대로 최근꺼를 맨 위로 / 안 읽은 갯수 표시)
 # 해당 사용자의 is_message값 true로 바꿔주기
 @api_view(['GET',])
-def message_list(request, user_id):
-    user = get_object_or_404(get_user_model(), pk=user_id)
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
+def message_list(request):
+    user = get_object_or_404(get_user_model(), pk=request.user.id)
     # 해당 학생과 대화한 상대 모두 가져오기
-    senders = Message.objects.filter(receiver=user).values_list('sender', flat=True).distinct()
-    receivers = Message.objects.filter(sender=user).values_list('receiver', flat=True).distinct()
+    senders = Message.objects.filter(receiver=request.user).values_list('sender', flat=True).distinct()
+    receivers = Message.objects.filter(sender=request.user).values_list('receiver', flat=True).distinct()
     # 두 명단 합치기
     buddies = list(set(list(chain(senders, receivers))))
-    # buddies = list(chain(senders, receivers)).remove(user)
+    # buddies = list(chain(senders, receivers)).remove(request.user)
 
     # 각 대화상대마다, 안읽은갯수+가장최근대화 묶어서 딕셔너리 형태로 저장한 것들을 리스트에 넣어줌.
     messages_list = []
     for buddy in buddies:
         # 그 상대와 나눈 대화 전부 가져오기
-        messages = Message.objects.filter((Q(receiver=user)&Q(sender=buddy))|(Q(receiver=buddy)&Q(sender=user))).order_by('-sendtime')
+        messages = Message.objects.filter((Q(receiver=request.user)&Q(sender=buddy))|(Q(receiver=buddy)&Q(sender=request.user))).order_by('-sendtime')
         # 그 중 읽지 않은 메시지 갯수
         unread_cnt = messages.filter(Q(is_checked=False)&Q(sender=buddy)).count()
         # 그 중 가장 최근 메시지
@@ -49,6 +55,8 @@ def message_list(request, user_id):
 # 특정 상대화의 대화 내용 모두 가져오기 / 새로운 메시지 작성
 # is_checked가 False인 객체들 전부 True로 바꿔주기
 @api_view(['GET', 'POST',])
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
 def talk(request, buddy_id):
     buddy = get_object_or_404(get_user_model(), pk=buddy_id)
     if request.method == 'GET':
