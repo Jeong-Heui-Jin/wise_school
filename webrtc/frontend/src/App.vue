@@ -67,29 +67,35 @@
 			</div>
 			<div id="video-container" v-if="isScreenShared">
 				<!-- <user-video :stream-manager="teacher" @click.native="updateMainVideoStreamManager(teacher)" v-if="teacher"/> -->
-				<div class="video-wrapper">
-					<div class="user-video-wrapper">
+				<div class="video-wrapper" style="width:100%;">
+					<div class="user-video-wrapper" id="user-video-wrapper" style="left:0;">
 						<user-video id="my-video" style="width:10%;" :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
-						<div id="user-video" style="width:10%;" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub">
+						<div id="user-video-while-shared" style="width:10%;" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub">
 							<div class="test" v-if="JSON.parse(sub.stream.connection.data).clientData !== 'Screen Sharing'">
 								<user-video :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
 							</div>
 						</div>
 					</div>
-					<div style="width:80%;" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub">
+					<div style="width:100%;" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub">
 						<div class="video-screen-sharing" v-if="JSON.parse(sub.stream.connection.data).clientData === 'Screen Sharing'">
-							<user-video style="width: 300%; " :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+							<user-video style="width: 100%; " :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div id="video-container" v-else>
 				<!-- <user-video :stream-manager="teacher" @click.native="updateMainVideoStreamManager(teacher)" v-if="teacher"/> -->
-				<div style="width:30%;" >
+				<div class="btn-move" id="btn-left" @click="move(-1)">
+					<img src="../public/resources/images/btn_left.png" alt="">
+				</div>
+				<div class="btn-move" id="btn-right" @click="move(1)">
+					<img src="../public/resources/images/btn_right.png" alt="">
+				</div>
+				<div class="user-video" style="" >
 					<user-video id="my-video" :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
 				</div>
 				
-				<div id="user-video" style="width:30%;" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub">
+				<div class="user-video" id="user-video" style="width:30%;" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub">
 					<div class="test">
 						<user-video :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
 						<div class="video-function">
@@ -306,13 +312,17 @@ export default {
 					.then(() => {
 
 						// --- Get your own camera stream with the desired properties ---
+						var width = screen.availWidth;
+						var height = screen.availHeight*0.9;
 
 						let publisher = this.OV.initPublisher(undefined, {
 							audioSource: undefined, // The source of audio. If undefined default microphone
 							videoSource: undefined, // The source of video. If undefined default webcam
 							publishAudio: true,  	// Whether you want to start publishing with your audio unmuted or not
 							publishVideo: true,  	// Whether you want to start publishing with your video enabled or not
-							resolution: '1920x1440',  // The resolution of your video
+							// resolution: '640x480',  // The resolution of your video
+							resolution: `${width}x${height}`,  // The resolution of your video
+							// resolution: '1280x720',  // The resolution of your video
 							frameRate: 30,			// The frame rate of your video
 							insertMode: 'APPEND',	// How the video is inserted in the target element 'video-container'
 							mirror: false       	// Whether to mirror your local video or not
@@ -701,6 +711,49 @@ export default {
 				}
 			})
 			this.count = buf;
+			
+			setTimeout(()=>{
+				if(this.count == 1) {
+					document.getElementsByClassName('user-video').forEach((video)=>{
+						video.style.width=""
+					});
+				}
+				else if(this.count<=4){
+					document.getElementsByClassName('user-video').forEach((video)=>{
+						video.style.width="50%"
+					});
+					document.getElementsByClassName('video-function').forEach((video)=>{
+						video.style.width="50%"
+					});
+				}
+				else if(this.count<=9){
+					document.getElementsByClassName('user-video').forEach((video)=>{
+						video.style.width="33%"
+					});
+					document.getElementsByClassName('video-function').forEach((video)=>{
+						video.style.width="33%"
+					});
+				} else {
+					document.getElementsByClassName('user-video').forEach((video)=>{
+						video.style.width="24.5%"
+					});
+					document.getElementsByClassName('video-function').forEach((video)=>{
+						video.style.width="24.5%"
+					});
+				}
+			},1000)
+		},
+
+		move (ny) {
+			/*const videoWrapper = document.getElementById("user-video-wrapper");
+			var x= Number(videoWrapper.style.left.slice(0,-2)) + videoWrapper.offsetWidth*nx;
+			console.log(videoWrapper.offsetWidth);
+			if (x > 0) x=0;
+			videoWrapper.style.left = x;*/
+			const videos = document.getElementById("video-container");
+			var y = Number(videos.style.top.slice(0,-2)) + document.getElementsByClassName('video-stream')[0].offsetHeight*ny;
+			console.log(document.getElementsByClassName('video-stream')[0].offsetHeight)
+			videos.style.top=y;
 		},
 	},
 
