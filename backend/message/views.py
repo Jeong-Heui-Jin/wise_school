@@ -21,7 +21,7 @@ def message_list(request, user_id):
     senders = Message.objects.filter(receiver=user).values_list('sender', flat=True).distinct()
     receivers = Message.objects.filter(sender=user).values_list('receiver', flat=True).distinct()
     # 두 명단 합치기
-    buddies = list(chain(senders, receivers))
+    buddies = list(set(list(chain(senders, receivers))))
     # buddies = list(chain(senders, receivers)).remove(user)
 
     # 각 대화상대마다, 안읽은갯수+가장최근대화 묶어서 딕셔너리 형태로 저장한 것들을 리스트에 넣어줌.
@@ -39,8 +39,11 @@ def message_list(request, user_id):
             'unread_cnt' : unread_cnt,
         }
         messages_list.append(chat_info)
-
-    return JsonResponse(messages_list)
+    
+    messages = {
+        'messages': sorted(messages_list, key=lambda x:x.get('latest').get('sendtime'), reverse=True),
+    }
+    return JsonResponse(messages)
 
 
 # 특정 상대화의 대화 내용 모두 가져오기 / 새로운 메시지 작성
