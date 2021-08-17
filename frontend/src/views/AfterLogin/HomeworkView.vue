@@ -30,9 +30,18 @@
       >
 
       <!-- 취소/수정/삭제 버튼 -->
+      <div>
+        <button id="fileBtn" v-b-modal.modal-center>보기</button>
+        <b-modal id="modal-center" centered title="첨부 사진">
+          <!-- <img :src="imageUrl" class="card-img-top" alt="..."> -->
+          <p>숙제 사진</p>
+        </b-modal>
+      </div>
       <button id="cancelBtn" @click="goHomeworkList">닫기</button>
-      <button id="changeBtn" @click="editHomework">수정</button>
-      <button id="deleteBtn" @click="deleteHomework">삭제</button>
+      <div v-if="usertype===1">
+        <button id="changeBtn" @click="editHomework">수정</button>
+        <button id="deleteBtn" @click="deleteHomework">삭제</button>
+      </div>
     </b-form>
   </div>
 </template>
@@ -52,6 +61,7 @@ export default {
   data: function () {
     return {
       homework: {},
+      usertype: 2,
     };
   },
   methods: {
@@ -106,14 +116,24 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-    }
+    },
+    viewFiles: function () {
+
+    },
   },
   computed: {
-    ...mapState(["headers", "selected_homework"]),
+    ...mapState(["headers", "selected_homework", "now_user",]),
+    imageUrl : function () {
+      const imagePath = this.homework.homeworkfile_set[0].image
+      return `http://127.0.0.1:8000/${imagePath}`
+    }
+
+
   },
   created: function () {
     this.setToken();
     this.getHomeworkDetail();
+    this.usertype = this.now_user.usertype
   },
 };
 </script>
@@ -136,8 +156,8 @@ export default {
 
 #noticeViewForm #homeworkTitle {
   position: absolute;
-  top: -92px;
-  left: -20px;
+  top: -102px;
+  left: -250px;
 }
 
 #noticeViewForm #sub-title {
@@ -203,12 +223,25 @@ export default {
 #noticeViewForm #cancelBtn {
   position: absolute;
   top: 550px;
-  left: 500px;
+  left: 550px;
 
   border-radius: 12px;
   border: 0px;
   color: red;
   background-color: #fcb6b6;
+
+  min-width: 11%;
+}
+
+#noticeViewForm #fileBtn {
+  position: absolute;
+  top: 550px;
+  left: 450px;
+
+  border-radius: 12px;
+  border: 0px;
+  color: rgb(0, 87, 46);
+  background-color: #b6fcc5;
 
   min-width: 11%;
 }
