@@ -2,6 +2,8 @@
   <div style="font-family: 'Jua', sans-serif" variant="light">
     <NavSideBar />
     <NavBar />
+
+    <h1>안녕</h1>
   </div>
 </template>
 
@@ -9,6 +11,7 @@
 // import axios from "axios";
 import NavSideBar from "@/components/NavSideBar.vue";
 import NavBar from "@/components/NavBar.vue";
+import { mapState } from "vuex";
 
 export default {
   name: "HomeworkStatus",
@@ -25,7 +28,11 @@ export default {
     NavBar,
   },
   methods: {},
-  computed: {},
-  created: function () {},
+  computed: {
+    ...mapState(["infomation_homework"]),
+  },
+  created: function () {
+    this.setToken();
+  },
 };
 </script>
