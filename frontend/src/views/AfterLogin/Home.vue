@@ -150,7 +150,7 @@ export default {
         })
         .catch(err => {
           console.log(err)
-      })
+      });
     },
     enterRoom: function () {
       const now_at = new Date();

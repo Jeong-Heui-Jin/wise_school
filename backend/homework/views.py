@@ -14,7 +14,16 @@ from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
+import boto3
+from datetime import datetime
+from SHS.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
 
+# image
+s3_client = boto3.client(
+    's3',
+    aws_access_key_id     = AWS_ACCESS_KEY_ID,
+    aws_secret_access_key = AWS_SECRET_ACCESS_KEY
+)
 
 # 전체 숙제 조회 / (선생님) 새로운 숙제 생성
 @api_view(['GET', 'POST',])
@@ -32,12 +41,14 @@ def homework_list(request):
         if serializer.is_valid(raise_exception=True):
             homework = serializer.save(classroom=classroom)
 
-            image_list = request.FILES.getlist('image_path')
-            for image in image_list:
-                item = HomeworkFile.objects.create(homework=homework, image=image)
-                item.save()
+            # image_list = request.FILES.getlist('image_path')
+            # for image in image_list:
+            #     # item = HomeworkFile.objects.create(homework=homework, image=image)
+            #     # item.save()
+                
+                    
             # 사진파일까지 저장되도록 한 번 더 저장
-            serializer.save()
+            # serializer.save()
 
             # 해당 반의 학생들 명단
             students = get_user_model().objects.filter(Q(classroom=classroom) & Q(usertype=2))
@@ -59,15 +70,29 @@ def homework_list(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
+
+
 # 숙제 파일 저장
-@api_view(['POST',])
+@api_view(['POST'])
 def homeworkfile(request, homework_id):
     homework = get_object_or_404(Homework, pk=homework_id)
 
     # images = request.data
-
+    
     for image in request.FILES.getlist('files'):
-       HomeworkFile.objects.create(image=image, homework=homework)
+        image_time = (str(datetime.now())).replace(" ","") # 이미지이름을 시간으로 설정하기 위해 datetime를 사용했다.
+        image_type = (image.content_type).split("/")[1]
+        s3_client.upload_fileobj(
+            image,
+            "dycho96", # 버킷이름
+            image_time+"."+image_type,
+            ExtraArgs = {
+                "ContentType" : image.content_type
+            }
+        )
+        image_url = "http://dycho96.s3.ap-northeast-2.amazonaws.com/"+image_time+"."+image_type  # 업로드된 이미지의 url이 설정값으로 저장됨
+        image_url = image_url.replace(" ","/")
+        HomeworkFile.objects.create(homework=homework, image=image_url)
    
     return Response(status=status.HTTP_201_CREATED)
 
