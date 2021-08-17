@@ -9,7 +9,6 @@
       <div>
         <button
           id="noticeButton"
-          style="text-align: right"
           @click="deleteAll()"
         >
           전체 삭제
@@ -21,20 +20,28 @@
           id="textNoticeImportant"
           v-for="(notification, idx) in notifications"
           v-bind:key="idx"
+          class="d-flex justify-content-between align-items-center"
         >
-          {{ notification.content }}
-          {{ notification.registertime }}
-          <b-button @click="deleteNotification(notification)">삭제</b-button>
+          <div>
+            {{ notification.content }}
+          </div>
+          <div>
+            {{ notification.registertime }}
+            <b-button @click="deleteNotification(notification)">삭제</b-button>
+          </div>
         </b-list-group-item>
-        <!-- <b-list-group-item
-          id="textNotice"
-          v-for="(item, normal_index) in items"
-          v-bind:key="normal_index"
-          v-on:click="goNoticeView(item)"
-        >
-          📙 {{ item.title }}
-        </b-list-group-item> -->
       </b-list-group>
+
+      <!-- Pagination -->
+      <b-pagination
+        id="paginationForm"
+        pills
+        v-model="currentPage"
+        :total-rows="rows"
+        :per-page="perPage"
+        aria-controls="my-table"
+        align="center"
+      ></b-pagination>
     </div>
   </div>
 </template>
@@ -49,7 +56,7 @@ export default {
   name: "Notification",
   data() {
     return {
-      perPage: 7,
+      perPage: 8,
       currentPage: 1,
       notifications: [],
       userId: 2,
@@ -121,6 +128,9 @@ export default {
     },
   },
   computed: {
+    rows() {
+      return this.notifications.length;
+    },
     ...mapState(["headers", "now_user"]),
   },
   created: function () {
