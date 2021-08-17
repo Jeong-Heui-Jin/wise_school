@@ -6,16 +6,7 @@
 
     <!-- 작성 Form -->
     <b-form id="noticeCreateForm">
-      <h1 id="noticeTitle">공지 작성</h1>
-
-      <!-- 제목 -->
-      <h2 id="sub-title" style="font-size: 32px">제목</h2>
-      <b-form-input id="titleName" v-model="createValue.title"></b-form-input>
-
-      <!-- 중요도 -->
-      <h2 id="isImportant">중요도</h2>
-      <b-form-select v-model="createValue.is_important" :options="options" id="select">
-      </b-form-select>
+      <h1 id="homeworkTitle">숙제 제출</h1>
 
       <!-- 내용 -->
       <h2 id="content" style="font-size: 32px">내용</h2>
@@ -29,7 +20,7 @@
       <input type="file" id="files" ref="files" accept="image/*" multiple v-on:change="handleFileUpload()" enctype="multipart/form-data">
 
       <!-- 취소/저장 버튼 -->
-      <button id="saveBtn" @click="noticeCreate">저장</button>
+      <button id="saveBtn" @click="homeworkSubmit">저장</button>
       <button id="cancelBtn">취소</button>
     </b-form>
   </div>
@@ -42,41 +33,33 @@ import NavBar from "@/components/NavBar.vue";
 import { mapState } from "vuex";
 
 export default {
-  name: "HomeworkCreate",
+  name: "HomeworkSubmit",
   components: {
     NavSideBar,
     NavBar,
   },
   data: function () {
     return {
+      homework_id: this.$route.params.id,
       createValue: {
-        title: "",
-        is_important: 0,
         content: "",
       },
       files: "",
-      options: [
-        { text: '일반', value: 0 },
-        { text: '중요', value: 1 }
-      ]
     };
   },
   methods: {
     setToken: function () {
       this.$store.dispatch("setToken");
     },
-    noticeCreate: function (event) {
+    homeworkSubmit: function (event) {
       event.preventDefault();
       axios({
         method: "post",
-        // url: "http://127.0.0.1:8000/notice/",
-        url: "http://i5a205.p.ssafy.io:8000/notice/",
+        url: `http://127.0.0.1:8000/homework/detail/${this.homework_id}/`,
         headers: this.headers,
         data: this.createValue,
       })
         .then((res) => {
-          this.$store.dispatch('selectNotice', res.data)
-
           // 파일 저장
           if (this.files) {
             var formData = new FormData();
@@ -88,8 +71,8 @@ export default {
 
             axios({
               method: "post",
-              url: `http://127.0.0.1:8000/notice/file/${res.data.id}/`,
-              // url: `http://i5a205.p.ssafy.io:8000/notice/file/${res.data.id}/`,
+              url: `http://127.0.0.1:8000/homework/submit/file/${res.data.id}/`,
+              // url: `http://i5a205.p.ssafy.io:8000/homework/submit/file/${res.data.id}/`,
               data: formData,
               headers: { 'Content-Type': 'multipart/form-data' },
             })
@@ -102,7 +85,7 @@ export default {
               });
           }
 
-          this.$router.push({ name: "NoticeView" });
+          this.$router.push({ name: "HomeworkView" });
         })
         .catch((err) => {
           console.log(err);
@@ -122,7 +105,7 @@ export default {
 </script>
 
 <style>
-#noticeCreateForm #select {
+#noticeCreateForm {
   position: fixed;
 
   width: 1100px;
@@ -137,7 +120,7 @@ export default {
   font-size: 160%;
 }
 
-#noticeCreateForm #noticeTitle {
+#noticeCreateForm #homeworkTitle {
   position: absolute;
   top: -92px;
   left: -20px;
@@ -161,26 +144,10 @@ export default {
   border-radius: 10px;
 }
 
-#noticeCreateForm #isImportant {
+#noticeCreateForm #endTitle {
   position: absolute;
   left: 100px;
   top: 135px;
-}
-
-#noticeCreateForm #select {
-  position: absolute;
-  left: 250px;
-  top: 130px;
-  width: 700px;
-  height: 50px;
-  font-size: 30px;
-  padding: 5px;
-  background-color: rgb(248, 236, 196);
-}
-
-.select {
-  width: 80px;
-  padding: 5px;
 }
 
 #noticeCreateForm #endDate {
@@ -239,7 +206,6 @@ export default {
 
   text-align: left;
   padding-left: 15px;
-  padding: 10px;
 }
 
 #noticeCreateForm #cancelBtn {

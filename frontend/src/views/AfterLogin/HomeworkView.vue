@@ -42,6 +42,7 @@
         <button id="changeBtn" @click="editHomework">수정</button>
         <button id="deleteBtn" @click="deleteHomework">삭제</button>
       </div>
+      <button @click="goSubmit()">숙제 제출</button>
     </b-form>
   </div>
 </template>
@@ -120,14 +121,17 @@ export default {
     viewFiles: function () {
 
     },
+    goSubmit: function () {
+      this.$router.push({name:'HomeworkSubmit', params:{id:this.homework.id}})
+      // window.open(`/homework-submit/${this.homework.id}`, "_self");
+    }
   },
   computed: {
     ...mapState(["headers", "selected_homework", "now_user",]),
-    imageUrl : function () {
-      const imagePath = this.homework.homeworkfile_set[0].image
-      return `http://127.0.0.1:8000/${imagePath}`
-    }
-
+    // imageUrl : function () {
+    //   const imagePath = this.homework.homeworkfile_set[0].image
+    //   return `http://127.0.0.1:8000/${imagePath}`
+    // }
 
   },
   created: function () {
