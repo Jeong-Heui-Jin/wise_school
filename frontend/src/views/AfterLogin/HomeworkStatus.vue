@@ -50,6 +50,9 @@ export default {
         { key: "submitDate", label: "제출일" },
       ],
       items: [],
+
+      studentInfo: null,
+      homeworkInfo: null,
     };
   },
   components: {
@@ -63,13 +66,15 @@ export default {
     getHomeworkStatusDetail: function () {
       axios({
         method: "get",
-        url: `http://127.0.0.1:8000/homework/submit-detail/1/`,
-        // url: `http://i5a205.p.ssafy.io:8000/homework/submit-detail/1/`,
+        // url: `http://127.0.0.1:8000/homework/submit-detail/${this.infomation_homework.id}/`,
+        // url: `http://i5a205.p.ssafy.io:8000/homework/submit-detail/73/`,
+        url: `http://i5a205.p.ssafy.io:8000/homework/detail/73/`,
         headers: this.headers,
       })
         .then((res) => {
-          console.log("res :", res);
-          // temp = {};
+          this.homeworkInfo = res.data;
+          console.log("getHomeworkStatusDetail :", this.homeworkInfo);
+          // console.log("ininsssss", this.studentInfo);
         })
         .catch((err) => {
           console.log(err);
@@ -82,7 +87,41 @@ export default {
         headers: this.headers,
       })
         .then((res) => {
-          console.log("res :", res);
+          this.studentInfo = res.data;
+          console.log("getStudentInfo :", this.studentInfo);
+          // console.log("ininhhhh", this.homeworkInfo);
+
+          var temp = null;
+          for (let i = 0; i < this.studentInfo.students.length; ++i) {
+            console.log("야호");
+            for (
+              let hw = 0;
+              hw < this.homeworkInfo.submithomework_count;
+              ++hw
+            ) {
+              if (
+                this.studentInfo.students[i].id ===
+                this.homeworkInfo.submithomework_set[hw].id
+              ) {
+                temp = {
+                  studentName: this.studentInfo.students[i].name,
+                  isSubmit: true,
+                  submitDate:
+                    this.homeworkInfo.submithomework_set[hw].registertime,
+                };
+
+                this.items.push(temp);
+              } else {
+                temp = {
+                  studentName: this.studentInfo.students[i].name,
+                  isSubmit: false,
+                  submitDate: "",
+                };
+
+                this.items.push(temp);
+              }
+            }
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -94,7 +133,7 @@ export default {
   },
   created: function () {
     this.setToken();
-    console.log(this.infomation_homework);
+    // console.log(this.infomation_homework);
     this.getHomeworkStatusDetail();
     this.getStudentInfo();
   },
