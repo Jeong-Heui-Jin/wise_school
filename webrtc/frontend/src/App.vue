@@ -229,6 +229,13 @@ export default {
 
 				this.sessionCount();
 				document.getElementById("session-count").innerHTML = this.count;
+				if (this.isScreenShared) {
+					this.session.signal({
+						data: "",
+						to: [subscriber.stream.connection],
+						type: 'startScreenSharing'
+					})
+				}
 			});
 
 			// On every Stream destroyed...
