@@ -17,23 +17,24 @@
         :hover="true"
         :small="false"
         :borderless="true"
-        :items="items"
         :fields="fields"
+        :items="items"
         :per-page="perPage"
         :current-page="currentPage"
         @row-clicked="goHomeworkView"
       >
-        <!-- items column -->
-        <!-- <template #cell(items)="data">
-          <b-link>{{ data.items.submitHomework }}</b-link>
+        <!-- <template #cell(id)="data">
+          {{ data.item.id }}
         </template> -->
-
-        <!-- Button -->
+        <template #cell(isSubmit)="data">
+          <b-button variant="outline-primary">
+            {{ data.item.isSubmit }}</b-button
+          >
+        </template>
         <template #cell(submitHomework)="data">
-          <div v-if="usertype===1">
-            <b-button> {{ data.item.submitHomework }} </b-button>
-          </div>
-          <b-button> {{ data.item.submitHomework }} </b-button>
+          <b-button variant="outline-primary">
+            {{ data.item.submitHomework }}</b-button
+          >
         </template>
       </b-table>
 
@@ -53,7 +54,7 @@
 
 <script>
 import axios from "axios";
-import NavSideBar from '@/components/NavSideBar.vue'
+import NavSideBar from "@/components/NavSideBar.vue";
 import NavBar from "@/components/NavBar.vue";
 import { mapState } from "vuex";
 
@@ -69,10 +70,26 @@ export default {
         { key: "title", label: "숙제 제목" },
         { key: "end", label: "종료일" },
         { key: "submitHomework", label: "제출 인원" },
+        { key: "isSubmit", label: "제출 현황" },
       ],
+      // this.now_user.usertype === 1
+      //   ? [
+      //       // Title name 변경
+      //       { key: "id", label: "번호" },
+      //       { key: "title", label: "숙제 제목" },
+      //       { key: "end", label: "종료일" },
+      //       { key: "submitHomework", label: "제출 인원" },
+      //     ]
+      //   : [
+      //       { key: "id", label: "번호" },
+      //       { key: "title", label: "숙제 제목" },
+      //       { key: "end", label: "종료일" },
+      //       { key: "isSubmit", label: "제출 상태" },
+      //     ],
       items: [],
       classNum: 1,
-      usertype: 2,
+      // usertype: this.now_user.usertype,
+      isSubmit: false,
     };
   },
   components: {
@@ -80,9 +97,6 @@ export default {
     NavBar,
   },
   methods: {
-    btnClick: function () {
-      console.log("아야");
-    },
     setToken: function () {
       this.$store.dispatch("setToken");
     },
@@ -90,31 +104,62 @@ export default {
       axios({
         method: "get",
         url: "http://i5a205.p.ssafy.io:8000/homework/list/",
+        // url: "http://127.0.0.1:8000/homework/list/",
         headers: this.headers,
       })
         .then((res) => {
-          // console.log(res.data);
+          this.now_user.usertype = 1;
+          if (this.now_user.usertype === 2) {
+            this.fields.splice(3, 1);
+            // print
+            console.log(this.fields);
+          } else {
+            this.fields.splice(4, 1);
+            // print
+            console.log(this.fields);
+          }
+          // console.log("res.data in axios get :", res.data);
           for (let i = 0; i < res.data.length; ++i) {
+            // console.log("hi");
             temp = {
               id: res.data[i].id,
-              title: res.data[i].title,
+              // 글자수 30자 이상이면 ... 표시
+              title:
+                res.data[i].title.length < 30
+                  ? res.data[i].title
+                  : res.data[i].title.substring(0, 30) + "...",
               end: res.data[i].end,
               submitHomework:
                 String(res.data[i].submithomework_count) +
                 "/" +
                 String(this.classNum),
+              isSubmit: false,
             };
-            console.log(temp);
+
+            console.log("this.now_user.usertype :", this.now_user.usertype);
+            if (this.now_user.usertype === 2) {
+              console.log(this.fields);
+              // console.log("before fields : ", this.fields);
+              // this.fields["isSubmit"] = "무야호~~";
+              // this.fields.push({ key: "isSubmit", value: "무야호~~" });
+              // console.log("after fields : ", this.fields);
+              for (let j = 0; j < res.data[i].submithomework_set.length; ++j) {
+                if (
+                  res.data[i].submithomework_set[j].student === this.now_user.id
+                ) {
+                  temp["isSubmit"] = true;
+                  break;
+                }
+              }
+            }
+
+            // console.log(temp);
             this.items.push(temp);
           }
-          // this.items = res.data;
-          // console.log(this.items);
-          // console.log(this.now_user);
 
           // 모든 items의 end 데이터를 가공한다.
           for (let i = 0; i < this.items.length; ++i) {
             var temp = this.items[i].end;
-            // console.log(temp);
 
             this.items[i].end =
               temp.substring(5, 7) +
@@ -125,11 +170,8 @@ export default {
               "시 " +
               temp.substring(14, 16) +
               "분";
-
-            // var submit = this.items[i].submithomework_count;
-            // this.items[i].submithomework_count =
-            //   String(submit) + "/" + String(this.classNum);
           }
+          console.log("this.items :", this.items);
         })
         .catch((err) => {
           console.log(err);
@@ -151,7 +193,6 @@ export default {
         .then((res) => {
           // 선생님을 제외한 학생의 수 저장
           this.classNum = res.data.length - 1;
-          console.log(this.classNum);
         })
         .catch((err) => {
           console.log(err);
@@ -168,7 +209,7 @@ export default {
     this.setToken();
     this.getHomeworkList();
     this.getClassNum();
-    this.usertype = this.now_user.usertype
+    // this.usertype = this.now_user.usertype;
   },
 };
 </script>
