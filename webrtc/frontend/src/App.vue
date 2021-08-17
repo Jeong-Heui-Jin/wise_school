@@ -735,8 +735,7 @@ export default {
 					document.getElementsByClassName('video-function').forEach((video)=>{
 						video.style.width="50%"
 					});
-				}
-				else if(this.count<=9){
+				} else if(this.count<=9){
 					document.getElementsByClassName('user-video').forEach((video)=>{
 						video.style.width="33%"
 					});
@@ -751,18 +750,18 @@ export default {
 						video.style.width="24.5%"
 					});
 				}
-			},1000)
+			},500)
 		},
 
 		move (ny) {
-			/*const videoWrapper = document.getElementById("user-video-wrapper");
-			var x= Number(videoWrapper.style.left.slice(0,-2)) + videoWrapper.offsetWidth*nx;
-			console.log(videoWrapper.offsetWidth);
-			if (x > 0) x=0;
-			videoWrapper.style.left = x;*/
 			const videos = document.getElementById("video-container");
-			var y = Number(videos.style.top.slice(0,-2)) + document.getElementsByClassName('video-stream')[0].offsetHeight*ny;
-			if (y > 0) y=0;
+			const videoHeight = document.getElementsByClassName('video-stream')[0].offsetHeight;
+			var y = Number(videos.style.top.slice(0,-2)) + videoHeight*ny;
+			const diff = videoHeight - videos.offsetHeight;
+
+			if (y > 0) y = 0;
+			if (y< diff ) y = diff;
+
 			videos.style.top=y;
 		},
 	},
