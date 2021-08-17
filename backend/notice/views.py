@@ -11,7 +11,16 @@ from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
+from datetime import datetime
+import boto3
+from SHS.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
 
+# image
+s3_client = boto3.client(
+    's3',
+    aws_access_key_id     = AWS_ACCESS_KEY_ID,
+    aws_secret_access_key = AWS_SECRET_ACCESS_KEY
+)
 
 # 해당 반의 공지사항 목록 조회 / 새 공지사항 작성
 @api_view(['GET', 'POST',])
@@ -57,7 +66,19 @@ def noticefile(request, notice_id):
     notice = get_object_or_404(Notice, pk=notice_id)
 
     for image in request.FILES.getlist('files'):
-       NoticeFile.objects.create(image=image, notice=notice)
+        image_time = (str(datetime.now())).replace(" ","") # 이미지이름을 시간으로 설정하기 위해 datetime를 사용했다.
+        image_type = (image.content_type).split("/")[1]
+        s3_client.upload_fileobj(
+            image,
+            "dycho96", # 버킷이름
+            image_time+"."+image_type,
+            ExtraArgs = {
+                "ContentType" : image.content_type
+            }
+        )
+        image_url = "http://dycho96.s3.ap-northeast-2.amazonaws.com/"+image_time+"."+image_type  # 업로드된 이미지의 url이 설정값으로 저장됨
+        image_url = image_url.replace(" ","/")
+        NoticeFile.objects.create(image=image_url, notice=notice)
    
     return Response(status=status.HTTP_201_CREATED)
 

@@ -134,7 +134,19 @@ def submithomeworkfile(request, submithomework_id):
     submithomework = get_object_or_404(SubmitHomework, pk=submithomework_id)
 
     for image in request.FILES.getlist('files'):
-       SubmitHomeworkFile.objects.create(image=image, submithomework=submithomework)
+        image_time = (str(datetime.now())).replace(" ","") # 이미지이름을 시간으로 설정하기 위해 datetime를 사용했다.
+        image_type = (image.content_type).split("/")[1]
+        s3_client.upload_fileobj(
+            image,
+            "dycho96", # 버킷이름
+            image_time+"."+image_type,
+            ExtraArgs = {
+                "ContentType" : image.content_type
+            }
+        )
+        image_url = "http://dycho96.s3.ap-northeast-2.amazonaws.com/"+image_time+"."+image_type  # 업로드된 이미지의 url이 설정값으로 저장됨
+        image_url = image_url.replace(" ","/")
+        SubmitHomeworkFile.objects.create(image=image_url, submithomework=submithomework)
 
     return Response(status=status.HTTP_201_CREATED)
 
