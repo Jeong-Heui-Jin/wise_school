@@ -366,8 +366,14 @@ export default {
 		},
 
 		leaveSession () {
-			// --- Leave the session by calling 'disconnect' method over the Session object ---
-			if (this.session) this.session.disconnect();
+			// --- Leave the session by calling 'disconnect' method over the Session object ---;
+			(()=>{
+				console.log("@@@@@@@@")
+				window.opener.postMessage({
+					msgType: "leave_class",
+				},"http://i5a205.p.ssafy.io:8081");
+			})();
+			if (this.session) this.session.disconnect()
 
 			this.session = undefined;
 			this.mainStreamManager = undefined;
@@ -375,13 +381,8 @@ export default {
 			this.subscribers = [];
 			this.OV = undefined;
 
-			window.removeEventListener('beforeunload', this.leaveSession)
-			.then(()=>{
-				window.opener.postMessage({
-					msgType: "leave_class",
-				// },"http://localhost:8080");
-			},"http://i5a205.p.ssafy.io:8081");
-			})
+			window.removeEventListener('beforeunload', this.leaveSession);
+			
 		},
 
 		updateMainVideoStreamManager (stream) {
@@ -776,8 +777,7 @@ export default {
 		if (!window.opener) { // 직접 주소를 사용해서 들어왔을 때
 			this.joinSession();
 		} else {		// 학사 페이지를 통해 들어왔을 때
-			
-			
+
 			window.timer=setTimeout(()=>{			// 응답 없을 시 창 종료
 				alert("연결 상태가 좋지 않습니다. 다시 시도해주세요!");
 
