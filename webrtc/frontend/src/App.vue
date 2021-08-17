@@ -752,7 +752,7 @@ export default {
 			videoWrapper.style.left = x;*/
 			const videos = document.getElementById("video-container");
 			var y = Number(videos.style.top.slice(0,-2)) + document.getElementsByClassName('video-stream')[0].offsetHeight*ny;
-			console.log(document.getElementsByClassName('video-stream')[0].offsetHeight)
+			if (y > 0) y=0;
 			videos.style.top=y;
 		},
 	},
