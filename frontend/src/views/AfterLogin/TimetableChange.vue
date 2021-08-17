@@ -191,8 +191,19 @@ export default {
         }
     },
     // 시간표 삭제하기 버튼 함수
-    deleteTimeTable() {
-        
+    deleteTimetable: function () {
+      // axios({
+      //   method: "get",
+      //   url: 'http://127.0.0.1:8000/classroom/timetable/',
+      //   // url: 'http://i5a205.p.ssafy.io:8000/classroom/timetable/',
+      //   headers: this.headers,
+      // })
+      //   .then((res) => {
+      //     console.log(res.data)
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
     },
 
     // 시간표 제목 바꾸기 버튼 함수

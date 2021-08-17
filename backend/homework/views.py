@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
-from .models import Homework, SubmitHomework, HomeworkFile
+from .models import Homework, SubmitHomework, HomeworkFile, SubmitHomeworkFile
 from classroom.models import Classroom
 from .serializers import HomeworkSerializer, HomeworkListSerializer, SubmitHomeworkSerializer, SubmitHomeworkListSerializer
 from notice.serializers import NotificationSerializer
@@ -127,6 +127,17 @@ def homework_detail(request, homework_id):
             serializer.save(student=request.user, homework=homework)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
     
+
+# 제출한 파일 저장
+@api_view(['POST',])
+def submithomeworkfile(request, submithomework_id):
+    submithomework = get_object_or_404(SubmitHomework, pk=submithomework_id)
+
+    for image in request.FILES.getlist('files'):
+       SubmitHomeworkFile.objects.create(image=image, submithomework=submithomework)
+
+    return Response(status=status.HTTP_201_CREATED)
+
 
 # 제출한 숙제 상세 조회 / 수정 / 삭제
 @api_view(['GET', 'PUT', 'DELETE',])

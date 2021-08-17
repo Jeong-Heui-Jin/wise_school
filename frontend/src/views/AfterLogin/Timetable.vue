@@ -85,16 +85,15 @@
           {{detail.time}}교시
           <div id="time">{{ detail.start }} ~ {{ detail.end }}</div>
         </b-col>
-        <b-col id="subject">{{detail.subject}}</b-col>
-        <!-- <b-col id="subject">{{detail.tue}}</b-col>
+        <b-col id="subject">{{detail.mon}}</b-col>
+        <b-col id="subject">{{detail.tue}}</b-col>
         <b-col id="subject">{{detail.wed}}</b-col>
         <b-col id="subject">{{detail.thu}}</b-col>
-        <b-col id="subject">{{detail.fri}}</b-col> -->
+        <b-col id="subject">{{detail.fri}}</b-col>
       </b-row>
     </b-container>
     <div id="button-form">
       <button style="background-color: #74a7fe" @click="$router.push('/timetable_change')">수정하기</button>
-      <button style="background-color: #74a7fe" @click="deleteTimetable">삭제하기</button>
     </div>
   </div>
 </template>
@@ -164,20 +163,6 @@ export default {
 
         return "00000".substring(0, 6 - c.length) + c;
     },
-    deleteTimetable: function () {
-      // axios({
-      //   method: "get",
-      //   url: 'http://127.0.0.1:8000/classroom/timetable/',
-      //   // url: 'http://i5a205.p.ssafy.io:8000/classroom/timetable/',
-      //   headers: this.headers,
-      // })
-      //   .then((res) => {
-      //     console.log(res.data)
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   });
-    }
   },
   mounted() {
     this.setToken()

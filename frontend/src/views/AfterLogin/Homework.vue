@@ -23,16 +23,16 @@
         :current-page="currentPage"
         @row-clicked="goHomeworkView"
       >
-        <!-- <template #cell(id)="data">
-          {{ data.item.id }}
-        </template> -->
         <template #cell(isSubmit)="data">
           <b-button variant="outline-primary">
             {{ data.item.isSubmit }}</b-button
           >
         </template>
         <template #cell(submitHomework)="data">
-          <b-button variant="outline-primary">
+          <b-button
+            variant="outline-primary"
+            @click="goHomeworkStatus(data.item.submitHomework)"
+          >
             {{ data.item.submitHomework }}</b-button
           >
         </template>
@@ -72,20 +72,6 @@ export default {
         { key: "submitHomework", label: "제출 인원" },
         { key: "isSubmit", label: "제출 현황" },
       ],
-      // this.now_user.usertype === 1
-      //   ? [
-      //       // Title name 변경
-      //       { key: "id", label: "번호" },
-      //       { key: "title", label: "숙제 제목" },
-      //       { key: "end", label: "종료일" },
-      //       { key: "submitHomework", label: "제출 인원" },
-      //     ]
-      //   : [
-      //       { key: "id", label: "번호" },
-      //       { key: "title", label: "숙제 제목" },
-      //       { key: "end", label: "종료일" },
-      //       { key: "isSubmit", label: "제출 상태" },
-      //     ],
       items: [],
       classNum: 1,
       // usertype: this.now_user.usertype,
@@ -135,14 +121,9 @@ export default {
                 String(this.classNum),
               isSubmit: false,
             };
-
             console.log("this.now_user.usertype :", this.now_user.usertype);
             if (this.now_user.usertype === 2) {
               console.log(this.fields);
-              // console.log("before fields : ", this.fields);
-              // this.fields["isSubmit"] = "무야호~~";
-              // this.fields.push({ key: "isSubmit", value: "무야호~~" });
-              // console.log("after fields : ", this.fields);
               for (let j = 0; j < res.data[i].submithomework_set.length; ++j) {
                 if (
                   res.data[i].submithomework_set[j].student === this.now_user.id
@@ -171,7 +152,7 @@ export default {
               temp.substring(14, 16) +
               "분";
           }
-          console.log("this.items :", this.items);
+          // console.log("this.items :", this.items);
         })
         .catch((err) => {
           console.log(err);
@@ -184,6 +165,10 @@ export default {
       this.$store.dispatch("selectHomework", homework);
       this.$router.push({ name: "HomeworkView" });
     },
+    goHomeworkStatus: function (info_homework) {
+      this.$store.dispatch("selectInfoHomework", info_homework);
+      this.$router.push({ name: "HomeworkStatus" });
+    },
     getClassNum: function () {
       axios({
         method: "get",
@@ -191,8 +176,10 @@ export default {
         headers: this.headers,
       })
         .then((res) => {
+          // console.log("res :", res);
           // 선생님을 제외한 학생의 수 저장
-          this.classNum = res.data.length - 1;
+          this.classNum = res.data.students.length;
+          // console.log("this.classNum :", this.classNum);
         })
         .catch((err) => {
           console.log(err);
