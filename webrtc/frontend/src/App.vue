@@ -85,12 +85,6 @@
 			</div>
 			<div id="video-container" v-else>
 				<!-- <user-video :stream-manager="teacher" @click.native="updateMainVideoStreamManager(teacher)" v-if="teacher"/> -->
-				<div class="btn-move" id="btn-left" @click="move(-1)">
-					<img src="../public/resources/images/btn_left.png" alt="">
-				</div>
-				<div class="btn-move" id="btn-right" @click="move(1)">
-					<img src="../public/resources/images/btn_right.png" alt="">
-				</div>
 				<div class="user-video" style="" >
 					<user-video id="my-video" :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
 				</div>
@@ -116,7 +110,16 @@
 					</div>
 				</div>
 			</div>
-			
+			<div id="btn-left" v-if="count>16">
+				<div class="btn-move" @click="move(-1)">
+					<img src="../public/resources/images/btn_left.png" alt="">
+				</div>
+			</div>
+			<div id="btn-right" v-if="count>16">
+				<div class="btn-move" @click="move(1)">
+					<img src="../public/resources/images/btn_right.png" alt="">
+				</div>
+			</div>
 		</div>
 		
 		<!-- 경고 메시지 수신창 -->
