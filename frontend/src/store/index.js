@@ -14,7 +14,7 @@ export default new Vuex.Store({
     selected_homework: null,
     selected_notice: null,
     now_user: null,
-    infomation_homework:null,
+    information_homework:null,
   },
   mutations: {
     SET_TOKEN: function (state, config) {
@@ -30,7 +30,7 @@ export default new Vuex.Store({
       state.now_user = user
     },
     SELECT_INFO_HOMEWORK:function(state, info_homework){
-      state.infomation_homework = info_homework;
+      state.information_homework = info_homework;
     }
   },
   actions: {
