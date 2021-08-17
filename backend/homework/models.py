@@ -30,7 +30,7 @@ class SubmitHomework(models.Model):
 
 
 def submit_file_path(instance, filename):
-    return '{0}/homework/{1}/{2}/{3}'.format(instance.homework.classroom.school.name, instance.homework.id, instance.student.username, filename)
+    return '{0}/homework/{1}/{2}/{3}'.format(instance.submithomework.homework.classroom.school.name, instance.submithomework.homework.id, instance.submithomework.student.username, filename)
 
 
 class SubmitHomeworkFile(models.Model):

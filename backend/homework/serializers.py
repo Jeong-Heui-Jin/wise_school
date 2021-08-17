@@ -15,11 +15,10 @@ class SubmitHomeworkFileSerializer(serializers.ModelSerializer):
 
 
 class SubmitHomeworkSerializer(serializers.ModelSerializer):
-    submithomeworkfile_set = SubmitHomeworkFileSerializer(many=True, read_only=True)
 
     class Meta:
         model = SubmitHomework
-        fields = ('id', 'content', 'registertime', 'submithomeworkfile_set',)
+        fields = ('id', 'content', 'registertime',)
         read_only_fields = ('homework', 'student',)
 
 
