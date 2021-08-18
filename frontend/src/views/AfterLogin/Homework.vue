@@ -246,7 +246,7 @@ export default {
   background-color: #dcffaa;
 }
 
-#paginationForm {
+#homeworkForm #paginationForm {
   /* position: absolute; */
   /* left: 220px; */
   /* align: center; */
