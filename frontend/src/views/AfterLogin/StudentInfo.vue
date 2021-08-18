@@ -29,8 +29,11 @@
                 </div>
             </div>
         </div>
-        <button id="student-info-change" type="button" @click="infoChange">수정하기</button>
-        <button id="student-info-recovery" type="button" @click="infoRecovery">되돌리기</button>
+        <div v-if="usertype == 1">
+            <button id="student-info-change" type="button" @click="infoChange">수정하기</button>
+            <button id="student-info-recovery" type="button" @click="infoRecovery">되돌리기</button>
+        </div>
+        
         <div id="parents-info-form">
             <p style="font-size: 28px; margin-right: auto;">보호자 연락처</p>
             <div style="min-width: 900px; min-height: 200px; background-color: #d6d6d6; border-radius: 20px; padding: 10px;">
@@ -91,6 +94,7 @@ export default {
         return {
             data: '',
             student_id: this.$route.params.id,
+            usertype: 1,
             student: { ID: 1234, name: '목상원', number: '16', phone: '010-3542-8554', address: '서울시 강남구 테헤란로 212' },
             image: Sheep,
             parents: [
@@ -126,7 +130,9 @@ export default {
                 studentPhone.value = this.data.phone;
                 studentAddress.value = this.data.info.address;
 
-                this.parents = res.data.parents
+                this.parents = res.data.parents;
+                this.usertype = res.data.usertype;
+                // console.log("사용자", this.usertype)
 
                 if (Number(res.data.id) % 9 === 0) {
                 this.image = Whale;
@@ -186,8 +192,8 @@ export default {
             // axios POST
             axios({
               method: "put",
-              url: `http://127.0.0.1:8000/accounts/info/${this.student_id}/`,
-              // url: `http://i5a205.p.ssafy.io:8000/accounts/info/${this.student_id}/`,
+            //   url: `http://127.0.0.1:8000/accounts/info/${this.student_id}/`,
+              url: `http://i5a205.p.ssafy.io:8000/accounts/info/${this.student_id}/`,
               data: body,
               headers: this.headers,
             })
@@ -210,8 +216,8 @@ export default {
 
             axios({
               method: "delete",
-              url: `http://127.0.0.1:8000/accounts/parents/detail/${this.parents[Number(e.target.id[8]) - 1].id}/`,
-              // url: `http://i5a205.p.ssafy.io:8000/accounts/parents/detail/${this.parents[Number(e.target.id[8]) - 1].id}/`,
+            //   url: `http://127.0.0.1:8000/accounts/parents/detail/${this.parents[Number(e.target.id[8]) - 1].id}/`,
+              url: `http://i5a205.p.ssafy.io:8000/accounts/parents/detail/${this.parents[Number(e.target.id[8]) - 1].id}/`,
               headers: this.headers,
             })
               .then(function(){
@@ -237,8 +243,8 @@ export default {
                     // POST axios
                     axios({
                         method: "post",
-                        url: `http://127.0.0.1:8000/accounts/parents/${this.student_id}/`,
-                        // url: `http://i5a205.p.ssafy.io:8000/accounts/parents/${this.student_id}/`,
+                        // url: `http://127.0.0.1:8000/accounts/parents/${this.student_id}/`,
+                        url: `http://i5a205.p.ssafy.io:8000/accounts/parents/${this.student_id}/`,
                         data: bodyPost,
                         headers: this.headers,
                         })
@@ -262,8 +268,8 @@ export default {
                     // BODY key -> this.parents[Number(e.target.id[8]) - 1].ID
                     axios({
                         method: "put",
-                        url: `http://127.0.0.1:8000/accounts/parents/detail/${this.parents[Number(e.target.id[8]) - 1].ID}/`,
-                        // url: `http://i5a205.p.ssafy.io:8000/accounts/parents/${this.student_id}/`,
+                        // url: `http://127.0.0.1:8000/accounts/parents/detail/${this.parents[Number(e.target.id[8]) - 1].ID}/`,
+                        url: `http://i5a205.p.ssafy.io:8000/accounts/parents/${this.student_id}/`,
                         data: bodyPost,
                         headers: this.headers,
                         })
