@@ -16,7 +16,7 @@
           @click="goNotification"
         />
         <img id="logo" src="@/assets/mail.png" alt="편지_로고" />
-        <b-button id="button" variant="faded" type="light" size="lg"
+        <b-button id="button" variant="faded" type="light" size="lg" @click="goMyPage"
           >내 정보 보기</b-button
         >
         <b-button
@@ -33,6 +33,9 @@
 </template>
 
 <script>
+import axios from "axios";
+import { mapState } from 'vuex';
+
 export default {
   beforeCreate: function () {
     // jwt 없으면 login 페이지로 이동
@@ -40,9 +43,31 @@ export default {
       window.open("/login", "_self");
     }
   },
+  data() {
+    return {
+      user_id: 0
+    }
+  },
   methods: {
+    setUser: function () {
+      axios({
+        method: 'get',
+        url: 'http://i5a205.p.ssafy.io:8000/accounts/profile/',
+        headers: this.headers,
+        })
+        .then((res) => {
+          this.$store.dispatch('setUser', res.data)
+        })
+        .catch(err => {
+          console.log(err)
+      });
+    },
     goNotification: function() {
       window.open("/notification", "_self");
+    },
+    goMyPage: function() {
+      
+      window.open("/student_info/"+this.now_user.id, "_self");
     },
     logout() {
       // 로그아웃
@@ -53,6 +78,15 @@ export default {
       }
     },
   },
+   mounted() {
+    this.setUser();
+    console.log("여기여기", this.now_user.id)
+  },
+  computed: {
+    ...mapState([
+      'now_user'
+    ]),
+  }
 };
 </script>
 

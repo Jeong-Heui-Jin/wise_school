@@ -30,7 +30,7 @@
       >
 
       <!-- 취소/수정/삭제 버튼 -->
-      <button id="cancelBtn">닫기</button>
+      <button id="cancelBtn" @click="goNotice">목록</button>
       <button id="changeBtn">수정</button>
       <button id="deleteBtn">삭제</button>
     </b-form>
@@ -89,6 +89,9 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+    },
+    goNotice: function() {
+      window.open("/notice", "_self");
     },
   },
   computed: {
