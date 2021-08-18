@@ -48,9 +48,9 @@
         </div>
         <!-- 시간표 내용 -->
         <div id="timeschedule">
-          <ul id="list" v-for="timetable in today_timetable" :key="timetable.subject">
+          <!-- <ul id="list" v-for="timetable in today_timetable" :key="timetable.subject">
             <li @click="goHomeworkView"> {{ timetable.subject }}  {{ timetable.time }} </li>
-          </ul>
+          </ul> -->
         </div>
       </div>
     </div>
@@ -248,8 +248,10 @@ export default {
       // const imgName = "@/assets/whale.png"
       var cnt = 0;
 
-      timeBody.innerHTML = this.timeschedules.map((li) => {
+      console.log("오늘", this.today_timetable)
+      timeBody.innerHTML = this.today_timetable.map((li) => {
         cnt += 1;
+        console.log(li)
         return `
           <div class="d-flex" id="time-card">
             <div id="class-time">
