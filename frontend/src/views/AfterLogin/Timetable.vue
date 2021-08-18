@@ -316,11 +316,11 @@ export default {
   font-size: 24px;
 }
 
-#time {
+#timetable #time {
   font-size: 16px;
 }
 
-#lunch-time {
+#timetable #lunch-time {
   padding:0 !important;
   font-size: 32px;
   background-color: blanchedalmond;
