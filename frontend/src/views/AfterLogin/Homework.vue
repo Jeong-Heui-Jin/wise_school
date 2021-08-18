@@ -94,13 +94,12 @@ export default {
         headers: this.headers,
       })
         .then((res) => {
-          this.now_user.usertype = 1;
           if (this.now_user.usertype === 2) {
-            this.fields.splice(3, 1);
+            this.fields.splice(3, 1); // 제출인원 탭 제거
             // print
             // console.log(this.fields);
           } else {
-            this.fields.splice(4, 1);
+            this.fields.splice(4, 1); // 제출현황 탭 제거
             // print
             // console.log(this.fields);
           }
@@ -192,7 +191,10 @@ export default {
     rows() {
       return this.items.length;
     },
-    ...mapState(["headers", "now_user"]),
+    ...mapState([
+      "headers",
+      "now_user",
+      ]),
   },
   created: function () {
     this.setToken();
