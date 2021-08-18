@@ -48,8 +48,16 @@
                             <b-col cols="2"><input style="min-width:120px; max-width:120px;"/></b-col>
                             <b-col cols="3"><input style="min-width:160px; max-width:160px;"/></b-col>
                             <b-col cols="3"><input style="min-width:200px; max-width:200px;"/></b-col>
-                            <b-col cols="1"><button id="parents-1-update" type="button" style="min-width: 80px; min-height: 35px; border: 0px; border-radius: 10px; margin-right: 10px;" @click="parentInfoUpdate"> 수정 </button></b-col>
-                            <b-col cols="1"><button id="parents-1-delete" type="button" style="min-width: 80px; min-height: 35px; border: 0px; border-radius: 10px; margin-left: 10px;" @click="parentInfoDelete"> 삭제 </button></b-col>
+                            <b-col cols="1">
+                                <button id="parents-1-update" type="button" style="background-color: #d4e3fe; min-width: 80px; min-height: 35px; border: 0px; border-radius: 10px; margin-right: 10px;" @click="parentInfoUpdate"> 
+                                    등록 
+                                </button>
+                            </b-col>
+                            <b-col cols="1">
+                                <button id="parents-1-delete" type="button" style="background-color: #ff8c82; min-width: 80px; min-height: 35px; border: 0px; border-radius: 10px; margin-left: 10px;" @click="parentInfoDelete"> 
+                                    삭제 
+                                </button>
+                            </b-col>
                         </b-row>
                     </div>
                     <div id="parent-info" v-if="parents.length >= 2">
@@ -57,8 +65,16 @@
                             <b-col cols="2"><input style="min-width:120px; max-width:120px;"/></b-col>
                             <b-col cols="3"><input style="min-width:160px; max-width:160px;"/></b-col>
                             <b-col cols="3"><input style="min-width:200px; max-width:200px;"/></b-col>
-                            <b-col cols="1"><button id="parents-2-update" type="button" style="min-width: 80px; min-height: 35px; border: 0px; border-radius: 10px; margin-right: 10px;" @click="parentInfoUpdate"> 수정 </button></b-col>
-                            <b-col cols="1"><button id="parents-2-delete" type="button" style="min-width: 80px; min-height: 35px; border: 0px; border-radius: 10px; margin-left: 10px;" @click="parentInfoDelete"> 삭제 </button></b-col>
+                            <b-col cols="1">
+                                <button id="parents-2-update" type="button" style="background-color: #d4e3fe; min-width: 80px; min-height: 35px; border: 0px; border-radius: 10px; margin-right: 10px;" @click="parentInfoUpdate"> 
+                                    등록 
+                                </button>
+                            </b-col>
+                            <b-col cols="1">
+                                <button id="parents-2-delete" type="button" style="background-color: #ff8c82; min-width: 80px; min-height: 35px; border: 0px; border-radius: 10px; margin-left: 10px;" @click="parentInfoDelete"> 
+                                    삭제 
+                                </button>
+                            </b-col>
                         </b-row>
                     </div>
                 </div>
@@ -117,7 +133,7 @@ export default {
                 url: `http://i5a205.p.ssafy.io:8000/accounts/info/${this.student_id}`,
                 headers: this.headers,
             })
-                .then((res) => {
+            .then((res) => {
                 this.data = Object.assign([], res.data);
                 console.log(this.data);
                 const studentName = document.querySelector('#student-name');
@@ -353,12 +369,12 @@ export default {
 
 #parents-info-form {
     position: absolute;
-    left: 40px;
+    left: 50px;
     top: 350px;
 }
 
 #parent-info {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 #parent-info input {
@@ -369,5 +385,6 @@ export default {
     border: 0px;
     border-radius: 3px;
     min-height: 35px;
+    margin-left: 10px;
 }
 </style>
