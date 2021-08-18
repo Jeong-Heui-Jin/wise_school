@@ -243,6 +243,9 @@ export default {
     this.setUser();
     this.getList();
     this.getNow();
+    
+  },
+  updated() {
     this.$nextTick(() => {
       const timeBody = document.querySelector('#timeschedule');
       // const imgName = "@/assets/whale.png"
@@ -265,6 +268,7 @@ export default {
           `;
       }).join("");
     });
+
   },
   mounted() {
     // console.log(this.$route.params.authority);
@@ -367,7 +371,7 @@ export default {
   border-radius: 20px;
   width: 300px;
   width: 300px;
-  height: 690px;
+  height: 760px;
   border: 2px solid aqua;
 }
 
