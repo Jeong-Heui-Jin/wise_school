@@ -127,7 +127,7 @@
 			<div class="alert-message-background"></div>
 			<div class="alert-message-modal" >
 				<img src="../public/resources/images/memo2.png" alt="">
-				<div class="alert-message-title">선생님이 쪽지를 보냈어요</div>
+				<div class="alert-message-title">{{receivedFrom}}님이 쪽지를 보냈어요</div>
 				<div class="alert-message-content"> {{alertMessage}} </div>
 			</div>
 		</div>
@@ -193,6 +193,7 @@ export default {
 			muted: false,			// 음소거 상태 
 			handUp: false,			// 손들기 상태
 			screenShareName: "Screen Sharing",	// 화면 공유 스트림의 이름
+			receivedFrom:"",		// 메시지 작성자
 			alertMessage:"",	// 선생님에게서 도착한 메시지 내용
 			sendMessage:"",		// 작성중인 메시지 내용
 			target:"",			// 마지막으로 메시지를 작성중이던 학생의 정보
@@ -253,6 +254,7 @@ export default {
 			this.session.on('signal:alert', (msg)=>{
 				if(msg.from.connectionId !== this.publisher.stream.connection.connectionId) {
 					this.alertMessage=msg.data;
+					this.receivedFrom = JSON.parse(msg.from.stream.connection.data).clientData;			
 				}
 			})
 
