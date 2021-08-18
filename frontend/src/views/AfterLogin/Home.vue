@@ -102,8 +102,8 @@ export default {
     getList: function () {
       axios({
         method: "get",
-        url: 'http://127.0.0.1:8000/classroom/home/',
-        // url: 'http://i5a205.p.ssafy.io:8000/classroom/home/',
+        // url: 'http://127.0.0.1:8000/classroom/home/',
+        url: 'http://i5a205.p.ssafy.io:8000/classroom/home/',
         headers: this.headers,
       })
         .then((res) => {
