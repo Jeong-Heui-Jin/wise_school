@@ -24,6 +24,7 @@
         id="paginationForm"
         pills
         v-model="currentPage"
+        :total-rows="rows"
         :per-page="perPage"
         aria-controls="my-table"
         align="center"
@@ -63,79 +64,113 @@ export default {
     setToken: function () {
       this.$store.dispatch("setToken");
     },
-    getHomeworkStatusDetail: function () {
-      axios({
-        method: "get",
-        // url: `http://127.0.0.1:8000/homework/submit-detail/${this.infomation_homework.id}/`,
-        // url: `http://i5a205.p.ssafy.io:8000/homework/submit-detail/73/`,
-        url: `http://i5a205.p.ssafy.io:8000/homework/detail/73/`,
-        headers: this.headers,
-      })
-        .then((res) => {
-          this.homeworkInfo = res.data;
-          console.log("getHomeworkStatusDetail :", this.homeworkInfo);
-          // console.log("ininsssss", this.studentInfo);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
     getStudentInfo: function () {
+      // 현재 숙제에 대한 정보 axios 요청
       axios({
         method: "get",
-        url: `http://i5a205.p.ssafy.io:8000/accounts/class-members/`,
+        url: `http://i5a205.p.ssafy.io:8000/homework/detail/${this.information_homework.id}/`,
         headers: this.headers,
       })
         .then((res) => {
-          this.studentInfo = res.data;
-          console.log("getStudentInfo :", this.studentInfo);
-          // console.log("ininhhhh", this.homeworkInfo);
+          // 성공한 경우 클래스 멤버 정보 axios 요청
+          axios({
+            method: "get",
+            url: `http://i5a205.p.ssafy.io:8000/accounts/class-members/`,
+            headers: this.headers,
+          })
+            .then((res_student) => {
+              // print test
+              console.log("getHomeworkStatusDetail", res);
+              console.log("getStudentInfo", res_student);
 
-          var temp = null;
-          for (let i = 0; i < this.studentInfo.students.length; ++i) {
-            console.log("야호");
-            for (
-              let hw = 0;
-              hw < this.homeworkInfo.submithomework_count;
-              ++hw
-            ) {
-              if (
-                this.studentInfo.students[i].id ===
-                this.homeworkInfo.submithomework_set[hw].id
-              ) {
-                temp = {
-                  studentName: this.studentInfo.students[i].name,
-                  isSubmit: true,
-                  submitDate:
-                    this.homeworkInfo.submithomework_set[hw].registertime,
-                };
+              for (let i = 0; i < res.data.submithomework_count; ++i) {
+                console.log(
+                  "res.data.submithomework_set[i]",
+                  res.data.submithomework_set[i]
+                );
+              }
 
-                this.items.push(temp);
-              } else {
-                temp = {
-                  studentName: this.studentInfo.students[i].name,
-                  isSubmit: false,
-                  submitDate: "",
-                };
+              for (let i = 0; i < res_student.data.students.length; ++i) {
+                var thisStudentSubmit = false;
+                let hw;
+
+                var submitHomeworkLength = res.data.submithomework_count;
+                for (hw = 0; hw < submitHomeworkLength; ++hw) {
+                  if (
+                    res_student.data.students[i].id ===
+                    res.data.submithomework_set[hw].id
+                  ) {
+                    thisStudentSubmit = true;
+                    break;
+                  }
+                }
+
+                var temp = null;
+
+                if (thisStudentSubmit) {
+                  temp = {
+                    studentName: res_student.data.students[i].name,
+                    isSubmit: "제출",
+                    submitDate: res.data.submithomework_set[hw].registertime,
+                  };
+                } else {
+                  temp = {
+                    studentName: res_student.data.students[i].name,
+                    isSubmit: "미제출",
+                    submitDate: "",
+                  };
+                }
+
+                // temp 가공
+                if (thisStudentSubmit) {
+                  temp["submitDate"] =
+                    temp["submitDate"].substring(5, 7) +
+                    "월 " +
+                    temp["submitDate"].substring(8, 10) +
+                    "일 " +
+                    temp["submitDate"].substring(11, 13) +
+                    "시 " +
+                    temp["submitDate"].substring(14, 16) +
+                    "분";
+                }
 
                 this.items.push(temp);
               }
-            }
-          }
+            })
+            .catch((error) => {
+              console.error(error);
+            });
         })
-        .catch((err) => {
-          console.log(err);
+        .catch((error) => {
+          console.error(error);
         });
     },
   },
   computed: {
-    ...mapState(["headers", "infomation_homework"]),
+    rows() {
+      return this.items.length;
+    },
+    ...mapState(["headers", "information_homework"]),
   },
   created: function () {
     this.setToken();
-    // console.log(this.infomation_homework);
-    this.getHomeworkStatusDetail();
+    // console.log(this.information_homework);
     this.getStudentInfo();
   },
 };
 </script>
+
+<style>
+#homeworkStatusForm {
+  position: fixed;
+
+  max-width: 1000px;
+  min-width: 1000px;
+  height: 600px;
+
+  top: 152px;
+  left: 400px;
+
+  font-size: 130%;
+}
+</style>
