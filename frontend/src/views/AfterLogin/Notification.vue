@@ -5,19 +5,16 @@
 
     <h1 id="title">알림</h1>
 
-    <div id="listForm">
+    <div id="notificationForm">
       <div>
-        <button
-          id="noticeButton"
-          @click="deleteAll()"
-        >
-          전체 삭제
-        </button>
+        <button id="notificationBtn" @click="deleteAll()">전체 삭제</button>
       </div>
-      <b-list-group id="groupPosition">
-        <!-- 📗📘📔📙📒📕 -->
+      <!-- 📗📘📔📙📒📕 -->
+      <!-- previous version -->
+
+      <!-- <b-list-group id="groupPosition">
         <b-list-group-item
-          id="textNoticeImportant"
+          id="textNotification my-table"
           v-for="(notification, idx) in notifications"
           v-bind:key="idx"
           class="d-flex justify-content-between align-items-center"
@@ -30,7 +27,28 @@
             <b-button @click="deleteNotification(notification)">삭제</b-button>
           </div>
         </b-list-group-item>
-      </b-list-group>
+      </b-list-group> -->
+
+      <b-table
+        id="textNotification my-table"
+        :hover="true"
+        :small="false"
+        :borderless="true"
+        :fields="fields"
+        :items="notifications"
+        :per-page="perPage"
+        :current-page="currentPage"
+        thead-class="hidden_header"
+      >
+        <template #cell(content)="data">
+          <div id="textNotification">
+            <a id="alignLeft">{{ data.item.content }}</a
+            ><button id="deleteBtn" @click="deleteNotification(notification)">
+              삭제
+            </button>
+          </div>
+        </template>
+      </b-table>
 
       <!-- Pagination -->
       <b-pagination
@@ -58,6 +76,7 @@ export default {
     return {
       perPage: 8,
       currentPage: 1,
+      fields: [{ key: "content", label: "알림" }],
       notifications: [],
       userId: 2,
     };
@@ -73,12 +92,12 @@ export default {
     getNotifications: function () {
       axios({
         method: "get",
-        // url: `http://i5a205.p.ssafy.io:8000/notice/notification/${this.userId}/`,
-        url: `http://127.0.0.1:8000/notice/notification/${this.userId}/`,
+        url: `http://i5a205.p.ssafy.io:8000/notice/notification/${this.userId}/`,
+        // url: `http://127.0.0.1:8000/notice/notification/${this.userId}/`,
         headers: this.headers,
       })
         .then((res) => {
-          console.log(res.data)
+          console.log(res.data);
 
           // registertime print format 변경
           for (let i = 0; i < res.data.length; ++i) {
@@ -96,22 +115,22 @@ export default {
               "분";
 
             var content = res.data[i].content;
-            if (content.substring(0,2)==='숙제') {
-              res.data[i].content = '📘 ' + content
+            if (content.substring(0, 2) === "숙제") {
+              res.data[i].content = "📘 " + content;
             } else {
-              res.data[i].content = '📙 ' + content
+              res.data[i].content = "📙 " + content;
             }
           }
 
-          this.notifications = res.data
+          this.notifications = res.data;
         })
         .catch((err) => {
           console.log(err);
         });
     },
-    deleteAll: function () {
-    },
+    deleteAll: function () {},
     deleteNotification: function (notification) {
+      console.log(notification);
       axios({
         method: "delete",
         url: `http://i5a205.p.ssafy.io:8000/notice/notification/${notification.id}/`,
@@ -119,8 +138,8 @@ export default {
         headers: this.headers,
       })
         .then((res) => {
-          console.log(res)
-          alert('삭제되었습니다!')
+          console.log(res);
+          alert("삭제되었습니다!");
         })
         .catch((err) => {
           console.log(err);
@@ -136,66 +155,40 @@ export default {
   created: function () {
     this.setToken();
     this.getNotifications();
-    this.userId = this.now_user.id
+    this.userId = this.now_user.id;
   },
 };
 </script>
 
 <style>
-#noticeImportant {
-  font-weight: bold;
-  font-size: 120%;
-
-  /* padding: 10px; */
+#alignLeft {
+  float: left;
 }
 
-#noticeImportant:link {
-  color: red;
-  text-decoration: none;
+#deleteBtn {
+  position: absolute;
+  /* left: 850px; */
+  left: 930px;
+  font-size: 110%;
+
+  width: 55px;
+  height: 33px;
+  line-height: 35px;
+  border-radius: 5px;
+
+  background-color: rgb(253, 155, 142);
 }
 
-#noticeImportant:visited {
-  color: black;
-  text-decoration: none;
-}
-
-#noticeImportant:hover {
-  color: dodgerblue;
-  text-decoration: underline;
-}
-
-#notice {
-  font-size: 120%;
-  width: 100%;
-  height: 100%;
-}
-
-#notice:link {
-  color: red;
-  text-decoration: none;
-}
-
-#notice:visited {
-  color: black;
-  text-decoration: none;
-}
-
-#notice:hover {
-  color: rgb(255, 207, 94);
-  text-decoration: underline;
-}
-
-#listForm {
+#notificationForm {
   position: fixed;
-  left: 500px;
-  top: 90px;
-  max-width: 900px;
-  min-width: 900px;
-  max-height: 60%;
-  min-height: 60%;
+  left: 400px;
+  top: 152px;
+  max-width: 1000px;
+  min-width: 1000px;
+  max-height: 600px;
   border-radius: 10px;
   /* padding: 100; */
-  background-color: white;
+  /* background-color: white; */
 }
 
 #noticeTitle {
@@ -203,37 +196,38 @@ export default {
   left: 22%;
 }
 
-#listForm #groupPosition {
+#notificationForm #groupPosition {
   position: absolute;
   min-width: 900px;
   top: 30px;
-
-  /* min-width: 800px;
-  border-radius: 10px;
-  border: 1px solid; */
 }
-#listForm #textNoticeImportant {
+#notificationForm #textNotification {
   background-color: #f9f5d8;
   text-align: left;
+  line-height: 40px;
+  min-height: 40px;
   min-width: 800px;
   border-radius: 10px;
   border: 1px solid;
-  margin-top: 20px;
+
+  display: flex;
+  align-items: center; /* 수직 정렬 */
+  flex-direction: row; /* default: row */
+
+  margin-top: 5px;
 }
-#listForm #textNotice {
-  text-align: left;
-  top: 20px;
-  min-width: 800px;
-  border-radius: 10px;
-  border: 1px solid;
-}
-#listForm #noticeButton {
-  /* margin: 0px auto; */
-  /* float: right; */
+
+#notificationForm #notificationBtn {
   position: absolute;
-  left: 800px;
-  width: 100px;
+
+  top: -20px;
+  left: 917px;
+
   border-radius: 10px;
   background-color: rgb(193, 243, 187);
+}
+
+#notificationForm #paginationForm {
+  bottom: 50px;
 }
 </style>
