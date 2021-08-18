@@ -5,7 +5,7 @@
     <NavBar />
 
     <!-- 작성 Form -->
-    <b-form id="noticeViewForm">
+    <b-form id="homeworkViewForm">
       <h1 id="homeworkTitle">숙제 보기</h1>
       <!-- 제목 -->
       <h2 id="sub-title">제목</h2>
@@ -31,18 +31,18 @@
 
       <!-- 취소/수정/삭제 버튼 -->
       <div>
-        <button id="fileBtn" v-b-modal.modal-center>보기</button>
         <b-modal id="modal-center" centered title="첨부 사진">
           <!-- <img :src="imageUrl" class="card-img-top" alt="..."> -->
           <p>숙제 사진</p>
         </b-modal>
       </div>
+      <button id="fileBtn" v-b-modal.modal-center>보기</button>
       <button id="cancelBtn" @click="goHomeworkList">닫기</button>
-      <div v-if="usertype===1">
-        <button id="changeBtn" @click="editHomework">수정</button>
-        <button id="deleteBtn" @click="deleteHomework">삭제</button>
+      <div v-if="usertype === 1">
+        <button id="homeworkChangeBtn" @click="editHomework">수정</button>
+        <button id="homeworkDeleteBtn" @click="deleteHomework">삭제</button>
       </div>
-      <button @click="goSubmit()">숙제 제출</button>
+      <button id="submitBtn" @click="goSubmit()">숙제 제출</button>
     </b-form>
   </div>
 </template>
@@ -71,13 +71,13 @@ export default {
     },
     getHomeworkDetail: function () {
       axios({
-          method: "get",
-          url: `http://i5a205.p.ssafy.io:8000/homework/detail/${this.selected_homework.id}/`,
-          headers: this.headers,
+        method: "get",
+        url: `http://i5a205.p.ssafy.io:8000/homework/detail/${this.selected_homework.id}/`,
+        headers: this.headers,
       })
         .then((res) => {
           this.homework = res.data;
-          console.log(res.data)
+          console.log(res.data);
           var temp = this.homework.end;
           // console.log(temp);
 
@@ -97,11 +97,9 @@ export default {
     },
     goHomeworkList: function () {
       // window.open("/homework", "_self");
-      this.$router.push({ name: 'Homework' })
+      this.$router.push({ name: "Homework" });
     },
-    editHomework: function () {
-
-    },
+    editHomework: function () {},
     deleteHomework: function (event) {
       event.preventDefault();
       axios({
@@ -110,7 +108,7 @@ export default {
         headers: this.headers,
       })
         .then((res) => {
-          console.log(res)
+          console.log(res);
           // this.$router.push({ name: 'Homework' })
           window.open("/homework", "_self");
         })
@@ -118,32 +116,32 @@ export default {
           console.log(err);
         });
     },
-    viewFiles: function () {
-
-    },
+    viewFiles: function () {},
     goSubmit: function () {
-      this.$router.push({name:'HomeworkSubmit', params:{id:this.homework.id}})
+      this.$router.push({
+        name: "HomeworkSubmit",
+        params: { id: this.homework.id },
+      });
       // window.open(`/homework-submit/${this.homework.id}`, "_self");
-    }
+    },
   },
   computed: {
-    ...mapState(["headers", "selected_homework", "now_user",]),
+    ...mapState(["headers", "selected_homework", "now_user"]),
     // imageUrl : function () {
     //   const imagePath = this.homework.homeworkfile_set[0].image
     //   return `http://127.0.0.1:8000/${imagePath}`
     // }
-
   },
   created: function () {
     this.setToken();
     this.getHomeworkDetail();
-    this.usertype = this.now_user.usertype
+    this.usertype = this.now_user.usertype;
   },
 };
 </script>
 
 <style>
-#noticeViewForm {
+#homeworkViewForm {
   position: fixed;
 
   width: 1100px;
@@ -158,19 +156,19 @@ export default {
   font-size: 160%;
 }
 
-#noticeViewForm #homeworkTitle {
+#homeworkViewForm #homeworkTitle {
   position: absolute;
   top: -102px;
   left: -250px;
 }
 
-#noticeViewForm #sub-title {
+#homeworkViewForm #sub-title {
   position: absolute;
   left: 100px;
   top: 70px;
 }
 
-#noticeViewForm #titleName {
+#homeworkViewForm #titleName {
   position: absolute;
   left: 250px;
   top: 60px;
@@ -182,13 +180,13 @@ export default {
   border-radius: 10px;
 }
 
-#noticeViewForm #endTitle {
+#homeworkViewForm #endTitle {
   position: absolute;
   left: 100px;
   top: 135px;
 }
 
-#noticeViewForm #endDate {
+#homeworkViewForm #endDate {
   position: absolute;
   left: 250px;
   top: 135px;
@@ -200,13 +198,13 @@ export default {
   border-radius: 10px;
 }
 
-#noticeViewForm #content {
+#homeworkViewForm #content {
   position: absolute;
   left: 100px;
   top: 200px;
 }
 
-#noticeViewForm #contentText {
+#homeworkViewForm #contentText {
   position: absolute;
   left: 250px;
   top: 200px;
@@ -224,10 +222,10 @@ export default {
   border-radius: 10px;
 }
 
-#noticeViewForm #cancelBtn {
+#homeworkViewForm #cancelBtn {
   position: absolute;
   top: 550px;
-  left: 550px;
+  left: 650px;
 
   border-radius: 12px;
   border: 0px;
@@ -237,10 +235,23 @@ export default {
   min-width: 11%;
 }
 
-#noticeViewForm #fileBtn {
+#homeworkViewForm #fileBtn {
   position: absolute;
   top: 550px;
-  left: 450px;
+  left: 350px;
+
+  border-radius: 12px;
+  border: 0px;
+  color: rgb(0, 87, 46);
+  background-color: #b6e0fc;
+
+  min-width: 11%;
+}
+
+#homeworkViewForm #submitBtn {
+  position: absolute;
+  top: 550px;
+  left: 500px;
 
   border-radius: 12px;
   border: 0px;
@@ -250,7 +261,7 @@ export default {
   min-width: 11%;
 }
 
-#noticeViewForm #changeBtn {
+#homeworkViewForm #homeworkChangeBtn {
   position: absolute;
   top: 17px;
   left: 965px;
@@ -262,10 +273,11 @@ export default {
 
   font-size: 60%;
 
-  min-width: 5%;
+  width: 55px;
+  height: 25px;
 }
 
-#noticeViewForm #deleteBtn {
+#homeworkViewForm #homeworkDeleteBtn {
   position: absolute;
   top: 17px;
   left: 1025px;
@@ -277,6 +289,7 @@ export default {
 
   font-size: 60%;
 
-  min-width: 5%;
+  width: 55px;
+  height: 25px;
 }
 </style>
