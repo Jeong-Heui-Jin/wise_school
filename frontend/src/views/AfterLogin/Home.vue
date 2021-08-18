@@ -48,6 +48,9 @@
         </div>
         <!-- 시간표 내용 -->
         <div id="timeschedule">
+          <!-- <ul id="list" v-for="timetable in today_timetable" :key="timetable.subject">
+            <li @click="goHomeworkView"> {{ timetable.subject }}  {{ timetable.time }} </li>
+          </ul> -->
         </div>
       </div>
     </div>
@@ -76,13 +79,7 @@ export default {
       date: '',
       homeworks: [],
       notices: [],
-      timeschedules: [
-        {subject: '국어', book: '말하기/듣기/쓰기', time:'09:00 ~ 09:50'},
-        {subject: '수학', book: '수학/수학과익힘', time:'10:00 ~ 10:50'},
-        {subject: '사회', book: '사회과부도', time:'11:00 ~ 11:50'},
-        {subject: '과학', book: '관찰', time:'13:00 ~ 13:50'},
-        {subject: '영어', book: 'Elementary School', time:'14:00 ~ 14:50'},
-      ],
+      today_timetable: [],
       attendanceValue: "", // 출석체크
     }
   },
@@ -110,7 +107,6 @@ export default {
           console.log(res.data)
           this.homeworks = res.data.homeworks
           this.notices = res.data.notices
-          // this.timeschedules = res.data.timetable.details
 
           // 숙제 제목 긴 경우 뒤 생략
           for (let i = 0; i < this.homeworks.length; ++i) {
@@ -120,19 +116,32 @@ export default {
             }
           }
 
+          let temp_list = []
           // 해당 요일의 시간표 가져오기
           if (this.day == '월요일') {
-            this.timeschedules = res.data.timetable.details.mon
+            temp_list = res.data.timetable.details.mon
+            // this.today_timetable = res.data.timetable.details.mon
           } else if (this.day == '화요일') {
-            this.timeschedules = res.data.timetable.details.tue
+            temp_list = res.data.timetable.details.tue
+            // this.today_timetable = res.data.timetable.details.tue
           } else if (this.day == '수요일') {
-            this.timeschedules = res.data.timetable.details.wed
+            temp_list = res.data.timetable.details.wed
+            // this.today_timetable = res.data.timetable.details.wed
           } else if (this.day == '목요일') {
-            this.timeschedules = res.data.timetable.details.thu
+            temp_list = res.data.timetable.details.thu
+            // this.today_timetable = res.data.timetable.details.thu
           } else {
-            this.timeschedules = res.data.timetable.details.fri
+            temp_list = res.data.timetable.details.fri
+            // this.today_timetable = res.data.timetable.details.fri
           }
-          console.log(this.timeschedules)
+          
+          for (let i=0;i<temp_list.length;i++) {
+            this.today_timetable.push({
+              subject : temp_list[i].subject,
+              time : temp_list[i].time
+            });
+          }
+          // console.log("시간표", this.today_timetable)
         })
         .catch((err) => {
           console.log(err);
@@ -218,6 +227,7 @@ export default {
 			});
 
     },
+
     goHomeworkView: function (homework) {
       this.$store.dispatch('selectHomework', homework);
       window.open("/homework_view", "_self");
@@ -233,13 +243,18 @@ export default {
     this.setUser();
     this.getList();
     this.getNow();
+    
+  },
+  updated() {
     this.$nextTick(() => {
       const timeBody = document.querySelector('#timeschedule');
       // const imgName = "@/assets/whale.png"
       var cnt = 0;
 
-      timeBody.innerHTML = this.timeschedules.map((li) => {
+      console.log("오늘", this.today_timetable)
+      timeBody.innerHTML = this.today_timetable.map((li) => {
         cnt += 1;
+        console.log(li)
         return `
           <div class="d-flex" id="time-card">
             <div id="class-time">
@@ -253,6 +268,7 @@ export default {
           `;
       }).join("");
     });
+
   },
   mounted() {
     // console.log(this.$route.params.authority);
@@ -355,7 +371,7 @@ export default {
   border-radius: 20px;
   width: 300px;
   width: 300px;
-  height: 690px;
+  height: 760px;
   border: 2px solid aqua;
 }
 
