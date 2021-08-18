@@ -26,32 +26,32 @@
       <b-row class="period" v-for="student in studentAttendances" :key="student.id">
         <div class="w-100"></div>
         <b-col class="subject name">{{student.name}}</b-col>
-        <b-col class="subject" :class="student.mon">{{student.mon}}</b-col>
-        <b-col class="subject" :class="student.tue">{{student.tue}}</b-col>
-        <b-col class="subject" :class="student.wed">{{student.wed}}</b-col>
-        <b-col class="subject" :class="student.thu">{{student.thu}}</b-col>
-        <b-col class="subject" :class="student.fri">{{student.fri}}</b-col>
+        <b-col class="subject" :class="student.mon" @click="statusChange(student.userCode, student.name, student.mon, 0)">{{student.mon}}</b-col>
+        <b-col class="subject" :class="student.tue" @click="statusChange(student.userCode, student.name, student.tue, 1)">{{student.tue}}</b-col>
+        <b-col class="subject" :class="student.wed" @click="statusChange(student.userCode, student.name, student.wed, 2)">{{student.wed}}</b-col>
+        <b-col class="subject" :class="student.thu" @click="statusChange(student.userCode, student.name, student.thu, 3)">{{student.thu}}</b-col>
+        <b-col class="subject" :class="student.fri" @click="statusChange(student.userCode, student.name, student.fri, 4)">{{student.fri}}</b-col>
       </b-row>      
     </b-container>
-    <div v-if="!isChangingStatus" class="status-change-container">
-      <div class="status-change-background"></div>
+    <div v-if="isChangingStatus" class="status-change-container">
+      <div class="status-change-background" @click="closeModal"></div>
       <div class="status-change-wrapper">
         <div class="status-change-title">출결 상태 변경</div>
         <div class="status-change-status">
-          <div>- 학생 이름 : 김우진</div>
-          <div>- 상태 변경 : 조퇴 --->
-            <select class="status-change-combo" name="status" >
-              <option value="none">출석</option>
-              <option value="korean">조퇴</option>
-              <option value="english">지각</option>
-              <option value="chinese">결석</option>
+          <div>- 학생 이름 : {{changeInfo.name}}</div>
+          <div>- 상태 변경 : {{changeInfo.status}} --->
+            <select class="status-change-combo" id="combo" name="status" >
+              <option value="출석">출석</option>
+              <option value="조퇴">조퇴</option>
+              <option value="지각">지각</option>
+              <option value="결석">결석</option>
             </select>
           </div>
         </div>
         <div class="status-change-content">
           * 변경 사유 <div class="btn-save" @click="statusChangeRequest">저장</div>
           <div>
-            <textarea name="" id="" cols="30" rows="10"></textarea>
+            <textarea name="" id="status-change-reason" cols="30" rows="10"></textarea>
             <div>파일 첨부가 들어갈 자립니당</div>
             <!-- 파일 첨부좀 넣어주세요 -->
           </div>
@@ -83,6 +83,7 @@ export default {
         //   date: "18",
         //   day: 2,
         // },
+        // "two":{...
       },
       studentAttendances: [
         // {
@@ -93,9 +94,10 @@ export default {
         //   wed:"결석",
         //   thu:"취업",
         //   fri:"",
-        // },
+        // }, ...
       ],
       isChangingStatus:false,
+      changeInfo:{},
     }
   },
   methods: {
@@ -204,7 +206,7 @@ export default {
     zeroPadding: function (num) {
 			return num < 10 ? "0"+num : String(num);
 		},
-    adjustColor: function () {
+    adjustStatusColor: function () {
       document.getElementsByClassName("결석").forEach((el)=>{
         el.style.color="red";
       });
@@ -218,9 +220,53 @@ export default {
         el.style.color="blue";
       });
     },
+    statusChange: function (id, name, status, day) {
+      this.isChangingStatus = true;
+      this.changeInfo={
+        student_id: id,
+        status: status,
+        name: name,
+        day:day,
+      }
+    },
     statusChangeRequest: function () {
-      console.log("저장");
-    }
+      var newStatus = document.getElementById('combo').value;
+      if (this.changeInfo.status === newStatus) {
+        alert("출결 상태가 변하지 않았습니다. 다시 선택해 주세요.")
+        return;
+      }
+      // const data={
+      //   status: document.getElementById('combo').value,
+      //   student_id: changeInfo.student_id,
+      //   classroom_id: this.now_user.classroom,
+      // }
+      console.log()
+      const attendanceChange = {
+        reason:document.getElementById('status-change-reason').value,
+        id:this.changeInfo.student_id,
+        attendanceId:"",
+      }
+      attendanceChange
+    //   axios({
+    //     method: "post",
+		// 		url: "http://i5a205.p.ssafy.io:8000/student-manage/attendance/",
+		// 		data: {
+    //       status: this.attendanceValue,
+    //       student_id: this.now_user.id,
+    //       classroom_id: this.now_user.classroom
+    //     },
+		// 		headers: this.headers
+    //   })
+    //     .then((res) => {
+    //       console.log(res)
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    },
+    closeModal: function () {
+      this.isChangingStatus=false;
+    },
   },
   computed: {
     ...mapState([
@@ -235,7 +281,7 @@ export default {
     this.getMembers();
   },
   updated() {
-    this.adjustColor();
+    this.adjustStatusColor();
   }
 }
 </script>
