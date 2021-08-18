@@ -80,17 +80,23 @@
         <b-col class="subject"><div id="wed"></div></b-col>
         <b-col class="subject"><div id="thu"></div></b-col>
         <b-col class="subject"><div id="fri"></div></b-col> -->
-      <b-row id="period" v-for="detail in timetableDetail" :key="detail.time">
-        <b-col id="subject">
+      <b-row class="period" v-for="detail in timetableDetail" :key="detail.time">
+        <b-col class="subject" id="lunch-time" v-if="detail.time==5">
+          점심시간
+          <div id="time">{{ timetableDetail[3].end }} ~ {{ detail.start }}</div>
+        </b-col>
+
+        <div class="w-100"></div>
+        <b-col class="subject">
           {{detail.time}}교시
           <div id="time">{{ detail.start }} ~ {{ detail.end }}</div>
         </b-col>
-        <b-col id="subject">{{detail.mon}}</b-col>
-        <b-col id="subject">{{detail.tue}}</b-col>
-        <b-col id="subject">{{detail.wed}}</b-col>
-        <b-col id="subject">{{detail.thu}}</b-col>
-        <b-col id="subject">{{detail.fri}}</b-col>
-      </b-row>
+        <b-col class="subject" :class="detail.mon">{{detail.mon}}</b-col>
+        <b-col class="subject" :class="detail.tue">{{detail.tue}}</b-col>
+        <b-col class="subject" :class="detail.wed">{{detail.wed}}</b-col>
+        <b-col class="subject" :class="detail.thu">{{detail.thu}}</b-col>
+        <b-col class="subject" :class="detail.fri">{{detail.fri}}</b-col>
+      </b-row>      
     </b-container>
     <div id="button-form">
       <button style="background-color: #74a7fe" @click="$router.push('/timetable_change')">수정하기</button>
@@ -117,7 +123,34 @@ export default {
       // 오름 차순 정렬 가정
       timetableDetail : [
         {time : '1', mon: '국어', tue: '체육', wed: '영어', thu: '사회', fri: '수학', start: '09:00', end: '09:50'},
-      ]
+      ],
+      color:[
+        "#D8C8B2",
+        "#DDE7E7",
+        "#FFFFFF",
+        "#F8E77F",
+        "#F7B938",
+        "#F6FC7A",
+        "#84A7D3",
+        "#B3A7DC",
+        "#5AC6D0",
+        "#00A6A9",
+        "#5DC19B",
+        "#C0D84D",
+        "#009770",
+        "#1C9249",
+        "#9ED6C0",
+        "#1583AF",
+        "#B82647",
+        "#F15B5B",
+        "#966147",
+        "#BD7F41",
+        "#BF2F7B",
+        "#BE577B",
+        "#E0709B",
+      ],
+      subject:[],
+      top:0,
     }
   },
   methods: {
@@ -127,8 +160,8 @@ export default {
     getTimetable: function () {
       axios({
         method: "get",
-        url: 'http://127.0.0.1:8000/classroom/timetable/',
-        // url: 'http://i5a205.p.ssafy.io:8000/classroom/timetable/',
+        // url: 'http://127.0.0.1:8000/classroom/timetable/',
+        url: 'http://i5a205.p.ssafy.io:8000/classroom/timetable/',
         headers: this.headers,
       })
         .then((res) => {
@@ -163,6 +196,37 @@ export default {
 
         return "00000".substring(0, 6 - c.length) + c;
     },
+    adjustColor() {
+      this.timetableDetail.forEach((detail)=>{
+        if(!this.subject[detail.mon]) {
+          this.subject[detail.mon]=this.color[this.top%21];
+          this.top++;
+        }
+        if(!this.subject[detail.tue]) {
+          this.subject[detail.tue]=this.color[this.top%21];
+          this.top++;
+        }
+        if(!this.subject[detail.wed]) {
+          this.subject[detail.wed]=this.color[this.top%21];
+          this.top++;
+        }
+        if(!this.subject[detail.thu]) {
+          this.subject[detail.thu]=this.color[this.top%21];
+          this.top++;
+        }
+        if(!this.subject[detail.fri]) {
+          this.subject[detail.fri]=this.color[this.top%21];
+          this.top++;
+        }
+      });
+      var keys = Object.keys(this.subject)
+      keys.forEach((subject)=>{
+        document.getElementsByClassName(subject).forEach((el)=>{
+          el.style.backgroundColor=this.subject[subject];
+
+        });
+      });
+    }
   },
   mounted() {
     this.setToken()
@@ -208,7 +272,10 @@ export default {
   },
   created: function() {
 
-  }
+  },
+  updated() {
+    this.adjustColor();
+  },
 }
 </script>
 
@@ -224,7 +291,7 @@ export default {
 
 #timetable-content .subject {
   min-width: 40px;
-  font-size: 40px;
+  font-size: 32px;
   text-align: center;
   padding-top: 20px;
   border: 1px solid black;
@@ -248,4 +315,15 @@ export default {
   border: 0px;
   font-size: 24px;
 }
+
+#time {
+  font-size: 16px;
+}
+
+#lunch-time {
+  padding:0 !important;
+  font-size: 32px;
+  background-color: blanchedalmond;
+}
+
 </style>
