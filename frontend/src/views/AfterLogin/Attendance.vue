@@ -33,12 +33,28 @@
         <b-col class="subject" :class="student.fri">{{student.fri}}</b-col>
       </b-row>      
     </b-container>
-    <div v-if="isChangingStatus" class="status-change-container" style="position:absolute;top:0;left:0; background-color:black; width:100%; height:100%; z-index: 5; opacity:0.3;">
+    <div v-if="!isChangingStatus" class="status-change-container">
+      <div class="status-change-background"></div>
       <div class="status-change-wrapper">
         <div class="status-change-title">출결 상태 변경</div>
         <div class="status-change-status">
-          <ul>1</ul>
-          <ul>2</ul>
+          <div>- 학생 이름 : 김우진</div>
+          <div>- 상태 변경 : 조퇴 --->
+            <select class="status-change-combo" name="status" >
+              <option value="none">출석</option>
+              <option value="korean">조퇴</option>
+              <option value="english">지각</option>
+              <option value="chinese">결석</option>
+            </select>
+          </div>
+        </div>
+        <div class="status-change-content">
+          * 변경 사유 <div class="btn-save" @click="statusChangeRequest">저장</div>
+          <div>
+            <textarea name="" id="" cols="30" rows="10"></textarea>
+            <div>파일 첨부가 들어갈 자립니당</div>
+            <!-- 파일 첨부좀 넣어주세요 -->
+          </div>
         </div>
       </div>
     </div>
@@ -202,6 +218,9 @@ export default {
         el.style.color="blue";
       });
     },
+    statusChangeRequest: function () {
+      console.log("저장");
+    }
   },
   computed: {
     ...mapState([
@@ -246,4 +265,94 @@ export default {
 .attendance-wrapper #date {
   font-size: 30px;
 }
+
+#attendance .status-change-container {
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.status-change-container .status-change-background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  opacity: 0.3;
+}
+
+.status-change-container .status-change-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width:500px;
+
+  background-color: white;
+  z-index: 6;
+}
+
+.status-change-wrapper .status-change-title {
+  font-size: 30px;
+  font-weight: bold;
+  text-align: left;
+  margin: 25px;
+}
+
+.status-change-wrapper .status-change-status {
+  display: flex;
+  flex-direction: column;
+  font-size: 24px;
+  text-align: left;
+  margin: 0 25px;
+}
+
+.status-change-status .status-change-combo {
+  width: 200px;
+  text-align-last: center;
+  text-align: center;
+  -ms-text-align-last: center;
+  -moz-text-align-last: center;
+}
+
+.status-change-wrapper .status-change-content {
+  font-size: 20px;
+  text-align: left;
+  margin: 0 25px;
+}
+
+.status-change-content .btn-save {
+  display: inline-block;
+  color:#ffffff;
+  background-color: #003de4;
+  border-radius: 20px;
+  padding: 2px 20px;
+  font-size: 16px;
+}
+
+.status-change-content .btn-save:hover {
+  background-color: #3060e4;
+}
+
+.status-change-content .btn-save:active {
+  background-color: #a3aabd;
+}
+
+.status-change-content textarea {
+  width:100%;
+  resize: none;
+  border: 2px solid #6ce9ff;
+  border-radius: 20px;
+  margin: 10px 0;
+}
+
+.status-change-content textarea:focus {
+  outline: none;
+}
+
 </style>
