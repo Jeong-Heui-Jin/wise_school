@@ -16,39 +16,6 @@
         </button>
       </div>
       <!-- 📗📘📔📙📒📕 -->
-      <!-- <b-list-group
-        id="noticeTable my-list"
-        :per-page="perPage"
-        :current-page="currentPage"
-      > -->
-      <!-- <b-list-group-item
-          id="textNoticeImportant "
-          v-for="(importantItem, import_index) in importantItems"
-          v-bind:key="import_index"
-          v-on:click="goNoticeView(importantItem)"
-        >
-          📙 {{ importantItem.title }}
-        </b-list-group-item>
-        <b-list-group-item
-          id="textNotice"
-          v-for="(item, normal_index) in items"
-          v-bind:key="normal_index"
-          v-on:click="goNoticeView(item)"
-        >
-          📙 {{ item.title }}
-        </b-list-group-item> -->
-      <!-- <b-list-group-item
-          id="textNoticeImportant"
-          v-for="(item, index) in items"
-          v-bind:key="index"
-          v-on:click="goNoticeView(item)"
-        >
-          <span v-if="item.is_important === true" id="textNoticeImportant">
-            📙 {{ item.title }}
-          </span>
-          <div v-else id="textNotice">📙 ㅁㄴㅇㅁㄴㅇ</div>
-        </b-list-group-item>
-      </b-list-group> -->
       <b-table
         id="noticeTable my-table"
         :hover="true"
@@ -211,7 +178,7 @@ export default {
 }
 
 #noticeImportant:link {
-  color: red;
+  color: rgb(115, 255, 0);
   text-decoration: none;
 }
 
