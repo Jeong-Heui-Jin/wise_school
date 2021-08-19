@@ -10,7 +10,9 @@
 
     <!-- 작성 Form -->
     <b-form id="attitude-view-form">
-      <h1 id="attitude-title">&lt;{{ selected_attitude.name }}&gt; 학생 태도</h1>
+      <h1 id="attitude-title">
+        &lt;{{ selected_attitude.name }}&gt; 학생 태도
+      </h1>
 
       <!-- 작성 정보 -->
       <div id="attitude-header">
@@ -38,11 +40,17 @@
 
       <!-- 내용 -->
       <div id="attitude-content-wrapper">
-        <b-form-textarea class="attitude-textarea" readonly id="contentText" v-model="selected_attitude.content"></b-form-textarea>
+        <b-form-textarea
+          class="attitude-textarea"
+          readonly
+          id="contentText"
+          v-model="selected_attitude.content"
+        ></b-form-textarea>
       </div>
 
       <!-- 수정/닫기 버튼 -->
       <div id="btn-wrapper">
+        <button id="btn-delete" @click="deleteAttribute">삭제</button>
         <button id="btn-save" @click="goUpdateAttribute">수정</button>
         <button id="btn-cancel" @click="cancel">닫기</button>
       </div>
@@ -75,8 +83,8 @@ export default {
       this.$store.dispatch("setToken");
     },
 
-    goUpdateAttribute () {
-        this.$router.push({ name: "AttitudeChange"});
+    goUpdateAttribute() {
+      this.$router.push({ name: "AttitudeChange" });
     },
 
     getStudents() {
@@ -97,6 +105,27 @@ export default {
         });
     },
 
+    deleteAttribute() {
+      if (!confirm("정말로 삭제하시겠습니까?")) return;
+
+      axios({
+        method: "delete",
+        url: `http://i5a205.p.ssafy.io:8000/student-manage/note/detail/${this.selected_attitude.id}/`,
+        headers: this.headers,
+      })
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+          alert("삭제되었습니다.");
+        });
+      this.$router.push({
+        name: "AttitudeInfo",
+        params: { id: this.selected_attitude.student },
+      });
+    },
+
     setDate() {
       const today = new Date();
       this.today =
@@ -112,7 +141,10 @@ export default {
     },
 
     cancel() {
-      this.$router.push({ name: "AttitudeInfo", params: { id: this.selected_attitude.student } });
+      this.$router.push({
+        name: "AttitudeInfo",
+        params: { id: this.selected_attitude.student },
+      });
     },
   },
 
@@ -125,7 +157,7 @@ export default {
     this.setToken();
     this.setDate();
     this.getStudents();
-    console.log(this.selected_attitude)
+    console.log(this.selected_attitude);
   },
 };
 </script>
@@ -144,8 +176,8 @@ export default {
   top: 112px;
   left: 370px;
 
-    padding:50px 30px;
-    padding-bottom: 30px;
+  padding: 50px 30px;
+  padding-bottom: 30px;
 
   background-color: #d3ebbe;
   border-radius: 20px;
@@ -156,8 +188,8 @@ export default {
 #attitude-view-form #attitude-header {
   display: flex;
   justify-content: space-between;
-    align-items: center;
-    font-size: 90%;
+  align-items: center;
+  font-size: 90%;
 }
 
 #attitude-header #attitude-name-wrapper {
@@ -165,8 +197,8 @@ export default {
   align-items: center;
 }
 
-#attitude-name-wrapper #attitude-name{
-    align-items: center;
+#attitude-name-wrapper #attitude-name {
+  align-items: center;
   margin: 0;
 }
 
@@ -175,7 +207,7 @@ export default {
   align-items: center;
 }
 
-#attitude-date-wrapper #today-date{
+#attitude-date-wrapper #today-date {
   margin: 0;
 }
 
@@ -186,42 +218,49 @@ export default {
 }
 
 #attitude-view-form #btn-wrapper {
-    text-align: end;
-    margin: 0 10px;
+  text-align: end;
+  margin: 0 10px;
 }
 
 #attitude-view-form .attitude-input {
-    background-color: rgb(248, 236, 196);
-    border: 0px;
-    border-radius: 20px;
-    margin-left: 30px;
-    padding: 5px 10px;
+  background-color: rgb(248, 236, 196);
+  border: 0px;
+  border-radius: 20px;
+  margin-left: 30px;
+  padding: 5px 10px;
 }
 
 #attitude-view-form .attitude-input:focus {
-    outline: none;
+  outline: none;
 }
 
 #attitude-view-form .attitude-textarea {
-    background-color: rgb(248, 236, 196);
-    border: 0px;
-    border-radius: 20px;
+  background-color: rgb(248, 236, 196);
+  border: 0px;
+  border-radius: 20px;
 
-    height: 380px;
-    resize: none;
+  height: 380px;
+  resize: none;
 
-    font-size: 32px;
+  font-size: 32px;
 }
 
 #attitude-view-form .attitude-textarea:focus {
-    outline:none;
+  outline: none;
 }
 
-#attitude-view-form #btn-cancel {
+#attitude-view-form #btn-delete {
   border-radius: 20px;
   border: 0px;
   color: red;
   background-color: #fcb6b6;
+  min-width: 11%;
+}
+#attitude-view-form #btn-cancel {
+  border-radius: 20px;
+  border: 0px;
+  color: rgb(219, 69, 0);
+  background-color: #ffd560;
   margin-left: 20px;
 
   min-width: 11%;
@@ -232,6 +271,7 @@ export default {
   border: 0px;
   color: rgb(38, 38, 255);
   background-color: #8cdbff;
+  margin-left: 20px;
 
   min-width: 11%;
 }

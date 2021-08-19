@@ -33,7 +33,7 @@
 
       <!-- 내용 -->
       <h2 id="content" style="font-size: 32px">내용</h2>
-      <b-form-textarea id="contentText" v-model="content"></b-form-textarea>
+      <b-form-textarea id="contentText" v-model="selected_attitude.content"></b-form-textarea>
 
       <!-- 취소/저장 버튼 -->
       <button id="btn-save" @click="updateNote">수정</button>
@@ -73,16 +73,19 @@ export default {
         url: `http://i5a205.p.ssafy.io:8000/student-manage/note/detail/${this.selected_attitude.id}/`,
         headers: this.headers,
         data: {
-          content: this.content,
+          content: this.selected_attitude.content,
         },
       })
         .then((res) => {
           console.log(res.data);
-          alert("성공");
         })
         .catch((err) => {
           console.log(err);
         });
+        this.$router.push({
+        name: "AttitudeInfo",
+        params: { id: this.selected_attitude.student },
+      });
     },
 
     cancel() {
@@ -95,10 +98,6 @@ export default {
 
   computed: {
     ...mapState(["headers", "selected_attitude"]),
-  },
-
-  created() {
-    this.content = this.selected_attitude.content;
   },
 };
 </script>
