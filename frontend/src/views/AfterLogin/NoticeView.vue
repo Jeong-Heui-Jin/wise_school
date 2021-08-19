@@ -31,8 +31,8 @@
 
       <!-- 취소/수정/삭제 버튼 -->
       <button id="cancelBtn" @click="goNotice">목록</button>
-      <button id="changeBtn">수정</button>
-      <button id="deleteBtn">삭제</button>
+      <!-- <button id="changeBtn">수정</button> -->
+      <button id="deleteBtn">삭제하기</button>
     </b-form>
   </div>
 </template>
@@ -91,7 +91,7 @@ export default {
         });
     },
     goNotice: function () {
-      window.open("/notice", "_self");
+      this.$router.push({ name: "Notice" });
     },
   },
   computed: {
@@ -190,13 +190,28 @@ export default {
 
 #noticeViewForm #cancelBtn {
   position: absolute;
-  top: 550px;
-  left: 500px;
+  top: 530px;
+  left: 650px;
 
   border-radius: 12px;
   border: 0px;
-  color: red;
-  background-color: #fcb6b6;
+  /* color: red;
+  background-color: #fcb6b6; */
+  color: rgb(0, 87, 46);
+  background-color: #b6e0fc;
+
+  min-width: 11%;
+}
+
+#noticeViewForm #fileBtn {
+  position: absolute;
+  top: 530px;
+  left: 350px;
+
+  border-radius: 12px;
+  border: 0px;
+  color: rgb(0, 87, 46);
+  background-color: #b6e0fc;
 
   min-width: 11%;
 }
@@ -219,15 +234,18 @@ export default {
 #noticeViewForm #deleteBtn {
   position: absolute;
   top: 17px;
-  left: 1025px;
+  left: 980px;
 
   border-radius: 7px;
   border: 0px;
-  color: rgb(190, 140, 32);
-  background-color: rgb(249, 249, 252);
-
+  /* color: rgb(190, 140, 32); */
+  /* background-color: rgb(249, 249, 252); */
+  background-color: #fcb6b6;
+  color: white;
   font-size: 60%;
+  vertical-align: auto;
 
-  min-width: 5%;
+  width: 70px;
+  height: 25px;
 }
 </style>

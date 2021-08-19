@@ -31,20 +31,27 @@
 
       <!-- 취소/수정/삭제 버튼 -->
       <div>
+        <b-button id="fileBtn" v-b-modal.modal-center>첨부파일</b-button>
+        
         <b-modal id="modal-center" scrollable centered no-fade title="첨부 사진"
           size="lg"
         >
           <form ref="form" style="text-align: center;">
-            <ul>
-              <li v-for="image in images" :key="image">
-                <!-- <img :src="image" class="gallery-image" style="max-width:800px; max-height:800px "> -->
-                <img :src="image">
-              </li>
-            </ul>
+            <div v-if="images.length==0">
+              첨부파일이 없습니다.
+            </div>
+            <div v-else>
+              <ul>
+                <li v-for="image in images" :key="image">
+                  <!-- <img :src="image" class="gallery-image" style="max-width:800px; max-height:800px "> -->
+                  <img :src="image">
+                </li>
+              </ul>
+            </div>
           </form>
         </b-modal>
       </div>
-      <b-button id="fileBtn" v-b-modal.modal-center>첨부파일</b-button>
+      
       <b-button id="cancelBtn" @click="goHomeworkList">닫기</b-button>
       <div v-if="usertype === 1">
         <!-- <button id="homeworkChangeBtn" @click="editHomework">수정</button> -->
@@ -135,7 +142,6 @@ export default {
           console.log(err);
         });
     },
-    viewFiles: function () {},
     goSubmit: function () {
       this.$router.push({
         name: "HomeworkSubmit",

@@ -6,7 +6,7 @@
     <h1 id="title">공지사항</h1>
 
     <div id="noticeForm">
-      <div>
+      <div v-if="now_user.usertype===1">
         <button
           id="noticeButton"
           style="text-align: right"
@@ -93,7 +93,7 @@ export default {
         headers: this.headers,
       })
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           // id 기준 내림차순
           res.data.sort(function (a, b) {
             if (a.is_important === b.is_important) {
@@ -127,7 +127,7 @@ export default {
 
           for (let i = 0; i < res.data.length; ++i) {
             if (res.data[i].is_important) {
-              console.log(i);
+              // console.log(i);
               res.data[i].status = "awesome";
             }
             this.items.push(res.data[i]);
@@ -261,9 +261,10 @@ export default {
   border: 1px solid;
   margin-top: 5px;
 }
+
 #noticeButton {
   position: absolute;
-  top: -20px;
+  top: -30px;
   left: 890px;
 
   min-width: 100px;

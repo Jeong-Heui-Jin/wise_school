@@ -15,7 +15,7 @@
           alt="알람_로고"
           @click="goNotification"
         />
-        <img id="logo" src="@/assets/mail.png" alt="편지_로고" />
+        <!-- <img id="logo" src="@/assets/mail.png" alt="편지_로고" /> -->
         <b-button id="button" variant="faded" type="light" size="lg" @click="goMyPage"
           >내 정보 보기</b-button
         >
@@ -123,11 +123,12 @@ export default {
 
 #nav-bar #logo {
   margin-top: 5px;
-  max-height: 40px;
-  min-height: 40px;
+  margin-left: 10px;
+  max-height: 35px;
+  min-height: 35px;
   height: 40px;
-  max-width: 40px;
-  min-width: 40px;
+  max-width: 35px;
+  min-width: 35px;
   margin-right: 30px;
 }
 </style>
