@@ -11,7 +11,7 @@
         <div class="d-flex justify-content-around" style="margin-top: 180px;">
             <img :src="image" style="margin-left: 40px; max-width: 260px; max-height: 260px;" alt="프로필 사진"/>
             
-            <div id="student-info-text" style="min-width: 500px; max-height: 230px; background-color: #fff2d5; border-radius: 10px; padding: 10px; padding-top: 20px">
+            <div id="user-info-text" style="min-width: 500px; max-height: 230px; background-color: #fff2d5; border-radius: 10px; padding: 10px; padding-top: 20px">
                 <div class="d-flex justify-content-between">
                     <p style="margin-top: auto; margin-bottom: auto;">이   름</p>
                     <b-form-input id="name" v-model="userValue.name">{{userValue.name}}</b-form-input>
@@ -33,8 +33,8 @@
         </div>
     
         <div v-if="usertype == 1">
-            <button id="student-info-change" type="button" @click="infoChange">수정하기</button>
-            <button id="student-info-recovery" type="button" @click="infoRecovery">변경취소</button>
+            <button id="user-info-change" type="button" @click="infoChange">수정하기</button>
+            <button id="user-info-recovery" type="button" @click="infoRecovery">변경취소</button>
         </div>
 
         <!-- 파일 업로드 -->
@@ -42,7 +42,7 @@
             <button id="img-change-btn" type="button" @click="updateImgBtn">사진 변경</button>
         </span>
         <span v-else>
-            <button id="student-img-change" type="button" @click="infoImgChange">확인</button>
+            <button id="user-img-change" type="button" @click="infoImgChange">확인</button>
             <p>
                 <input
                     type="file"
@@ -238,7 +238,7 @@ export default {
     margin-bottom: 10px; 
 }
 
-#user-info-form #student-info-change {
+#user-info-form #user-info-change {
     position: absolute;
     left: 560px;
     top: 450px;
@@ -257,7 +257,7 @@ export default {
   object-fit: fill;
 }
 
-#user-info-form #student-img-change {
+#user-info-form #user-img-change {
     position: absolute;
     left: 260px;
     top: 450px;
@@ -294,7 +294,7 @@ export default {
     /* background-color: lightgray; */
 }
 
-#user-info-form #student-info-recovery {
+#user-info-form #user-info-recovery {
     position: absolute;
     left: 720px;
     top: 450px;

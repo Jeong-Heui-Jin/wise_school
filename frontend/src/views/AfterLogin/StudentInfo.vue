@@ -71,7 +71,8 @@
                                     등록 
                                 </button>
                             </b-col>
-                            <b-col v-if="usertype == 1" cols="1">
+                            <!-- <b-col v-if="usertype == 1" cols="1"> -->
+                            <b-col cols="1">
                                 <button id="parents-1-delete" type="button" style="background-color: #ff8c82; min-width: 80px; min-height: 35px; border: 0px; border-radius: 10px; margin-left: 40px;" @click="parentInfoDelete"> 
                                     삭제 
                                 </button>
@@ -145,6 +146,7 @@ export default {
             })
             .then((res) => {
                 this.data = Object.assign([], res.data);
+                console.log(this.data)
                 const studentName = document.querySelector('#student-name');
                 const studentNumber = document.querySelector('#student-number');
                 const studentPhone = document.querySelector('#student-phone');
@@ -219,8 +221,8 @@ export default {
             // axios Put
             axios({
               method: "put",
-            //   url: `http://127.0.0.1:8000/accounts/info/${this.student_id}/`,
-              url: `http://i5a205.p.ssafy.io:8000/accounts/info/${this.student_id}/`,
+            //   url: `http://127.0.0.1:8000/accounts/image-change/${this.student_id}/`,
+              url: `http://i5a205.p.ssafy.io:8000/accounts/image-change/${this.student_id}/`,
               data: formData,
               headers: {
                   "Authorization": this.headers.Authorization,
@@ -267,11 +269,11 @@ export default {
             })
               .then(function(){
                 alert('삭제되었습니다 :(');
-                this.$router.go();
               })
               .catch(function(err){
                 console.log(err);
               });
+              this.$router.go();
         },
         parentInfoUpdate(e) {
             if (e.target.parentElement.parentElement.children[0].children[0].value.length > 0 &&
@@ -295,11 +297,11 @@ export default {
                         })
                         .then(function(){
                             alert('등록되었습니다 :)');
-                            this.$router.go();
                         })
                         .catch(function(err){
                             console.log(err);
                         });
+                        this.$router.go();
                 }
                 // UPDATE 경우
                 else {
@@ -328,6 +330,8 @@ export default {
                     this.parents[Number(e.target.id[8]) - 1].relation = e.target.parentElement.parentElement.children[0].children[0].value;
                     this.parents[Number(e.target.id[8]) - 1].name = e.target.parentElement.parentElement.children[1].children[0].value;
                     this.parents[Number(e.target.id[8]) - 1].phone = e.target.parentElement.parentElement.children[2].children[0].value;
+                    
+                    this.$router.go();
                 }
             }
             else {
