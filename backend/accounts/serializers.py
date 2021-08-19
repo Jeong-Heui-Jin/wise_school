@@ -39,7 +39,8 @@ class UserListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'classroom', 'name', 'phone')
+        fields = ('id', 'classroom', 'name', 'phone',)
+        read_only_fields = ('image',)
         # fields = '__all__'
 
 

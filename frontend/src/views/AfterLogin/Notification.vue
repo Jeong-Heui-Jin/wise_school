@@ -7,11 +7,10 @@
 
     <div id="notificationForm">
       <div>
-        <button id="notificationBtn" @click="deleteAll()">전체 삭제</button>
+        <button id="notificationBtn" @click="deleteAll">전체 삭제</button>
       </div>
       <!-- 📗📘📔📙📒📕 -->
       <!-- previous version -->
-
       <!-- <b-list-group id="groupPosition">
         <b-list-group-item
           id="textNotification my-table"
@@ -43,7 +42,7 @@
         <template #cell(content)="data">
           <div id="textNotification">
             <a id="alignLeft">{{ data.item.content }}</a
-            ><button id="deleteBtn" @click="deleteNotification(notification)">
+            ><button id="deleteBtn" @click="deleteNotification(data.item)">
               삭제
             </button>
           </div>
@@ -128,13 +127,26 @@ export default {
           console.log(err);
         });
     },
-    deleteAll: function () {},
+    deleteAll: function () {
+      console.log("deleteAll function call");
+      axios({
+        method: "delete",
+        url: `http://127.0.0.1:8000/notice/notification_detail/`,
+        headers: this.headers,
+      })
+        .then((res) => {
+          console.log(res);
+          alert("전체삭제되었습니다!");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     deleteNotification: function (notification) {
       console.log(notification);
       axios({
         method: "delete",
-        url: `http://i5a205.p.ssafy.io:8000/notice/notification/${notification.id}/`,
-        // url: `http://127.0.0.1:8000/notice/notification/${notification.id}/`,
+        url: `http://127.0.0.1:8000/notice/notification_detail/${notification.id}/`,
         headers: this.headers,
       })
         .then((res) => {

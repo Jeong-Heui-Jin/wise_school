@@ -125,7 +125,7 @@ def info(request, user_id):
             serializer.save()
 
         # 프로필 image 파일
-        image = request.FILES['files']
+        image = request.FILES.getlist('files')[0]
         image_time = (str(datetime.now())).replace(" ","") # 이미지이름을 시간으로 설정하기 위해 datetime를 사용했다.
         image_type = (image.content_type).split("/")[1]
         s3_client.upload_fileobj(
@@ -136,7 +136,7 @@ def info(request, user_id):
                 "ContentType" : image.content_type
             }
         )
-        image_url = "http://dycho96.s3.ap-northeast-2.amazonaws.com/"+image_time+"."+image_type  # 업로드된 이미지의 url이 설정값으로 저장됨
+        image_url = image_time+"."+image_type  # 업로드된 이미지의 url이 설정값으로 저장됨
         image_url = image_url.replace(" ","/")
         
         # user 정보 수정
@@ -144,11 +144,12 @@ def info(request, user_id):
             'name' : request.data.get('name'),
             'phone' : request.data.get('phone'),
             'classroom_id' : user.classroom.id,
-            'image': image_url,
+            # 'image': image_url,
         }
+        print(user_data)
         serializer = UserListSerializer(user, data=user_data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save()
+            serializer.save(image=image_url)
             return Response(serializer.data)
 
     elif request.method == 'DELETE':
