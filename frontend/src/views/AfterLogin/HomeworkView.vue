@@ -32,7 +32,7 @@
       <!-- 취소/수정/삭제 버튼 -->
       <div>
         <b-modal id="modal-center" centered title="첨부 사진">
-          <!-- <img :src="imageUrl" class="card-img-top" alt="..."> -->
+          <img :src="images" style="margin-left: 20px; width: 230px; height: 230px;" alt="숙제 첨부 사진"/>
           <p>숙제 사진</p>
         </b-modal>
       </div>
@@ -63,6 +63,7 @@ export default {
     return {
       homework: {},
       usertype: 2,
+      images: []
     };
   },
   methods: {
@@ -90,6 +91,10 @@ export default {
             "시 " +
             temp.substring(14, 16) +
             "분";
+
+            for(let i=0;i<this.homework.homeworkfile_set.length;i++){
+              this.images.append(this.homework.homeworkfile_set[i].image);
+            }
         })
         .catch((err) => {
           console.log(err);
@@ -124,6 +129,9 @@ export default {
       });
       // window.open(`/homework-submit/${this.homework.id}`, "_self");
     },
+    DetailHomeworkImg() {
+
+    }
   },
   computed: {
     ...mapState(["headers", "selected_homework", "now_user"]),
