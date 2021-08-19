@@ -6,11 +6,7 @@ from django.shortcuts import get_object_or_404, get_list_or_404
 from rest_framework import serializers, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-<<<<<<< HEAD
-from .serializers import ParentSerializer, StudentInfoSerializer, UserSerializer, UserListSerializer, ServiceRequestSerializer, SignupSerializer, StudentInfoSerializer, UserImgSerializer
-=======
-from .serializers import UserImageChangeSerializer, ParentSerializer, StudentInfoSerializer, UserSerializer, UserListSerializer, ServiceRequestSerializer, SignupSerializer, StudentInfoSerializer
->>>>>>> profile
+from .serializers import UserImgSerializer, ParentSerializer, StudentInfoSerializer, UserSerializer, UserListSerializer, ServiceRequestSerializer, SignupSerializer, StudentInfoSerializer
 from classroom.serializers import ClassroomSerializer
 from django.contrib.auth import get_user_model
 from django.contrib.auth import update_session_auth_hash
@@ -131,7 +127,7 @@ def image_change(request, user_id):
     data = {
         'image': image_url,
     }
-    serializer = UserImageChangeSerializer(user, data=data)
+    serializer = UserImgSerializer(user, data=data)
     if serializer.is_valid(raise_exception=True):
         serializer.save()
         return Response(serializer.data)
@@ -187,7 +183,7 @@ def info(request, user_id):
         # print(user_data)
         serializer = UserListSerializer(user, data=user_data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save(image=image_url)
+            serializer.save()
             return Response(serializer.data)
 
     elif request.method == 'DELETE':
