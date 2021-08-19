@@ -3,7 +3,7 @@ from django.http.response import JsonResponse
 from .models import User, Parents
 from classroom.models import School, Classroom
 from django.shortcuts import get_object_or_404, get_list_or_404
-from rest_framework import status
+from rest_framework import serializers, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import ParentSerializer, StudentInfoSerializer, UserSerializer, UserListSerializer, ServiceRequestSerializer, SignupSerializer, StudentInfoSerializer
@@ -105,13 +105,17 @@ def profile(request):
 
 # 해당 사용자의 정보 조회/수정/삭제
 @api_view(['GET', 'PUT','DELETE',])
-@authentication_classes([JSONWebTokenAuthentication])
-@permission_classes([IsAuthenticated])
+# @authentication_classes([JSONWebTokenAuthentication])
+# @permission_classes([IsAuthenticated])
 def info(request, user_id):
     user = get_object_or_404(User, pk=user_id)
     if request.method == 'GET':
         serializer = UserSerializer(user)
-        return Response(serializer.data)
+        user_info = {
+            'info': serializer.data,
+            'class_num': user.classroom.grade,
+        }
+        return JsonResponse(user_info)
 
     elif request.method == 'PUT':
         # student.info 정보 수정
@@ -268,6 +272,7 @@ def create_student(request, school_id):
 
 @api_view(['POST'])
 def signup(request):
+    print('1234')
     password = request.data.get('password')
     class_id = request.data.get('class_id')
     room = get_object_or_404(Classroom, pk=class_id)

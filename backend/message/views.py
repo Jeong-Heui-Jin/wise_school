@@ -17,12 +17,11 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 
 # 해당 학생의 전체 메시지 목록 조회 (+ 시간 순서대로 최근꺼를 맨 위로 / 안 읽은 갯수 표시)
-# 해당 사용자의 is_message값 true로 바꿔주기
 @api_view(['GET',])
 @authentication_classes([JSONWebTokenAuthentication])
 @permission_classes([IsAuthenticated])
 def message_list(request):
-    user = get_object_or_404(get_user_model(), pk=request.user.id)
+    # user = get_object_or_404(get_user_model(), pk=request.user.id)
     # 해당 학생과 대화한 상대 모두 가져오기
     senders = Message.objects.filter(receiver=request.user).values_list('sender', flat=True).distinct()
     receivers = Message.objects.filter(sender=request.user).values_list('receiver', flat=True).distinct()
