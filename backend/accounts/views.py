@@ -267,6 +267,7 @@ def create_student(request, school_id):
 
 @api_view(['POST'])
 def signup(request):
+    print('1234')
     password = request.data.get('password')
     class_id = request.data.get('class_id')
     room = get_object_or_404(Classroom, pk=class_id)
