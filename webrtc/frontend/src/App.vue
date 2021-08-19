@@ -228,15 +228,16 @@ export default {
 				}
 				this.subscribers.push(subscriber);
 
+				this.checkScreenShared();
 				this.sessionCount();
 				document.getElementById("session-count").innerHTML = this.count;
-				if (this.isScreenShared) {
-					this.session.signal({
-						data: "",
-						to: [subscriber.stream.connection],
-						type: 'startScreenSharing'
-					})
-				}
+				// if (this.isScreenShared) {
+				// 	this.session.signal({
+				// 		data: "",
+				// 		to: [subscriber.stream.connection],
+				// 		type: 'startScreenSharing'
+				// 	})
+				// }
 			});
 
 			// On every Stream destroyed...
@@ -246,6 +247,7 @@ export default {
 					this.subscribers.splice(index, 1);
 				}
 
+				this.checkScreenShared();
 				this.sessionCount();
 				document.getElementById("session-count").innerHTML = this.count;
 			});
@@ -765,6 +767,20 @@ export default {
 			if (y< diff ) y = diff;
 
 			videos.style.top=y;
+		},
+
+		checkScreenShared () {
+			var buf = 0;
+			this.subscribers.forEach((sub)=>{
+				if(JSON.parse(sub.stream.connection.data).clientData==="Screen Sharing") {
+					buf+=1;
+				}
+			});
+			if (buf) {
+				this.isScreenShared=true;
+			} else {
+				this.isScreenShared = false;
+			}
 		},
 	},
 
