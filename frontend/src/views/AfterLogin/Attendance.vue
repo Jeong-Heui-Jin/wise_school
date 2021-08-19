@@ -252,7 +252,7 @@ export default {
       this.isChangingStatus = true;
       this.changeInfo={
         attendance_id: student[`${this.day[day]}`].attendance_id,
-        student_id: student.userCode,
+        student: student,
         status: student[`${this.day[day]}`].status,
         name: student.name,
         day:day,
@@ -265,18 +265,29 @@ export default {
         alert("출결 상태가 변하지 않았습니다. 다시 선택해 주세요.")
         return;
       }
-      // const data={
-      //   status: document.getElementById('combo').value,
-      //   student_id: changeInfo.student_id,
-      //   classroom_id: this.now_user.classroom,
-      // }
+
+      axios({
+        method: "PUT",
+        url: `http://i5a205.p.ssafy.io:8000/student-manage/attendance/detail/${this.changeInfo.attendance_id}/`,
+        data: {
+          status: newStatus,
+        },
+        headers: this.headers
+      })
+      .then((res) => {
+        console.log(res)
+        this.changeInfo.student[`${this.day[this.changeInfo.day]}`].status=newStatus;
+        alert("수정에 성공했습니다.")
+      })
+      .catch((err) => {
+        console.log(err);
+      });
       
-      const attendanceChange = {
+      const attendanceChangeDetail = {
         reason:document.getElementById('status-change-reason').value,
         attendance_id:this.changeInfo.attendance_id,
-
       }
-      console.log(attendanceChange)
+      console.log(attendanceChangeDetail)
       
     //   axios({
     //     method: "post",
