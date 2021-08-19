@@ -148,8 +148,8 @@ export default {
             // axios Put
             axios({
               method: "put",
-            //   url: `http://127.0.0.1:8000/accounts/info/${this.user_id}/`,
-              url: `http://i5a205.p.ssafy.io:8000/accounts/info/${this.user_id}/`,
+            //   url: `http://127.0.0.1:8000/accounts/image-change/${this.user_id}/`,
+              url: `http://i5a205.p.ssafy.io:8000/accounts/image-change/${this.user_id}/`,
               data: formData,
               headers: {
                   "Authorization": this.headers.Authorization,

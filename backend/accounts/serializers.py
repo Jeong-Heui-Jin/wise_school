@@ -49,7 +49,7 @@ class UserImgSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('image',)
-        # read_only_fields = ('image',)
+        read_only_fields = ('image',)
         # fields = '__all__'
 
 
