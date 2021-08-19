@@ -17,7 +17,15 @@
 
       <!-- 파일 업로드 -->
       <h2 id="fileUploadTitle" style="font-size: 32px">파일 첨부</h2>
-      <input type="file" id="files" ref="files" accept="image/*" multiple v-on:change="handleFileUpload()" enctype="multipart/form-data">
+      <input
+        type="file"
+        id="files"
+        ref="files"
+        accept="image/*"
+        multiple
+        v-on:change="handleFileUpload()"
+        enctype="multipart/form-data"
+      />
 
       <!-- 취소/저장 버튼 -->
       <button id="saveBtn" @click="homeworkSubmit">저장</button>
@@ -28,7 +36,7 @@
 
 <script>
 import axios from "axios";
-import NavSideBar from '@/components/NavSideBar.vue'
+import NavSideBar from "@/components/NavSideBar.vue";
 import NavBar from "@/components/NavBar.vue";
 import { mapState } from "vuex";
 
@@ -55,7 +63,8 @@ export default {
       event.preventDefault();
       axios({
         method: "post",
-        url: `http://127.0.0.1:8000/homework/detail/${this.homework_id}/`,
+        // url: `http://127.0.0.1:8000/homework/detail/${this.homework_id}/`,
+        url: `http://i5a205.p.ssafy.io:8000/homework/detail/${this.homework_id}/`,
         headers: this.headers,
         data: this.createValue,
       })
@@ -63,24 +72,24 @@ export default {
           // 파일 저장
           if (this.files) {
             var formData = new FormData();
-            formData.append('files', this.files)
+            formData.append("files", this.files);
 
-            for( var i = 0; i < this.files.length; i++ ){
-              formData.append('files', this.files[i]);
+            for (var i = 0; i < this.files.length; i++) {
+              formData.append("files", this.files[i]);
             }
 
             axios({
               method: "post",
-              url: `http://127.0.0.1:8000/homework/submit/file/${res.data.id}/`,
-              // url: `http://i5a205.p.ssafy.io:8000/homework/submit/file/${res.data.id}/`,
+              // url: `http://127.0.0.1:8000/homework/submit/file/${res.data.id}/`,
+              url: `http://i5a205.p.ssafy.io:8000/homework/submit/file/${res.data.id}/`,
               data: formData,
-              headers: { 'Content-Type': 'multipart/form-data' },
+              headers: { "Content-Type": "multipart/form-data" },
             })
-              .then(function(res){
-                console.log(res)
-                console.log('SUCCESS!!');
+              .then(function (res) {
+                console.log(res);
+                console.log("SUCCESS!!");
               })
-              .catch(function(err){
+              .catch(function (err) {
                 console.log(err);
               });
           }
