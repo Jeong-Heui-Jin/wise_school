@@ -6,7 +6,7 @@
 
     <!-- 작성 Form -->
     <b-form id="homeworkViewForm">
-      <h1 id="homeworkTitle">숙제 보기</h1>
+      <h1 id="homeworkViewTitle">숙제 보기</h1>
       <!-- 제목 -->
       <h2 id="sub-title">제목</h2>
       <b-form-input readonly id="titleName" v-model="homework.title">{{
@@ -156,10 +156,12 @@ export default {
   font-size: 160%;
 }
 
-#homeworkViewForm #homeworkTitle {
-  position: absolute;
-  top: -102px;
-  left: -250px;
+#homeworkViewForm #homeworkViewTitle {
+  position: fixed;
+  top: 10px;
+  left: 120px;
+  margin-left: 220px;
+  margin-top: 20px;
 }
 
 #homeworkViewForm #sub-title {
