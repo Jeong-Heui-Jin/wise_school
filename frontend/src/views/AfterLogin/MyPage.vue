@@ -120,27 +120,22 @@ export default {
         // 프로필 이미지 수정 하기
         infoImgChange() {
             
-            
-            // var formData = new FormData();
-            
-            // console.log("image",this.image)
-            // formData.append("files", this.image);
-            // formData.append("name", this.name);
-            // for (var i = 0; i < this.image.length; i++) {
-            //   formData.append("files", this.image[i]);
-            // }
-            // console.log("form", formData);
+            this.image = this.$refs.files.files[0];
+            var formData = new FormData();
+            formData.append("files", this.image);
+            for (var i = 0; i < this.image.length; i++) {
+              formData.append("files", this.image[i]);
+            }
+            console.log("form", formData);
 
             this.image = this.$refs.files.files[0];
-            let body = { files: this.image, name: this.name, phone: '010-1234-1234' };
-            console.log("body", body);
+           
             // axios Put
             axios({
               method: "put",
               url: `http://127.0.0.1:8000/accounts/info/${this.user_id}/`,
             //   url: `http://i5a205.p.ssafy.io:8000/accounts/info/${this.user_id}/`,
-              data: body,
-            //   data: formData,
+              data: formData,
               headers: {
                   "Authorization": this.headers.Authorization,
                   "Content-Type": "multipart/form-data"
@@ -152,7 +147,7 @@ export default {
               .catch(function(err){
                 console.log(err);
               });
-            // this.$router.go();
+            this.$router.go();
         },
         upload(e) {
             let file = e.target.files;

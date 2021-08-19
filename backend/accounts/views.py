@@ -125,7 +125,7 @@ def info(request, user_id):
             serializer.save()
 
         # 프로필 image 파일
-        image = request.FILES.getlist('files')
+        image = request.FILES.getlist('files')[0]
         image_time = (str(datetime.now())).replace(" ","") # 이미지이름을 시간으로 설정하기 위해 datetime를 사용했다.
         image_type = (image.content_type).split("/")[1]
         s3_client.upload_fileobj(
@@ -144,11 +144,12 @@ def info(request, user_id):
             'name' : request.data.get('name'),
             'phone' : request.data.get('phone'),
             'classroom_id' : user.classroom.id,
-            'image': image_url,
+            # 'image': image_url,
         }
+        print(user_data)
         serializer = UserListSerializer(user, data=user_data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save()
+            serializer.save(image=image_url)
             return Response(serializer.data)
 
     elif request.method == 'DELETE':
