@@ -9,7 +9,8 @@
     <!-- 전체 Form -->
     <b-form id="student-info-form">
         <div class="d-flex justify-content-around" style="margin-top: 30px;">
-            <img :src="image" style="max-width: 200px;" alt="학생사진"/>
+            <img :src="image" style="margin-left: 20px; width: 230px; height: 230px;" alt="학생 프로필 사진"/>
+            
             <div id="student-info-text" style="min-width: 500px; background-color: #fff2d5;  border-radius: 10px; padding: 15px; ">
                 <div class="d-flex justify-content-between">
                     <p style="margin-top: auto; margin-bottom: auto;">이   름</p>
@@ -33,12 +34,29 @@
             <button id="student-info-change" type="button" @click="infoChange">수정하기</button>
             <button id="student-info-recovery" type="button" @click="infoRecovery">되돌리기</button>
         </div>
+        <!-- 파일 업로드 -->
+        <span v-if="imgBtnClick==0">
+            <button id="img-change-btn" type="button" @click="updateImgBtn">사진 변경</button>
+        </span>
+        <span v-else>
+            <button id="student-img-change" type="button" @click="infoImgChange">확인</button>
+            <p>
+                <input
+                    type="file"
+                    id="img-button"
+                    ref="files"
+                    accept="image/*"
+                    v-on:change="upload"
+                    enctype="multipart/form-data"
+                />
+            </p>
+        </span>
         
         <div id="parents-info-form">
             <p style="font-size: 28px; margin-right: auto;">보호자 연락처</p>
             <div style="min-width: 900px; min-height: 200px; background-color: #d6d6d6; border-radius: 20px; padding: 10px;">
                 <div id="parent-info-form-graph">
-                    <b-row style="min-width: 800px; margin-bottom: 20px; margin-left:px;">
+                    <b-row style="min-width: 800px; margin-bottom: 20px; margin-left: 15px;">
                         <b-col cols="2">관계</b-col>
                         <b-col cols="3">이름</b-col>
                         <b-col cols="3">연락처</b-col>
@@ -89,15 +107,6 @@
 import axios from "axios";
 import NavSideBar from "@/components/NavSideBar.vue";
 import NavBar from "@/components/NavBar.vue";
-import Whale from "@/assets/whale.png";
-import Beaver from "@/assets/beaver.png";
-import Cat from "@/assets/cat.png";
-import Elephant from "@/assets/elephant.png";
-import Frog from "@/assets/frog.png";
-import Koala from "@/assets/koala.png";
-import Shark from "@/assets/shark.png";
-import Sheep from "@/assets/sheep.png";
-import Squirrel from "@/assets/squirrel.png";
 import { mapState } from 'vuex'
 
 export default {
@@ -112,11 +121,12 @@ export default {
             student_id: this.$route.params.id,
             usertype: 1,
             student: { ID: 1234, name: '목상원', number: '16', phone: '010-3542-8554', address: '서울시 강남구 테헤란로 212' },
-            image: Sheep,
             parents: [
                 { ID: 123, student_id: 1234, relation: '어머니', name: '김다정', phone: '010-1234-5678' },
                 { ID: 123, student_id: 1234, relation: '어머니', name: '김다정', phone: '010-1234-5678' },
-            ]
+            ],
+            image: '',
+            imgBtnClick: 0
         }
     },
     mounted() {
@@ -135,7 +145,6 @@ export default {
             })
             .then((res) => {
                 this.data = Object.assign([], res.data);
-                // console.log(this.data);
                 const studentName = document.querySelector('#student-name');
                 const studentNumber = document.querySelector('#student-number');
                 const studentPhone = document.querySelector('#student-phone');
@@ -146,37 +155,16 @@ export default {
                 studentPhone.value = this.data.info.phone;
                 studentAddress.value = this.data.info.info.address;
 
-                this.parents = res.data.parents;
-                this.usertype = res.data.usertype;
-                // console.log("사용자", this.usertype)
-
-                if (Number(res.data.id) % 9 === 0) {
-                this.image = Whale;
-                } else if (Number(res.data.id) % 9 === 1) {
-                this.image = Beaver;
-                } else if (Number(res.data.id) % 9 === 2) {
-                this.image = Cat;
-                } else if (Number(res.data.id) % 9 === 3) {
-                this.image = Elephant;
-                } else if (Number(res.data.id) % 9 === 4) {
-                this.image = Frog;
-                } else if (Number(res.data.id) % 9 === 5) {
-                this.image = Koala;
-                } else if (Number(res.data.id) % 9 === 6) {
-                this.image = Shark;
-                } else if (Number(res.data.id) % 9 === 7) {
-                this.image = Sheep;
-                } else {
-                this.image = Squirrel;
-                }
+                this.parents = res.data.info.parents;
+                this.usertype = res.data.info.usertype;
+                this.image = res.data.info.image;
 
                 const parentInfo = document.querySelectorAll('#parent-info');
 
-                console.log(this.data.parents[0]);
-                for (var i = 0; i < this.data.parents.length; i++) {
-                    parentInfo[i].children[0].children[0].children[0].value = this.data.parents[i].relation;
-                    parentInfo[i].children[0].children[1].children[0].value = this.data.parents[i].name;
-                    parentInfo[i].children[0].children[2].children[0].value = this.data.parents[i].phone;
+                for (var i = 0; i < this.data.info.parents.length; i++) {
+                    parentInfo[i].children[0].children[0].children[0].value = this.data.info.parents[i].relation;
+                    parentInfo[i].children[0].children[1].children[0].value = this.data.info.parents[i].name;
+                    parentInfo[i].children[0].children[2].children[0].value = this.data.info.parents[i].phone;
                 }
             })
                 .catch((err) => {
@@ -219,6 +207,47 @@ export default {
               .catch(function(err){
                 console.log(err);
               });
+        },
+        infoImgChange() {
+            this.image = this.$refs.files.files[0];
+            var formData = new FormData();
+            formData.append("files", this.image);
+            for (var i = 0; i < this.image.length; i++) {
+              formData.append("files", this.image[i]);
+            }
+           
+            // axios Put
+            axios({
+              method: "put",
+            //   url: `http://127.0.0.1:8000/accounts/info/${this.student_id}/`,
+              url: `http://i5a205.p.ssafy.io:8000/accounts/info/${this.student_id}/`,
+              data: formData,
+              headers: {
+                  "Authorization": this.headers.Authorization,
+                  "Content-Type": "multipart/form-data"
+              }
+            })
+              .then(function(){
+                alert('프로필 이미지 수정되었습니다 :)');
+                this.imgBtnClick = 0;
+              })
+              .catch(function(err){
+                console.log(err);
+              });
+            this.$router.go();
+        },
+        updateImgBtn() {
+            this.imgBtnClick = 1;
+        },
+        upload(e) {
+            let file = e.target.files;
+            let reader = new FileReader();
+
+            reader.readAsDataURL(file[0]);
+            reader.onload = e => {
+                // console.log(e.target.result);
+                this.image = e.target.result;
+            }
         },
         parentInfoDelete(e) {
             console.log(this.parents[Number(e.target.id[8]) - 1].id)
@@ -318,7 +347,7 @@ export default {
         ...mapState([
             'headers'
         ]),
-        },
+    },
 };
 </script>
 
@@ -346,7 +375,7 @@ export default {
 #student-info-form #student-info-change {
     position: absolute;
     left: 510px;
-    top: 280px;
+    top: 280px 	!important;
     border: 0px;
     background-color: #d4e3fe;
     min-width: 100px;
@@ -355,10 +384,54 @@ export default {
     border-radius: 10px;
 }
 
+#student-info-form img {
+  width: 100%;
+  height: 100%;
+  /* object-fit: cover; */
+  object-fit: fill;
+}
+
+#student-info-form #student-img-change {
+    position: absolute;
+    left: 260px;
+    top: 280px 	!important;
+    border: 0px;
+    background-color: #d4e3fe;
+    min-width: 100px;
+    min-height: 40px;
+    font-size: 20px;
+    border-radius: 10px;
+}
+
+#student-info-form #img-change-btn {
+    position: absolute;
+    left: 150px !important;
+    top: 280px 	!important;
+    border: 0px;
+    background-color: #d4e3fe;
+    min-width: 100px;
+    min-height: 40px;
+    font-size: 20px;
+    border-radius: 10px;
+}
+
+#student-info-form #img-button {
+    position: absolute;
+    left: 80px;
+    top: 290px 	!important;
+    border: 0px;
+    /* background-color: #d4e3fe; */
+    max-width: 180px;
+    max-height: 40px;
+    font-size: 15px;
+    /* border-radius: 10px; */
+    /* background-color: lightgray; */
+}
+
 #student-info-form #student-info-recovery {
     position: absolute;
     left: 740px;
-    top: 280px;
+    top: 280px 	!important;
     border: 0px;
     background-color: #ff8c82;
     min-width: 100px;

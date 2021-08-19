@@ -7,14 +7,14 @@
     <h1 id="title">내 정보 </h1>
 
     <!-- 전체 Form -->
-    <b-form id="student-info-form">
+    <b-form id="user-info-form">
         <div class="d-flex justify-content-around" style="margin-top: 180px;">
             <img :src="image" style="margin-left: 40px; max-width: 260px; max-height: 260px;" alt="프로필 사진"/>
             
             <div id="student-info-text" style="min-width: 500px; max-height: 230px; background-color: #fff2d5; border-radius: 10px; padding: 10px; padding-top: 20px">
                 <div class="d-flex justify-content-between">
                     <p style="margin-top: auto; margin-bottom: auto;">이   름</p>
-                    <b-form-input id="name"></b-form-input>
+                    <b-form-input id="name" v-model="userValue.name">{{userValue.name}}</b-form-input>
                 </div>
                 <div class="d-flex justify-content-between">
                     <p style="margin-top: auto; margin-bottom: auto;">I D</p>
@@ -23,11 +23,11 @@
                 </div>
                 <div class="d-flex justify-content-between">
                     <p style="margin-top: auto; margin-bottom: auto;">담당학급</p>
-                    <b-form-input id="userclass"></b-form-input>
+                    <b-form-input id="userclass" v-model="userValue.class_num">{{userValue.class_num}}</b-form-input>
                 </div>
                 <div class="d-flex justify-content-between">
                     <p style="margin-top: auto; margin-bottom: auto;">전화번호</p>
-                    <b-form-input id="phone-number"></b-form-input>
+                    <b-form-input id="phone-number" v-model="userValue.phone">{{userValue.phone}}</b-form-input>
                 </div>
             </div>
         </div>
@@ -76,8 +76,11 @@ export default {
             data: '',
             user_id: this.$route.params.id,
             usertype: 1,
-            name: "",
-            student: { ID: 1234, name: '목상원', number: '16', phone: '010-3542-8554', address: '서울시 강남구 테헤란로 212' },
+            userValue: {  
+                name: '',
+                phone: '',
+                class_num: ''
+            },
             image: '',
             imgBtnClick: 0
         }
@@ -104,9 +107,14 @@ export default {
                 const phone_number = document.querySelector('#phone-number');
 
                 name.value = this.data.info.name;
-                this.name = this.data.info.name;
                 username.value = this.data.info.username;
                 phone_number.value = this.data.info.phone;
+                
+                this.userValue.name = this.data.info.name;
+                name.value = this.data.info.name;
+                this.userValue.class_num = String(res.data.class_num)[0] + "학년 " + String(res.data.class_num)[2] + "반";
+                
+                this.userValue.phone = this.data.info.phone;
 
                 this.usertype = res.data.info.usertype;
                 this.image = res.data.info.image;
@@ -171,19 +179,17 @@ export default {
             this.imgBtnClick = 1;
         },
         infoChange() {  
-            const studentName = document.querySelector('#student-name');
-            const studentNumber = document.querySelector('#student-number');
-            const studentPhone = document.querySelector('#student-phone');
-            const studentAddress = document.querySelector('#student-address');
+            const name = document.querySelector('#name');
+            const phone_number = document.querySelector('#phone-number');
 
             // POST BODY
-            let body = { name: studentName.value, number: studentNumber.value, phone: studentPhone.value, address: studentAddress.value };
-            // console.log(body);
+            let body = { name: name.value, phone: phone_number.value };
+            console.log(body);
             // axios PUT
             axios({
               method: "put",
-            //   url: `http://127.0.0.1:8000/accounts/info/${this.student_id}/`,
-              url: `http://i5a205.p.ssafy.io:8000/accounts/info/${this.user_id}/`,
+              url: `http://127.0.0.1:8000/accounts/info/${this.user_id}/`,
+            //   url: `http://i5a205.p.ssafy.io:8000/accounts/info/${this.user_id}/`,
               data: body,
               headers: this.headers,
             })
@@ -212,7 +218,7 @@ export default {
 </script>
 
 <style>
-#student-info-form {
+#user-info-form {
     position: absolute;
     left: 350px;
     top: 100px;
@@ -222,17 +228,17 @@ export default {
     border-radius: 20px;
 }
 
-#student-info-form p{
+#user-info-form p{
     min-width: 100px;
     min-height: 20px;
     vertical-align: middle;
 }
 
-#student-info-text div{
+#user-info-text div{
     margin-bottom: 10px; 
 }
 
-#student-info-form #student-info-change {
+#user-info-form #student-info-change {
     position: absolute;
     left: 560px;
     top: 450px;
@@ -244,7 +250,14 @@ export default {
     border-radius: 10px;
 }
 
-#student-info-form #student-img-change {
+#user-info-form img {
+  width: 100%;
+  height: 100%;
+  /* object-fit: cover; */
+  object-fit: fill;
+}
+
+#user-info-form #student-img-change {
     position: absolute;
     left: 260px;
     top: 450px;
@@ -256,7 +269,7 @@ export default {
     border-radius: 10px;
 }
 
-#student-info-form #img-change-btn {
+#user-info-form #img-change-btn {
     position: absolute;
     left: 170px;
     top: 450px;
@@ -268,7 +281,7 @@ export default {
     border-radius: 10px;
 }
 
-#student-info-form #img-button {
+#user-info-form #img-button {
     position: absolute;
     left: 80px;
     top: 460px;
@@ -281,7 +294,7 @@ export default {
     /* background-color: lightgray; */
 }
 
-#student-info-form #student-info-recovery {
+#user-info-form #student-info-recovery {
     position: absolute;
     left: 720px;
     top: 450px;
@@ -293,24 +306,5 @@ export default {
     border-radius: 10px;
 }
 
-#parents-info-form {
-    position: absolute;
-    left: 35px;
-    top: 350px;
-}
 
-#parent-info {
-    margin-bottom: 15px;
-}
-
-#parent-info input {
-    text-align: center;
-}
-
-#parent-info-form-graph input {
-    border: 0px;
-    border-radius: 3px;
-    min-height: 35px;
-    margin-left: 10px;
-}
 </style>

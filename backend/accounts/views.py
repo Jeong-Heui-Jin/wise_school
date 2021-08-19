@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, get_list_or_404
 from rest_framework import serializers, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import ParentSerializer, StudentInfoSerializer, UserSerializer, UserListSerializer, ServiceRequestSerializer, SignupSerializer, StudentInfoSerializer
+from .serializers import ParentSerializer, StudentInfoSerializer, UserSerializer, UserListSerializer, ServiceRequestSerializer, SignupSerializer, StudentInfoSerializer, UserImgSerializer
 from classroom.serializers import ClassroomSerializer
 from django.contrib.auth import get_user_model
 from django.contrib.auth import update_session_auth_hash
@@ -129,19 +129,25 @@ def info(request, user_id):
             serializer.save()
 
         # 프로필 image 파일
-        image = request.FILES.getlist('files')[0]
-        image_time = (str(datetime.now())).replace(" ","") # 이미지이름을 시간으로 설정하기 위해 datetime를 사용했다.
-        image_type = (image.content_type).split("/")[1]
-        s3_client.upload_fileobj(
-            image,
-            "dycho96", # 버킷이름
-            image_time+"."+image_type,
-            ExtraArgs = {
-                "ContentType" : image.content_type
-            }
-        )
-        image_url = image_time+"."+image_type  # 업로드된 이미지의 url이 설정값으로 저장됨
-        image_url = image_url.replace(" ","/")
+        image_url = user.image
+        if (request.FILES.getlist('files')):
+            image = request.FILES.getlist('files')[0]
+            image_time = (str(datetime.now())).replace(" ","") # 이미지이름을 시간으로 설정하기 위해 datetime를 사용했다.
+            image_type = (image.content_type).split("/")[1]
+            s3_client.upload_fileobj(
+                image,
+                "dycho96", # 버킷이름
+                image_time+"."+image_type,
+                ExtraArgs = {
+                    "ContentType" : image.content_type
+                }
+            )
+            image_url = image_time+"."+image_type  # 업로드된 이미지의 url이 설정값으로 저장됨
+            image_url = image_url.replace(" ","/")
+            serializer = UserImgSerializer(user, data=image_url)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save(image=image_url)
+                return Response(serializer.data)
         
         # user 정보 수정
         user_data = {
@@ -150,7 +156,7 @@ def info(request, user_id):
             'classroom_id' : user.classroom.id,
             # 'image': image_url,
         }
-        print(user_data)
+        # print(user_data)
         serializer = UserListSerializer(user, data=user_data)
         if serializer.is_valid(raise_exception=True):
             serializer.save(image=image_url)

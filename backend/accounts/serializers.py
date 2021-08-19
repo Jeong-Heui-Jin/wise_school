@@ -43,6 +43,15 @@ class UserListSerializer(serializers.ModelSerializer):
         read_only_fields = ('image',)
         # fields = '__all__'
 
+# 사용자 프로필 이미지 변경
+class UserImgSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        # fields = ('id', )
+        read_only_fields = ('image',)
+        # fields = '__all__'
+
 
 class ServiceRequestSerializer(serializers.ModelSerializer):
 
