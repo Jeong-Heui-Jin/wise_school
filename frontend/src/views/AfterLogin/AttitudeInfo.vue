@@ -1,45 +1,30 @@
 <template>
-  <div style="font-family: 'Jua', sans-serif" variant="light">
+  <div id="attitude-info" style="font-family: 'Jua', sans-serif" variant="light">
     <NavSideBar />
     <NavBar />
 
-    <h1 id="homeworkTitle"> </h1>
+    <h1 id="title">{{student.name}} 학생 태도 </h1>
 
     <!-- Homework Create Button -->
-    <button id="homeworkCreateBtn" @click="goHomeworkCreate()">
-      숙제 추가하기
+    <button id="btn-attitude-create" @click="createAttitude()">
+      작성하기
     </button>
 
-    <!-- table/button/pagination div -->
-    <div id="homeworkForm">
-      <b-table
-        id="homeworkTable my-table"
-        :hover="true"
-        :small="false"
-        :borderless="true"
-        :items="items"
-        :fields="fields"
-        :per-page="perPage"
-        :current-page="currentPage"
-        @row-clicked="goHomeworkView"
-      >
-        <!-- items column -->
-        <template #cell(items)="data">
-          <b-link>{{ data.items }}</b-link>
-        </template>
-      </b-table>
-
-      <!-- Pagination -->
-      <b-pagination
-        id="paginationForm"
-        pills
-        v-model="currentPage"
-        :total-rows="rows"
-        :per-page="perPage"
-        aria-controls="my-table"
-        align="center"
-      ></b-pagination>
-    </div>
+    <b-container id="attitude-container">
+      <!-- 요일 -->
+      <b-row class="attitude-title" >
+        <b-col cols="1">번호</b-col>
+        <b-col cols="6">내용</b-col>
+        <b-col cols="3">작성일</b-col>
+        <b-col cols="2">작성자</b-col>
+      </b-row>
+      <b-row class="attitude-wrapper" v-for="attitude in attitudes" :key="attitude.id">
+        <b-col cols="1">{{attitude.id}}</b-col>
+        <b-col cols="6">{{attitude.content}}</b-col>
+        <b-col cols="3">{{attitude.date}}</b-col>
+        <b-col cols="2">{{attitude.teacher}}</b-col>
+      </b-row>
+    </b-container>
   </div>
 </template>
 
@@ -53,24 +38,12 @@ export default {
   name: "AttitudeInfo",
   data: function () {
     return {
-      perPage: 8,
-      currentPage: 1,
-      fields: [
-        // Title name 변경
-        { key: "id", label: "번호" },
-        { key: "title", label: "숙제 제목" },
-        { key: "end", label: "종료일" },
-        // { key: "submitInfo", label: "제출" },
-      ],
-      items: [
-        // {
-        //   homework_id: "17",
-        //   title: "수학익힘책 16쪽 풀기",
-        //   end: "7.19(월)",
-        //   // submitInfo: "1/6",
-        //   content: "수학익힘책 16쪽 풀기",
-        // },
-      ],
+      student:{
+        name: "",
+      },
+      number:"",
+      attitudes:[],
+      teachers:[],
     };
   },
   components: {
@@ -81,67 +54,146 @@ export default {
     setToken: function () {
       this.$store.dispatch("setToken");
     },
-    getHomeworkList: function () {
-      axios({
+    getAttitudes:async function () {
+      console.log("Attitude")
+      await axios({
         method: "get",
-        url: 'http://i5a205.p.ssafy.io:8000/homework/list/',
+        url: `http://i5a205.p.ssafy.io:8000/student-manage/note/${this.number}/`,
         headers: this.headers,
       })
-        .then((res) => {
-          this.items = res.data;
+      .then((res) => {
+        this.attitudes=res.data;
+        this.attitudes.forEach((attitude)=>{
+          const date = attitude.registertime.split('T')[0].split('-');
+          attitude.date = date[0].slice(2)+'.'+date[1]+'.'+date[2];
+          var buf="";
+          this.teachers.forEach((teacher)=>{
+            if(attitude.teacher === teacher.id){
+              buf = teacher.name
+            }
+          });
+          attitude.teacher=buf;
+          
+        });
 
-          // 모든 items의 end 데이터를 가공한다.
-          for (let i = 0; i < this.items.length; ++i) {
-            var temp = this.items[i].end;
-            console.log(temp);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    },
+    async getTeachers () {
+      await axios({
+        method: "get",
+        url: 'http://i5a205.p.ssafy.io:8000/accounts/teachers/',
+        headers: this.headers,
+      })
+      .then((res) => {
+        res.data.forEach((teacher)=>{
+          this.teachers.push({
+            name: teacher.name,
+            id: teacher.id,
+          });
+        });
 
-            this.items[i].end =
-              temp.substring(5, 7) +
-              "월 " +
-              temp.substring(8, 10) +
-              "일 " +
-              temp.substring(11, 13) +
-              "시 " +
-              temp.substring(14, 16) +
-              "분";
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    },
+    async getStudents () {
+       await axios({
+        method: "get",
+        url: 'http://i5a205.p.ssafy.io:8000/accounts/students/',
+        headers: this.headers,
+      })
+      .then((res) => {
+        res.data.forEach((student)=>{
+          if(student.info.number === this.number) {
+            this.student.name = student.name;
+          }
+        });
+
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    },
+    getMembers: function () {
+      axios({
+        method: "get",
+        url: 'http://i5a205.p.ssafy.io:8000/accounts/class-members/',
+        headers: this.headers,
+      })
+      .then((res) => {
+          console.log(res.data)
+          res.data.teacher.forEach((teacher)=>{
+            console.log(teacher)
+            this.teachers[teacher.id] = teacher.name
+          });
+          console.log(this.teachers)
+          this.student={
+            name:"",
+            id:"",
           }
       })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    goHomeworkCreate: function () {
-      window.open("/homework_create", "_self");
-    },
-    goHomeworkView: function (homework) {
-      this.$store.dispatch('selectHomework', homework);
-      this.$router.push({ name: 'HomeworkView'})
-      // router.push({
-      //   path: "/homework_view",
-      //   query: { title: this.items.Title, Content: this.items.Content },
-      // });
-      // setTimeout(() => console.log("after"), 30000); // test
-      // window.open("/homework_view", "_self");
+      .catch((err) => {
+        console.log(err);
+      });
     },
   },
   computed: {
     rows() {
       return this.items.length;
     },
-    ...mapState(["headers"]),
+    ...mapState([
+      "headers",
+    ]),
   },
-  created: function () {
+  created: async function () {
+    this.number=Number(this.$route.params.id)
     this.setToken();
-    this.getHomeworkList();
+    await this.getStudents();
+    await this.getTeachers();
+    await this.getAttitudes();
+    // this.getMembers();
+    // this.getHomeworkList();
   },
 };
 </script>
 
 <style>
-#homeworkTitle {
-  position: fixed;
-  top: 10px;
-  left: 120px;
+#attitude-info #btn-attitude-create {
+  position: absolute;
+  top: 100px;
+  left: 1000px;
+  font-size: 20px;
+  min-width: 155px;
+  color: #0101d4;
+  border-radius: 20px;
+  border: 0px;
+  background-color: #6cbfe0;
+}
+
+#attitude-info #attitude-container {
+  position: absolute;
+  top: 150px;
+  left: 350px;
+  width: 800px;
+  max-width: 800px;
+  min-width: 800px;
+  border-bottom: 3px solid #47d4ff;
+  font-size: 22px;
+}
+
+#attitude-container .attitude-title {
+  border-bottom: 3px solid #47d4ff;
+  padding: 0;
+  color: #9c9c9c;
+}
+
+#attitude-container .attitude-wrapper {
+  border-top: 1px solid #47d4ff;
+  padding: 5px 0px;
 }
 
 #homeworkForm {
@@ -166,17 +218,7 @@ export default {
   top: 60px;
 }
 
-#homeworkCreateBtn {
-  position: absolute;
-  top: 112px;
-  left: 1200px;
 
-  min-width: 155px;
-
-  border-radius: 10px;
-  border: 0px;
-  background-color: #dcffaa;
-}
 
 #paginationForm {
   /* position: absolute; */
