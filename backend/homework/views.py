@@ -90,7 +90,7 @@ def homeworkfile(request, homework_id):
                 "ContentType" : image.content_type
             }
         )
-        image_url = "http://dycho96.s3.ap-northeast-2.amazonaws.com/"+image_time+"."+image_type  # 업로드된 이미지의 url이 설정값으로 저장됨
+        image_url = image_time+"."+image_type  # 업로드된 이미지의 url이 설정값으로 저장됨
         image_url = image_url.replace(" ","/")
         HomeworkFile.objects.create(homework=homework, image=image_url)
    

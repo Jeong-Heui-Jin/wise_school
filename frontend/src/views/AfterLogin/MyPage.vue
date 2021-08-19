@@ -4,7 +4,7 @@
     <NavSideBar />
     <NavBar />
 
-    <h1 id="title">학생 정보 확인</h1>
+    <h1 id="title">내 정보 </h1>
 
     <!-- 전체 Form -->
     <b-form id="student-info-form">
@@ -89,15 +89,6 @@
 import axios from "axios";
 import NavSideBar from "@/components/NavSideBar.vue";
 import NavBar from "@/components/NavBar.vue";
-import Whale from "@/assets/whale.png";
-import Beaver from "@/assets/beaver.png";
-import Cat from "@/assets/cat.png";
-import Elephant from "@/assets/elephant.png";
-import Frog from "@/assets/frog.png";
-import Koala from "@/assets/koala.png";
-import Shark from "@/assets/shark.png";
-import Sheep from "@/assets/sheep.png";
-import Squirrel from "@/assets/squirrel.png";
 import { mapState } from 'vuex'
 
 export default {
@@ -112,7 +103,7 @@ export default {
             student_id: this.$route.params.id,
             usertype: 1,
             student: { ID: 1234, name: '목상원', number: '16', phone: '010-3542-8554', address: '서울시 강남구 테헤란로 212' },
-            image: Sheep,
+            image: '',
             parents: [
                 { ID: 123, student_id: 1234, relation: '어머니', name: '김다정', phone: '010-1234-5678' },
                 { ID: 123, student_id: 1234, relation: '어머니', name: '김다정', phone: '010-1234-5678' },
@@ -150,25 +141,9 @@ export default {
                 this.usertype = res.data.usertype;
                 // console.log("사용자", this.usertype)
 
-                if (Number(res.data.id) % 9 === 0) {
-                this.image = Whale;
-                } else if (Number(res.data.id) % 9 === 1) {
-                this.image = Beaver;
-                } else if (Number(res.data.id) % 9 === 2) {
-                this.image = Cat;
-                } else if (Number(res.data.id) % 9 === 3) {
-                this.image = Elephant;
-                } else if (Number(res.data.id) % 9 === 4) {
-                this.image = Frog;
-                } else if (Number(res.data.id) % 9 === 5) {
-                this.image = Koala;
-                } else if (Number(res.data.id) % 9 === 6) {
-                this.image = Shark;
-                } else if (Number(res.data.id) % 9 === 7) {
-                this.image = Sheep;
-                } else {
-                this.image = Squirrel;
-                }
+                console.log("이미지", res.data.image)
+                this.image = res.data.image;
+
 
                 const parentInfo = document.querySelectorAll('#parent-info');
 
@@ -189,11 +164,13 @@ export default {
             const studentNumber = document.querySelector('#student-number');
             const studentPhone = document.querySelector('#student-phone');
             const studentAddress = document.querySelector('#student-address');
+            
 
             studentName.value = this.data.name;
             studentNumber.value = this.data.info.number;
             studentPhone.value = this.data.phone;
             studentAddress.value = this.data.info.address;
+            this.image = this.data.image;
         },
         // 학생 정보 수정 하기
         infoChange() {
@@ -203,8 +180,8 @@ export default {
             const studentAddress = document.querySelector('#student-address');
 
             // POST BODY
-            let body = { name: studentName.value, number: studentNumber.value, phone: studentPhone.value, address: studentAddress.value };
-            console.log(body);
+            let body = { name: studentName.value, number: studentNumber.value, phone: studentPhone.value, address: studentAddress.value, image: this.image };
+            console.log("body", body);
             // axios POST
             axios({
               method: "put",
@@ -279,7 +256,7 @@ export default {
                     name: e.target.parentElement.parentElement.children[1].children[0].value,
                     phone: e.target.parentElement.parentElement.children[2].children[0].value};
                     console.log(this.parents[Number(e.target.id[8]) - 1].ID);
-                    console.log(body);
+                    console.log("body", body);
                     // axis UPDATE
                     // BODY key -> this.parents[Number(e.target.id[8]) - 1].ID
                     axios({
@@ -318,7 +295,7 @@ export default {
         ...mapState([
             'headers'
         ]),
-        },
+    },
 };
 </script>
 

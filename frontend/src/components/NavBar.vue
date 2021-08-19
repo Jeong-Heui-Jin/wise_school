@@ -45,14 +45,14 @@ export default {
   },
   data() {
     return {
-      user_id: 0
+      usertype: 1,
     }
   },
   methods: {
     setUser: function () {
       axios({
         method: 'get',
-        url: 'http://i5a205.p.ssafy.io:8000/accounts/profile/',
+        url: 'http://i5a205.p.ssafy.io:8000/accounts/profile',
         headers: this.headers,
         })
         .then((res) => {
@@ -66,8 +66,12 @@ export default {
       window.open("/notification", "_self");
     },
     goMyPage: function() {
+      if (this.now_user.usertype === 2){
+        window.open("/student_info/"+this.now_user.id, "_self");
+      } else {
+        window.open("/mypage/"+this.now_user.id, "_self");
+      }
       
-      window.open("/student_info/"+this.now_user.id, "_self");
     },
     logout() {
       // 로그아웃
@@ -76,11 +80,11 @@ export default {
         localStorage.removeItem("jwt");
         window.open("/login", "_self");
       }
-    },
+    }
   },
    mounted() {
     this.setUser();
-    console.log("여기여기", this.now_user.id)
+    // console.log("여기여기", this.now_user.id)
   },
   computed: {
     ...mapState([
