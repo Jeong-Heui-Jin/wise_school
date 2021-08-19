@@ -9,13 +9,18 @@
     <!-- 전체 Form -->
     <b-form id="student-info-form">
         <div class="d-flex justify-content-around" style="margin-top: 30px;">
-            <img :src="image" style="max-width: 200px;" alt="학생사진"/>
+            <img :src="image" style="margin-left: 30px; max-width: 200px;" alt="학생사진"/>
+            
             <div id="student-info-text" style="min-width: 500px; background-color: #fff2d5;  border-radius: 10px; padding: 15px; ">
                 <div class="d-flex justify-content-between">
                     <p style="margin-top: auto; margin-bottom: auto;">이   름</p>
-                    <b-form-input id="student-name"></b-form-input>
+                    <b-form-input id="name"></b-form-input>
                 </div>
                 <div class="d-flex justify-content-between">
+                    <p style="margin-top: auto; margin-bottom: auto;">I D</p>
+                    <b-form-input id="username"></b-form-input>
+                </div>
+                <!-- <div class="d-flex justify-content-between">
                     <p style="margin-top: auto; margin-bottom: auto;">학급번호</p>
                     <b-form-input id="student-number"></b-form-input>
                 </div>
@@ -26,60 +31,25 @@
                 <div class="d-flex justify-content-between">
                     <p style="margin-top: auto; margin-bottom: auto;">주   소</p>
                     <b-form-input id="student-address"></b-form-input>
-                </div>
+                </div> -->
             </div>
         </div>
-        <div v-if="usertype == 1">
-            <button id="student-info-change" type="button" @click="infoChange">수정하기</button>
-            <button id="student-info-recovery" type="button" @click="infoRecovery">되돌리기</button>
-        </div>
+        <!-- 파일 업로드 -->
+        <span id="fileUploadTitle" style="font-size: 20px">사진 변경</span>
+        <p>
+            <input
+                type="file"
+                id="files"
+                ref="files"
+                accept="image/*"
+                v-on:change="upload"
+                enctype="multipart/form-data"
+            />
+        </p>
         
-        <div id="parents-info-form">
-            <p style="font-size: 28px; margin-right: auto;">보호자 연락처</p>
-            <div style="min-width: 900px; min-height: 200px; background-color: #d6d6d6; border-radius: 20px; padding: 10px;">
-                <div id="parent-info-form-graph">
-                    <b-row style="min-width: 800px; margin-bottom: 20px; margin-left:px;">
-                        <b-col cols="2">관계</b-col>
-                        <b-col cols="3">이름</b-col>
-                        <b-col cols="3">연락처</b-col>
-                    </b-row>
-                    <div id="parent-info" v-if="parents.length >= 1">
-                        <b-row>
-                            <b-col cols="2"><input style="min-width:120px; max-width:120px; margin-left:30px;"/></b-col>
-                            <b-col cols="3"><input style="min-width:160px; max-width:160px; margin-left:40px;"/></b-col>
-                            <b-col cols="3"><input style="min-width:200px; max-width:200px; margin-left:20px;"/></b-col>
-                            <b-col cols="1">
-                                <button id="parents-1-update" type="button" style="background-color: #d4e3fe; min-width: 80px; min-height: 35px; border: 0px; border-radius: 10px; margin-right: 10px; margin-left:30px;" @click="parentInfoUpdate"> 
-                                    등록 
-                                </button>
-                            </b-col>
-                            <b-col v-if="usertype == 1" cols="1">
-                                <button id="parents-1-delete" type="button" style="background-color: #ff8c82; min-width: 80px; min-height: 35px; border: 0px; border-radius: 10px; margin-left: 40px;" @click="parentInfoDelete"> 
-                                    삭제 
-                                </button>
-                            </b-col>
-                        </b-row>
-                    </div>
-                    <div id="parent-info" v-if="parents.length >= 2">
-                        <b-row>
-                            <b-col cols="2"><input style="min-width:120px; max-width:120px; margin-left:30px;"/></b-col>
-                            <b-col cols="3"><input style="min-width:160px; max-width:160px; margin-left:40px;"/></b-col>
-                            <b-col cols="3"><input style="min-width:200px; max-width:200px; margin-left:20px;"/></b-col>
-                            <b-col cols="1">
-                                <button id="parents-2-update" type="button" style="background-color: #d4e3fe; min-width: 80px; min-height: 35px; border: 0px; border-radius: 10px; margin-right: 10px; margin-left:30px;" @click="parentInfoUpdate"> 
-                                    등록 
-                                </button>
-                            </b-col>
-                            <b-col cols="1">
-                                <button id="parents-2-delete" type="button" style="background-color: #ff8c82; min-width: 80px; min-height: 35px; border: 0px; border-radius: 10px; margin-left: 10px; margin-left:40px;" @click="parentInfoDelete"> 
-                                    삭제 
-                                </button>
-                            </b-col>
-                        </b-row>
-                    </div>
-                </div>
-                <button type="button" style="width: 80px; height: 35px; border: 0px; border-radius: 10px; margin-top: 10px; margin-left: 10px;" @click="addForm">추가</button>
-            </div>
+        <div v-if="usertype == 1">
+            <button id="student-info-change" type="button" @click="infoImgChange">수정하기</button>
+            <button id="student-info-recovery" type="button" @click="infoRecovery">되돌리기</button>
         </div>
     </b-form>
   </div>
@@ -92,7 +62,7 @@ import NavBar from "@/components/NavBar.vue";
 import { mapState } from 'vuex'
 
 export default {
-    name: "StudentInfo",
+    name: "MyPage",
     components: {
     NavSideBar,
     NavBar,
@@ -100,196 +70,100 @@ export default {
     data() {
         return {
             data: '',
-            student_id: this.$route.params.id,
+            user_id: this.$route.params.id,
             usertype: 1,
+            name: "",
             student: { ID: 1234, name: '목상원', number: '16', phone: '010-3542-8554', address: '서울시 강남구 테헤란로 212' },
-            image: '',
-            parents: [
-                { ID: 123, student_id: 1234, relation: '어머니', name: '김다정', phone: '010-1234-5678' },
-                { ID: 123, student_id: 1234, relation: '어머니', name: '김다정', phone: '010-1234-5678' },
-            ]
+            image: ''
         }
     },
     mounted() {
         this.setToken();
-        this.getStudentInfo();
+        this.getUserInfo();
     },
     methods: {
         setToken: function () {
             this.$store.dispatch('setToken')
         },
-        getStudentInfo: function () {
+        getUserInfo: function () {
             axios({
                 method: "get",
-                url: `http://i5a205.p.ssafy.io:8000/accounts/info/${this.student_id}`,
+                url: `http://i5a205.p.ssafy.io:8000/accounts/info/${this.user_id}`,
                 headers: this.headers,
             })
             .then((res) => {
                 this.data = Object.assign([], res.data);
                 console.log(this.data);
-                const studentName = document.querySelector('#student-name');
-                const studentNumber = document.querySelector('#student-number');
-                const studentPhone = document.querySelector('#student-phone');
-                const studentAddress = document.querySelector('#student-address');
+                const name = document.querySelector('#name');
+                const username = document.querySelector('#username');
 
-                studentName.value = this.data.name;
-                studentNumber.value = this.data.info.number;
-                studentPhone.value = this.data.phone;
-                studentAddress.value = this.data.info.address;
+                name.value = this.data.name;
+                this.name = this.data.name;
+                username.value = this.data.username;
 
-                this.parents = res.data.parents;
                 this.usertype = res.data.usertype;
-                // console.log("사용자", this.usertype)
-
-                console.log("이미지", res.data.image)
                 this.image = res.data.image;
-
-
-                const parentInfo = document.querySelectorAll('#parent-info');
-
-                console.log(this.data.parents[0]);
-                for (var i = 0; i < this.data.parents.length; i++) {
-                    parentInfo[i].children[0].children[0].children[0].value = this.data.parents[i].relation;
-                    parentInfo[i].children[0].children[1].children[0].value = this.data.parents[i].name;
-                    parentInfo[i].children[0].children[2].children[0].value = this.data.parents[i].phone;
-                }
             })
-                .catch((err) => {
+            .catch((err) => {
                 console.log(err);
-                });
+            });
         },
         // 기존의 정보로 되돌리기
         infoRecovery() {
-            const studentName = document.querySelector('#student-name');
-            const studentNumber = document.querySelector('#student-number');
-            const studentPhone = document.querySelector('#student-phone');
-            const studentAddress = document.querySelector('#student-address');
+            const name = document.querySelector('#name');
+            const username = document.querySelector('#username');
             
-
-            studentName.value = this.data.name;
-            studentNumber.value = this.data.info.number;
-            studentPhone.value = this.data.phone;
-            studentAddress.value = this.data.info.address;
+            name.value = this.data.name;
+            username.value = this.data.username;
             this.image = this.data.image;
         },
-        // 학생 정보 수정 하기
-        infoChange() {
-            const studentName = document.querySelector('#student-name');
-            const studentNumber = document.querySelector('#student-number');
-            const studentPhone = document.querySelector('#student-phone');
-            const studentAddress = document.querySelector('#student-address');
+        // 프로필 이미지 수정 하기
+        infoImgChange() {
+            
+            
+            // var formData = new FormData();
+            
+            // console.log("image",this.image)
+            // formData.append("files", this.image);
+            // formData.append("name", this.name);
+            // for (var i = 0; i < this.image.length; i++) {
+            //   formData.append("files", this.image[i]);
+            // }
+            // console.log("form", formData);
 
-            // POST BODY
-            let body = { name: studentName.value, number: studentNumber.value, phone: studentPhone.value, address: studentAddress.value, image: this.image };
+            this.image = this.$refs.files.files[0];
+            let body = { files: this.image, name: this.name, phone: '010-1234-1234' };
             console.log("body", body);
-            // axios POST
+            // axios Put
             axios({
               method: "put",
-            //   url: `http://127.0.0.1:8000/accounts/info/${this.student_id}/`,
-              url: `http://i5a205.p.ssafy.io:8000/accounts/info/${this.student_id}/`,
+              url: `http://127.0.0.1:8000/accounts/info/${this.user_id}/`,
+            //   url: `http://i5a205.p.ssafy.io:8000/accounts/info/${this.user_id}/`,
               data: body,
-              headers: this.headers,
+            //   data: formData,
+              headers: {
+                  "Authorization": this.headers.Authorization,
+                  "Content-Type": "multipart/form-data"
+              }
             })
               .then(function(){
-                alert('수정되었습니다 :)');
+                alert('프로필 이미지 수정되었습니다 :)');
               })
               .catch(function(err){
                 console.log(err);
               });
+            // this.$router.go();
         },
-        parentInfoDelete(e) {
-            console.log(this.parents[Number(e.target.id[8]) - 1].id)
-            // console.log(e.target.id);
-            // console.log(this.parents[Number(e.target.id[8]) - 1].ID);
-            // console.log(this.parents[Number(e.target.id[8]) - 1].ID);
-            // this.parents.splice(Number(e.target.id[8]) - 1, 1);
-            // axios DELETE
-            // 해당 this.parents[Number(e.target.id[8]) - 1].ID로 parent Info data delete
-            // parents ID -> this.parents[idx].ID
+        upload(e) {
+            let file = e.target.files;
+            let reader = new FileReader();
 
-            axios({
-              method: "delete",
-            //   url: `http://127.0.0.1:8000/accounts/parents/detail/${this.parents[Number(e.target.id[8]) - 1].id}/`,
-              url: `http://i5a205.p.ssafy.io:8000/accounts/parents/detail/${this.parents[Number(e.target.id[8]) - 1].id}/`,
-              headers: this.headers,
-            })
-              .then(function(){
-                alert('삭제되었습니다 :(');
-                this.$router.go();
-              })
-              .catch(function(err){
-                console.log(err);
-              });
-        },
-        parentInfoUpdate(e) {
-            if (e.target.parentElement.parentElement.children[0].children[0].value.length > 0 &&
-                e.target.parentElement.parentElement.children[1].children[0].value.length > 0 &&
-                e.target.parentElement.parentElement.children[2].children[0].value.length > 0) {
-                // 처음 등록하는 경우
-                if(!this.parents || !this.parents[Number(e.target.id[8]) - 1].ID){
-                    // POST
-                    var bodyPost = { student_id: this.parents[Number(e.target.id[8]) - 1].student_id, 
-                    relation: e.target.parentElement.parentElement.children[0].children[0].value,
-                    name: e.target.parentElement.parentElement.children[1].children[0].value,
-                    phone: e.target.parentElement.parentElement.children[2].children[0].value};
-                    console.log(bodyPost);
-                    // POST axios
-                    axios({
-                        method: "post",
-                        // url: `http://127.0.0.1:8000/accounts/parents/${this.student_id}/`,
-                        url: `http://i5a205.p.ssafy.io:8000/accounts/parents/${this.student_id}/`,
-                        data: bodyPost,
-                        headers: this.headers,
-                        })
-                        .then(function(){
-                            alert('등록되었습니다 :)');
-                            this.$router.go();
-                        })
-                        .catch(function(err){
-                            console.log(err);
-                        });
-                }
-                // UPDATE 경우
-                else {
-                    var body = { ID: this.parents[Number(e.target.id[8]) - 1].ID, student_id: this.parents[Number(e.target.id[8]) - 1].student_id, 
-                    relation: e.target.parentElement.parentElement.children[0].children[0].value,
-                    name: e.target.parentElement.parentElement.children[1].children[0].value,
-                    phone: e.target.parentElement.parentElement.children[2].children[0].value};
-                    console.log(this.parents[Number(e.target.id[8]) - 1].ID);
-                    console.log("body", body);
-                    // axis UPDATE
-                    // BODY key -> this.parents[Number(e.target.id[8]) - 1].ID
-                    axios({
-                        method: "put",
-                        // url: `http://127.0.0.1:8000/accounts/parents/detail/${this.parents[Number(e.target.id[8]) - 1].ID}/`,
-                        url: `http://i5a205.p.ssafy.io:8000/accounts/parents/${this.student_id}/`,
-                        data: bodyPost,
-                        headers: this.headers,
-                        })
-                        .then(function(){
-                            alert('수정되었습니다 :)');
-                        })
-                        .catch(function(err){
-                            console.log(err);
-                        });
-
-                    this.parents[Number(e.target.id[8]) - 1].relation = e.target.parentElement.parentElement.children[0].children[0].value;
-                    this.parents[Number(e.target.id[8]) - 1].name = e.target.parentElement.parentElement.children[1].children[0].value;
-                    this.parents[Number(e.target.id[8]) - 1].phone = e.target.parentElement.parentElement.children[2].children[0].value;
-                }
-            }
-            else {
-                alert('빈칸을 채워주세요!');
+            reader.readAsDataURL(file[0]);
+            reader.onload = e => {
+                // console.log(e.target.result);
+                this.image = e.target.result;
             }
         },
-        addForm() {
-            if (this.parents.length <= 1) {
-                this.parents.push({ student_id: this.student.ID, relation: '', name: '', phone: ''});
-            }
-            else {
-                alert('더 이상 추가할 수 없습니다');
-            }
-        }
     },
     computed: {
         ...mapState([

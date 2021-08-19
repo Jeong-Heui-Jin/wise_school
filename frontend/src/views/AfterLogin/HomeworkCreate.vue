@@ -108,6 +108,7 @@ export default {
               headers: { "Content-Type": "multipart/form-data" },
             })
               .then(function (res) {
+                console.log("form ",formData)
                 console.log(res);
                 console.log("SUCCESS!!");
               })
