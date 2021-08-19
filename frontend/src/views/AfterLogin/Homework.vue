@@ -27,12 +27,14 @@
           <b-button
             variant="outline-danger"
             v-if="data.item.isSubmit === '제출하기'"
+            @click="goSubmit(data.item.id)"
           >
             {{ data.item.isSubmit }}</b-button
           >
           <b-button
             variant="outline-primary"
             v-if="data.item.isSubmit === '제출완료'"
+            @click="goHomeworkView(data.item)"
           >
             {{ data.item.isSubmit }}</b-button
           >
@@ -95,6 +97,12 @@ export default {
     setToken: function () {
       this.$store.dispatch("setToken");
     },
+    goSubmit: function (homework_id) {
+      this.$router.push({
+        name: "HomeworkSubmit",
+        params: { id: homework_id },
+      });
+    },
     getHomeworkList: function () {
       axios({
         method: "get",
@@ -131,7 +139,7 @@ export default {
             };
             // console.log("this.now_user.usertype :", this.now_user.usertype);
             if (this.now_user.usertype === 2) {
-              console.log(this.fields);
+              // console.log(this.fields);
               for (let j = 0; j < res.data[i].submithomework_set.length; ++j) {
                 if (
                   res.data[i].submithomework_set[j].student === this.now_user.id
