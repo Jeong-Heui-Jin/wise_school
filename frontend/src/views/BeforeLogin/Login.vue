@@ -110,7 +110,8 @@ export default {
     },
   },
   created: function() {
-    this.isLogin()
+    this.isLogin();
+    console.log(localStorage.getItem('jwt'));
   }
 };
 </script>

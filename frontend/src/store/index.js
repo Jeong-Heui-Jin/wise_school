@@ -15,6 +15,7 @@ export default new Vuex.Store({
     selected_notice: null,
     now_user: null,
     information_homework:null,
+    user_class: null
   },
   mutations: {
     SET_TOKEN: function (state, config) {
@@ -31,7 +32,10 @@ export default new Vuex.Store({
     },
     SELECT_INFO_HOMEWORK:function(state, info_homework){
       state.information_homework = info_homework;
-    }
+    },
+    SET_USER_CLASS: function (state, class_id) {
+      state.user_class = class_id
+    },
   },
   actions: {
     setToken: function ({ commit }) {
@@ -52,7 +56,10 @@ export default new Vuex.Store({
     },
     selectInfoHomework:function({commit}, info_homework){
       commit('SELECT_INFO_HOMEWORK', info_homework);
-    }
+    },
+    setUserClass: function ({ commit }, class_id) {
+      commit('SET_USER_CLASS', class_id)
+    },
   },
   modules: {
   }

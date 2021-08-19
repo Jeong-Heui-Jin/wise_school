@@ -8,10 +8,10 @@
 
     <!-- 전체 Form -->
     <b-form id="student-info-form">
-        <div class="d-flex justify-content-around" style="margin-top: 30px;">
-            <img :src="image" style="margin-left: 30px; max-width: 200px;" alt="학생사진"/>
+        <div class="d-flex justify-content-around" style="margin-top: 180px;">
+            <img :src="image" style="margin-left: 40px; max-width: 260px; max-height: 260px;" alt="프로필 사진"/>
             
-            <div id="student-info-text" style="min-width: 500px; background-color: #fff2d5;  border-radius: 10px; padding: 15px; ">
+            <div id="student-info-text" style="min-width: 500px; max-height: 230px; background-color: #fff2d5; border-radius: 10px; padding: 10px; padding-top: 20px">
                 <div class="d-flex justify-content-between">
                     <p style="margin-top: auto; margin-bottom: auto;">이   름</p>
                     <b-form-input id="name"></b-form-input>
@@ -19,39 +19,43 @@
                 <div class="d-flex justify-content-between">
                     <p style="margin-top: auto; margin-bottom: auto;">I D</p>
                     <b-form-input id="username"></b-form-input>
+                    <button style="font-size:12px; background-color:#d4e3fe;" type="button" @click="passwordChange">비밀번호 변경</button>
                 </div>
-                <!-- <div class="d-flex justify-content-between">
-                    <p style="margin-top: auto; margin-bottom: auto;">학급번호</p>
-                    <b-form-input id="student-number"></b-form-input>
+                <div class="d-flex justify-content-between">
+                    <p style="margin-top: auto; margin-bottom: auto;">담당학급</p>
+                    <b-form-input id="userclass"></b-form-input>
                 </div>
                 <div class="d-flex justify-content-between">
                     <p style="margin-top: auto; margin-bottom: auto;">전화번호</p>
-                    <b-form-input id="student-phone"></b-form-input>
+                    <b-form-input id="phone-number"></b-form-input>
                 </div>
-                <div class="d-flex justify-content-between">
-                    <p style="margin-top: auto; margin-bottom: auto;">주   소</p>
-                    <b-form-input id="student-address"></b-form-input>
-                </div> -->
             </div>
         </div>
-        <!-- 파일 업로드 -->
-        <span id="fileUploadTitle" style="font-size: 20px">사진 변경</span>
-        <p>
-            <input
-                type="file"
-                id="files"
-                ref="files"
-                accept="image/*"
-                v-on:change="upload"
-                enctype="multipart/form-data"
-            />
-        </p>
-        
+    
         <div v-if="usertype == 1">
-            <button id="student-info-change" type="button" @click="infoImgChange">수정하기</button>
-            <button id="student-info-recovery" type="button" @click="infoRecovery">되돌리기</button>
+            <button id="student-info-change" type="button" @click="infoChange">수정하기</button>
+            <button id="student-info-recovery" type="button" @click="infoRecovery">변경취소</button>
         </div>
+
+        <!-- 파일 업로드 -->
+        <span v-if="imgBtnClick==0">
+            <button id="img-change-btn" type="button" @click="updateImgBtn">사진 변경</button>
+        </span>
+        <span v-else>
+            <button id="student-img-change" type="button" @click="infoImgChange">확인</button>
+            <p>
+                <input
+                    type="file"
+                    id="img-button"
+                    ref="files"
+                    accept="image/*"
+                    v-on:change="upload"
+                    enctype="multipart/form-data"
+                />
+            </p>
+        </span>
     </b-form>
+    
   </div>
 </template>
 
@@ -74,7 +78,8 @@ export default {
             usertype: 1,
             name: "",
             student: { ID: 1234, name: '목상원', number: '16', phone: '010-3542-8554', address: '서울시 강남구 테헤란로 212' },
-            image: ''
+            image: '',
+            imgBtnClick: 0
         }
     },
     mounted() {
@@ -93,16 +98,21 @@ export default {
             })
             .then((res) => {
                 this.data = Object.assign([], res.data);
-                console.log(this.data);
+                // console.log(this.data);
                 const name = document.querySelector('#name');
                 const username = document.querySelector('#username');
+                const phone_number = document.querySelector('#phone-number');
 
-                name.value = this.data.name;
-                this.name = this.data.name;
-                username.value = this.data.username;
+                name.value = this.data.info.name;
+                this.name = this.data.info.name;
+                username.value = this.data.info.username;
+                phone_number.value = this.data.info.phone;
 
-                this.usertype = res.data.usertype;
-                this.image = res.data.image;
+                this.usertype = res.data.info.usertype;
+                this.image = res.data.info.image;
+                const userclass = document.querySelector('#userclass');
+                userclass.value = String(res.data.class_num)[0] + "학년 " + String(res.data.class_num)[2] + "반";
+                
             })
             .catch((err) => {
                 console.log(err);
@@ -126,15 +136,12 @@ export default {
             for (var i = 0; i < this.image.length; i++) {
               formData.append("files", this.image[i]);
             }
-            console.log("form", formData);
-
-            this.image = this.$refs.files.files[0];
            
             // axios Put
             axios({
               method: "put",
-              url: `http://127.0.0.1:8000/accounts/info/${this.user_id}/`,
-            //   url: `http://i5a205.p.ssafy.io:8000/accounts/info/${this.user_id}/`,
+            //   url: `http://127.0.0.1:8000/accounts/info/${this.user_id}/`,
+              url: `http://i5a205.p.ssafy.io:8000/accounts/info/${this.user_id}/`,
               data: formData,
               headers: {
                   "Authorization": this.headers.Authorization,
@@ -143,6 +150,7 @@ export default {
             })
               .then(function(){
                 alert('프로필 이미지 수정되었습니다 :)');
+                this.imgBtnClick = 0;
               })
               .catch(function(err){
                 console.log(err);
@@ -159,6 +167,41 @@ export default {
                 this.image = e.target.result;
             }
         },
+        updateImgBtn() {
+            this.imgBtnClick = 1;
+        },
+        infoChange() {  
+            const studentName = document.querySelector('#student-name');
+            const studentNumber = document.querySelector('#student-number');
+            const studentPhone = document.querySelector('#student-phone');
+            const studentAddress = document.querySelector('#student-address');
+
+            // POST BODY
+            let body = { name: studentName.value, number: studentNumber.value, phone: studentPhone.value, address: studentAddress.value };
+            // console.log(body);
+            // axios PUT
+            axios({
+              method: "put",
+            //   url: `http://127.0.0.1:8000/accounts/info/${this.student_id}/`,
+              url: `http://i5a205.p.ssafy.io:8000/accounts/info/${this.user_id}/`,
+              data: body,
+              headers: this.headers,
+            })
+              .then(function(){
+                alert('수정되었습니다 :)');
+              })
+              .catch(function(err){
+                console.log(err);
+              });
+            this.$router.go();
+        },
+        passwordChange() {  
+            const username = document.querySelector('#username');
+            username.value = this.data.username;
+            this.$router.push({ name:'PasswordChange', params:{'user':{username: username.value, id: this.user_id}} })
+        },
+
+
     },
     computed: {
         ...mapState([
@@ -191,8 +234,20 @@ export default {
 
 #student-info-form #student-info-change {
     position: absolute;
-    left: 510px;
-    top: 280px;
+    left: 560px;
+    top: 450px;
+    border: 0px;
+    background-color: #87acf1;
+    min-width: 100px;
+    min-height: 40px;
+    font-size: 20px;
+    border-radius: 10px;
+}
+
+#student-info-form #student-img-change {
+    position: absolute;
+    left: 260px;
+    top: 450px;
     border: 0px;
     background-color: #d4e3fe;
     min-width: 100px;
@@ -201,10 +256,35 @@ export default {
     border-radius: 10px;
 }
 
+#student-info-form #img-change-btn {
+    position: absolute;
+    left: 170px;
+    top: 450px;
+    border: 0px;
+    background-color: #d4e3fe;
+    min-width: 100px;
+    min-height: 40px;
+    font-size: 20px;
+    border-radius: 10px;
+}
+
+#student-info-form #img-button {
+    position: absolute;
+    left: 80px;
+    top: 460px;
+    border: 0px;
+    /* background-color: #d4e3fe; */
+    max-width: 180px;
+    max-height: 40px;
+    font-size: 15px;
+    /* border-radius: 10px; */
+    /* background-color: lightgray; */
+}
+
 #student-info-form #student-info-recovery {
     position: absolute;
-    left: 740px;
-    top: 280px;
+    left: 720px;
+    top: 450px;
     border: 0px;
     background-color: #ff8c82;
     min-width: 100px;

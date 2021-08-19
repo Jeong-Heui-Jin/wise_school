@@ -51,6 +51,7 @@
 <script>
 import axios from 'axios'
 import Logo from "@/components/Logo";
+import { mapState } from 'vuex'
 
 export default {
   name: "PasswordChange",
@@ -62,6 +63,9 @@ export default {
     Logo,
   },
   methods: {
+    setToken: function () {
+      this.$store.dispatch('setToken')
+    },
     changePassword: function () {
 
       if (this.validationNewPassword && this.validationCheckPassword) {
@@ -76,7 +80,12 @@ export default {
         })
         .then(() => {
           alert("비밀번호가 변경되었습니다! 새롭게 로그인해주세요 :)")
-          window.open("/login", "_self");
+          if (localStorage.getItem('jwt')!==null){
+            window.open("/mypage/"+this.$route.params.user.id, "_self");
+          }
+          else {
+            window.open("/login", "_self");
+          }
         })
         .catch(err => {
           alert(err)
@@ -127,9 +136,15 @@ export default {
       }
       return false;
     },
+    ...mapState([
+      'headers'
+    ]),
   },
   created: function() {
     // console.log(this.$route.params.user)
+  },
+  mounted() {
+    this.setToken();
   }
 };
 </script>

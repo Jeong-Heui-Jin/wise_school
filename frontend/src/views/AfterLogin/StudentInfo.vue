@@ -135,16 +135,16 @@ export default {
             })
             .then((res) => {
                 this.data = Object.assign([], res.data);
-                console.log(this.data);
+                // console.log(this.data);
                 const studentName = document.querySelector('#student-name');
                 const studentNumber = document.querySelector('#student-number');
                 const studentPhone = document.querySelector('#student-phone');
                 const studentAddress = document.querySelector('#student-address');
 
-                studentName.value = this.data.name;
-                studentNumber.value = this.data.info.number;
-                studentPhone.value = this.data.phone;
-                studentAddress.value = this.data.info.address;
+                studentName.value = this.data.info.name;
+                studentNumber.value = this.data.info.info.number;
+                studentPhone.value = this.data.info.phone;
+                studentAddress.value = this.data.info.info.address;
 
                 this.parents = res.data.parents;
                 this.usertype = res.data.usertype;
