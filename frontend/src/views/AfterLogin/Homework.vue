@@ -6,9 +6,12 @@
     <h1 id="homeworkTitle">숙제 검사</h1>
 
     <!-- Homework Create Button -->
-    <button id="homeworkCreateBtn" @click="goHomeworkCreate()">
+    <div v-if="now_user==1">
+      <button id="homeworkCreateBtn" @click="goHomeworkCreate()">
       숙제 추가하기
-    </button>
+      </button>
+    </div>
+    
 
     <!-- table/button/pagination div -->
     <div id="homeworkForm">
@@ -215,7 +218,7 @@ export default {
     this.getHomeworkList();
     this.getClassNum();
     // this.usertype = this.now_user.usertype;
-    this.now_user.usertype = 2;
+    // this.now_user.usertype = 2;
   },
 };
 </script>

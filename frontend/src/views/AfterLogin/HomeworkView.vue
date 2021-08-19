@@ -31,18 +31,27 @@
 
       <!-- 취소/수정/삭제 버튼 -->
       <div>
-        <b-modal id="modal-center" centered title="첨부 사진">
-          <img :src="images" style="margin-left: 20px; width: 230px; height: 230px;" alt="숙제 첨부 사진"/>
-          <p>숙제 사진</p>
+        <b-modal id="modal-center" scrollable centered no-fade title="첨부 사진"
+          @ok="handleOk"
+          size="lg"
+        >
+          <form ref="form" style="text-align: center;">
+            <ul>
+              <li v-for="image in images" :key="image">
+                <!-- <img :src="image" class="gallery-image" style="max-width:800px; max-height:800px "> -->
+                <img :src="image">
+              </li>
+            </ul>
+          </form>
         </b-modal>
       </div>
-      <button id="fileBtn" v-b-modal.modal-center>상세보기</button>
-      <button id="cancelBtn" @click="goHomeworkList">닫기</button>
+      <b-button id="fileBtn" v-b-modal.modal-center>상세보기</b-button>
+      <b-button id="cancelBtn" @click="goHomeworkList">닫기</b-button>
       <div v-if="usertype === 1">
         <button id="homeworkChangeBtn" @click="editHomework">수정</button>
         <button id="homeworkDeleteBtn" @click="deleteHomework">삭제</button>
       </div>
-      <button id="submitBtn" @click="goSubmit()">숙제 제출</button>
+      <b-button id="submitBtn" @click="goSubmit()">숙제 제출</b-button>
     </b-form>
   </div>
 </template>
@@ -63,7 +72,7 @@ export default {
     return {
       homework: {},
       usertype: 2,
-      images: []
+      images: [],
     };
   },
   methods: {
@@ -93,8 +102,9 @@ export default {
             "분";
 
             for(let i=0;i<this.homework.homeworkfile_set.length;i++){
-              this.images.append(this.homework.homeworkfile_set[i].image);
+              this.images.push(this.homework.homeworkfile_set[i].image);
             }
+            console.log(this.images);
         })
         .catch((err) => {
           console.log(err);
@@ -128,9 +138,6 @@ export default {
         params: { id: this.homework.id },
       });
       // window.open(`/homework-submit/${this.homework.id}`, "_self");
-    },
-    DetailHomeworkImg() {
-
     }
   },
   computed: {
@@ -145,6 +152,9 @@ export default {
     this.getHomeworkDetail();
     this.usertype = this.now_user.usertype;
   },
+  ready: function () {
+    this.startRotation();
+},
 };
 </script>
 
@@ -302,4 +312,5 @@ export default {
   width: 55px;
   height: 25px;
 }
+
 </style>
