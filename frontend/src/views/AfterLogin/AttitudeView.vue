@@ -48,7 +48,7 @@
         ></b-form-textarea>
       </div>
 
-      <!-- 수정/닫기 버튼 -->
+      <!-- 삭제/수정/닫기 버튼 -->
       <div id="btn-wrapper">
         <button id="btn-delete" @click="deleteAttribute">삭제</button>
         <button id="btn-save" @click="goUpdateAttribute">수정</button>
@@ -69,14 +69,6 @@ export default {
   components: {
     NavSideBar,
     NavBar,
-  },
-  data: function() {
-    return {
-      name: "",
-      number: "",
-      today: "",
-      content: "",
-    };
   },
   methods: {
     setToken: function() {
@@ -126,20 +118,6 @@ export default {
       });
     },
 
-    setDate() {
-      const today = new Date();
-      this.today =
-        today.getFullYear() +
-        "-" +
-        this.zeroPadding(today.getMonth() + 1) +
-        "-" +
-        this.zeroPadding(today.getDate());
-    },
-
-    zeroPadding(num) {
-      return num > 10 ? String(num) : "0" + String(num);
-    },
-
     cancel() {
       this.$router.push({
         name: "AttitudeInfo",
@@ -153,11 +131,7 @@ export default {
   },
 
   created: function() {
-    this.number = Number(this.$route.params.id);
     this.setToken();
-    this.setDate();
-    this.getStudents();
-    console.log(this.selected_attitude);
   },
 };
 </script>
