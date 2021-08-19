@@ -115,6 +115,9 @@ def notice_detail(request, notice_id):
 def notification(request, user_id):
     if request.method == 'GET':
         notifications = get_list_or_404(Notification, student=user_id)
+        user = request.user
+        user.info.is_notification = False
+        user.info.save()
         serializer = NotificationSerializer(notifications, many=True)
         return Response(serializer.data)
     elif request.method == 'DELETE':
