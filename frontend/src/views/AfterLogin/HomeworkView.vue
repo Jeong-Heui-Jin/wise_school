@@ -32,7 +32,6 @@
       <!-- 취소/수정/삭제 버튼 -->
       <div>
         <b-modal id="modal-center" scrollable centered no-fade title="첨부 사진"
-          @ok="handleOk"
           size="lg"
         >
           <form ref="form" style="text-align: center;">
@@ -45,11 +44,11 @@
           </form>
         </b-modal>
       </div>
-      <b-button id="fileBtn" v-b-modal.modal-center>상세보기</b-button>
+      <b-button id="fileBtn" v-b-modal.modal-center>첨부파일</b-button>
       <b-button id="cancelBtn" @click="goHomeworkList">닫기</b-button>
       <div v-if="usertype === 1">
-        <button id="homeworkChangeBtn" @click="editHomework">수정</button>
-        <button id="homeworkDeleteBtn" @click="deleteHomework">삭제</button>
+        <!-- <button id="homeworkChangeBtn" @click="editHomework">수정</button> -->
+        <button id="homeworkDeleteBtn" @click="deleteHomework">삭제하기</button>
       </div>
       <div v-if="usertype===2">
         <b-button id="submitBtn" @click="goSubmit()">숙제 제출</b-button>
@@ -107,7 +106,7 @@ export default {
             for(let i=0;i<this.homework.homeworkfile_set.length;i++){
               this.images.push(this.homework.homeworkfile_set[i].image);
             }
-            console.log(this.images);
+            // console.log(this.images);
         })
         .catch((err) => {
           console.log(err);
@@ -118,7 +117,7 @@ export default {
       this.$router.push({ name: "Homework" });
     },
     editHomework: function () {
-      
+      this.$router.push({ name:'HomeworkChange', params:{'id': (this.selected_homework.id)} })
     },
     deleteHomework: function (event) {
       event.preventDefault();
@@ -305,16 +304,17 @@ export default {
 #homeworkViewForm #homeworkDeleteBtn {
   position: absolute;
   top: 17px;
-  left: 1025px;
+  left: 1000px;
 
   border-radius: 7px;
   border: 0px;
-  color: rgb(190, 140, 32);
-  background-color: rgb(249, 249, 252);
-
+  /* color: rgb(190, 140, 32); */
+  /* background-color: rgb(249, 249, 252); */
+  background-color: #fcb6b6;
+  color: white;
   font-size: 60%;
 
-  width: 55px;
+  width: 70px;
   height: 25px;
 }
 

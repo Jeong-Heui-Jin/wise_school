@@ -6,20 +6,49 @@
 
     <h1 id="homeworkTitle">숙제 수정</h1>
 
-    <!-- 작성 Form -->
     <b-form id="noticeChangeForm">
+      <h1 id="homeworkTitle">숙제 작성</h1>
+
       <!-- 제목 -->
-      <h2 id="title">제목</h2>
-      <b-form-input id="titleName"></b-form-input>
+      <h2 id="sub-title" style="font-size: 32px">제목</h2>
+      <b-form-input
+        id="titleName"
+        v-model="homework.title"
+        :formatter="formatTitle"
+      ></b-form-input>
+
+      <h2 id="endTitle">마감일</h2>
+      <input
+        type="datetime-local"
+        id="endDate"
+        name="trip-start"
+        v-model="homework.end"
+      />
 
       <!-- 내용 -->
-      <h2 id="content">내용</h2>
-      <b-form-textarea id="contentText"></b-form-textarea>
+      <h2 id="content" style="font-size: 32px">내용</h2>
+      <b-form-textarea
+        id="contentText"
+        v-model="homework.content"
+      ></b-form-textarea>
+
+      <!-- 파일 업로드 -->
+      <h2 id="fileUploadTitle" style="font-size: 32px">파일 첨부</h2>
+      <input
+        type="file"
+        id="files"
+        ref="files"
+        accept="image/*"
+        multiple
+        v-on:change="handleFileUpload()"
+        enctype="multipart/form-data"
+      />
 
       <!-- 취소/저장 버튼 -->
       <button id="cancelBtn">취소</button>
-      <button id="saveBtn">저장</button>
+      <button id="saveBtn">수정</button>
     </b-form>
+
   </div>
 </template>
 
