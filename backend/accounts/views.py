@@ -16,6 +16,34 @@ from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
+import boto3
+from datetime import datetime
+from SHS.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
+
+import random
+
+# image
+s3_client = boto3.client(
+    's3',
+    aws_access_key_id     = AWS_ACCESS_KEY_ID,
+    aws_secret_access_key = AWS_SECRET_ACCESS_KEY
+)
+
+profile_images_paths = [
+    'http://dycho96.s3.ap-northeast-2.amazonaws.com/2021-08-1818:05:48.141002.png',
+    'http://dycho96.s3.ap-northeast-2.amazonaws.com/2021-08-1818:04:02.205511.png',
+    'http://dycho96.s3.ap-northeast-2.amazonaws.com/2021-08-1818:05:48.141002.png',
+    'http://dycho96.s3.ap-northeast-2.amazonaws.com/2021-08-1818:10:19.594827.png',
+    'http://dycho96.s3.ap-northeast-2.amazonaws.com/2021-08-1818:10:30.263697.png',
+    'http://dycho96.s3.ap-northeast-2.amazonaws.com/2021-08-1818:10:40.844359.png',
+    'http://dycho96.s3.ap-northeast-2.amazonaws.com/2021-08-1818:10:56.319531.png',
+    'http://dycho96.s3.ap-northeast-2.amazonaws.com/2021-08-1818:11:16.984994.png',
+    'http://dycho96.s3.ap-northeast-2.amazonaws.com/2021-08-1818:11:27.097556.png',
+    'http://dycho96.s3.ap-northeast-2.amazonaws.com/2021-08-1818:11:57.902993.png',
+    'http://dycho96.s3.ap-northeast-2.amazonaws.com/2021-08-1818:12:06.631970.png',
+    'http://dycho96.s3.ap-northeast-2.amazonaws.com/2021-08-1818:12:16.082815.png',
+]
+
 
 
 # 신규 서비스 신청
@@ -96,11 +124,27 @@ def info(request, user_id):
         if serializer.is_valid(raise_exception=True):
             serializer.save()
 
+        # 프로필 image 파일
+        image = request.FILES.getlist('files')[0]
+        image_time = (str(datetime.now())).replace(" ","") # 이미지이름을 시간으로 설정하기 위해 datetime를 사용했다.
+        image_type = (image.content_type).split("/")[1]
+        s3_client.upload_fileobj(
+            image,
+            "dycho96", # 버킷이름
+            image_time+"."+image_type,
+            ExtraArgs = {
+                "ContentType" : image.content_type
+            }
+        )
+        image_url = "http://dycho96.s3.ap-northeast-2.amazonaws.com/"+image_time+"."+image_type  # 업로드된 이미지의 url이 설정값으로 저장됨
+        image_url = image_url.replace(" ","/")
+        
         # user 정보 수정
         user_data = {
             'name' : request.data.get('name'),
             'phone' : request.data.get('phone'),
             'classroom_id' : user.classroom.id,
+            'image': image_url,
         }
         serializer = UserListSerializer(user, data=user_data)
         if serializer.is_valid(raise_exception=True):
@@ -234,6 +278,8 @@ def signup(request):
         
         user.set_password(password)
         user.classroom = room
+        random_num = random.randint(0, 11)
+        user.image = profile_images_paths[random_num]
         user.save()
 
         if user.usertype == 2:

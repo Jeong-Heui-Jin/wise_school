@@ -50,7 +50,6 @@ class ServiceRequestSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-
 class SignupSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     
