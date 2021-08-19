@@ -13,6 +13,7 @@ export default new Vuex.Store({
     headers: null,
     selected_homework: null,
     selected_notice: null,
+    selected_attitude: null,
     now_user: null,
     information_homework:null,
     user_class: null
@@ -26,6 +27,9 @@ export default new Vuex.Store({
     },
     SELECT_NOTICE: function (state, notice) {
       state.selected_notice = notice
+    },
+    SELECT_ATTITUDE: function (state, attitude) {
+      state.selected_attitude = attitude
     },
     SET_USER: function (state, user) {
       state.now_user = user
@@ -50,6 +54,9 @@ export default new Vuex.Store({
     },
     selectNotice: function ({ commit }, notice) {
       commit('SELECT_NOTICE', notice)
+    },
+    selectAttitude: function ({ commit }, attitude) {
+      commit('SELECT_ATTITUDE', attitude)
     },
     setUser: function ({ commit }, user) {
       commit('SET_USER', user)

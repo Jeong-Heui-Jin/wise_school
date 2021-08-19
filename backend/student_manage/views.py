@@ -99,7 +99,7 @@ def note_detail(request, note_id):
         return Response(serializer.data)
     else:
         # 현재 사용자와 작성자가 일치하지 않을 경우 수정/삭제하지 못함.
-        if not request.user.note_set.filter(pk=note_id).exists():
+        if not request.user.wrote_notes.filter(pk=note_id).exists():
             return Response({'detail': '권한이 없습니다.'}, status=status.HTTP_403_FORBIDDEN)
         else:
             if request.method == 'PUT':

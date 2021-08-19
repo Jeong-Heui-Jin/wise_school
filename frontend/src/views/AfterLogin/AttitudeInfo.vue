@@ -6,7 +6,7 @@
     <h1 id="title">{{student.name}} 학생 태도 </h1>
 
     <!-- Homework Create Button -->
-    <button id="btn-attitude-create" @click="createAttitude()">
+    <button id="btn-attitude-create" @click="goAttitudeCreate">
       작성하기
     </button>
 
@@ -18,7 +18,7 @@
         <b-col cols="3">작성일</b-col>
         <b-col cols="2">작성자</b-col>
       </b-row>
-      <b-row class="attitude-wrapper" v-for="attitude in attitudes" :key="attitude.id">
+      <b-row class="attitude-wrapper" v-for="attitude in attitudes" :key="attitude.id" @click="goAttitudeView(attitude)">
         <b-col cols="1">{{attitude.id}}</b-col>
         <b-col cols="6">{{attitude.content}}</b-col>
         <b-col cols="3">{{attitude.date}}</b-col>
@@ -75,7 +75,7 @@ export default {
             }
           });
           attitude.teacher=buf;
-          
+          attitude.name=this.student.name;
         });
 
       })
@@ -145,8 +145,13 @@ export default {
       });
     },
     
-    createAttitude () {
+    goAttitudeCreate () {
       window.open(`/attitude_create/${this.number}`,"_self");
+    },
+
+    goAttitudeView (attitude) {
+      this.$store.dispatch("selectAttitude", attitude);
+      this.$router.push({ name: "AttitudeView" });
     },
   },
   computed: {

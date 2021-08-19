@@ -20,6 +20,8 @@ import Attendance from '../views/AfterLogin/Attendance'
 import Attitude from '../views/AfterLogin/Attitude'
 import AttitudeInfo from '../views/AfterLogin/AttitudeInfo'
 import AttitudeCreate from '../views/AfterLogin/AttitudeCreate'
+import AttitudeView from '../views/AfterLogin/AttitudeView'
+import AttitudeChange from '../views/AfterLogin/AttitudeChange'
 import StudentInfo from '../views/AfterLogin/StudentInfo'
 import TimetableChange from '../views/AfterLogin/TimetableChange'
 import Notification from '../views/AfterLogin/Notification'
@@ -145,6 +147,16 @@ const routes = [
     path: '/attitude_create/:id',
     name: 'AttitudeCreate',
     component: AttitudeCreate,
+  },
+  {
+    path: '/attitude_view',
+    name: 'AttitudeView',
+    component: AttitudeView,
+  },
+  {
+    path: '/attitude_change',
+    name: 'AttitudeChange',
+    component: AttitudeChange,
   },
   {
     path: '/notification',
