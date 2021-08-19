@@ -24,7 +24,16 @@
         @row-clicked="goHomeworkView"
       >
         <template #cell(isSubmit)="data">
-          <b-button variant="outline-primary">
+          <b-button
+            variant="outline-danger"
+            v-if="data.item.isSubmit === '제출하기'"
+          >
+            {{ data.item.isSubmit }}</b-button
+          >
+          <b-button
+            variant="outline-primary"
+            v-if="data.item.isSubmit === '제출완료'"
+          >
             {{ data.item.isSubmit }}</b-button
           >
         </template>
@@ -118,7 +127,7 @@ export default {
                 String(res.data[i].submithomework_count) +
                 "/" +
                 String(this.classNum),
-              isSubmit: false,
+              isSubmit: "제출하기",
             };
             // console.log("this.now_user.usertype :", this.now_user.usertype);
             if (this.now_user.usertype === 2) {
@@ -127,7 +136,7 @@ export default {
                 if (
                   res.data[i].submithomework_set[j].student === this.now_user.id
                 ) {
-                  temp["isSubmit"] = true;
+                  temp["isSubmit"] = "제출완료";
                   break;
                 }
               }
@@ -191,16 +200,14 @@ export default {
     rows() {
       return this.items.length;
     },
-    ...mapState([
-      "headers",
-      "now_user",
-      ]),
+    ...mapState(["headers", "now_user"]),
   },
   created: function () {
     this.setToken();
     this.getHomeworkList();
     this.getClassNum();
     // this.usertype = this.now_user.usertype;
+    this.now_user.usertype = 2;
   },
 };
 </script>
