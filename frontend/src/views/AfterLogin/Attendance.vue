@@ -257,7 +257,6 @@ export default {
         name: student.name,
         day:day,
       }
-      console.log(this.changeInfo)
     },
     statusChangeRequest: function () {
       var newStatus = document.getElementById('combo').value;
@@ -355,7 +354,7 @@ export default {
 }
 
 #attendance .status-change-container {
-  position:absolute;
+  position: fixed;
   top:0;
   left:0;
   width:100%;
