@@ -128,10 +128,11 @@ export default {
         });
     },
     deleteAll: function () {
-      console.log("deleteAll function call");
+      console.log("deleteAll function call", this.userId);
       axios({
         method: "delete",
-        url: `http://127.0.0.1:8000/notice/notification_detail/`,
+        url: `http://i5a205.p.ssafy.io:8000/notice/notification/${this.userId}`,
+        // url: `http://127.0.0.1:8000/notice/notification/${this.userId}`,
         headers: this.headers,
       })
         .then((res) => {
@@ -146,7 +147,8 @@ export default {
       console.log(notification);
       axios({
         method: "delete",
-        url: `http://127.0.0.1:8000/notice/notification_detail/${notification.id}/`,
+        url: `http://i5a205.p.ssafy.io:8000/notice/notification_detail/${notification.id}/`,
+        // url: `http://127.0.0.1:8000/notice/notification_detail/${notification.id}/`,
         headers: this.headers,
       })
         .then((res) => {
@@ -166,8 +168,8 @@ export default {
   },
   created: function () {
     this.setToken();
-    this.getNotifications();
     this.userId = this.now_user.id;
+    this.getNotifications();
   },
 };
 </script>
