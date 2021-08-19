@@ -125,7 +125,7 @@ def info(request, user_id):
             serializer.save()
 
         # 프로필 image 파일
-        image = request.FILES.getlist('files')[0]
+        image = request.FILES['files']
         image_time = (str(datetime.now())).replace(" ","") # 이미지이름을 시간으로 설정하기 위해 datetime를 사용했다.
         image_type = (image.content_type).split("/")[1]
         s3_client.upload_fileobj(
