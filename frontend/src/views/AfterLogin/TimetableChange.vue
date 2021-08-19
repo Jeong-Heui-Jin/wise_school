@@ -29,15 +29,34 @@
       </b-row>
       <!-- 과목 -->
       <b-row class="period" v-for="detail in timetableDetail" :key="detail.time">
-        <b-col class="subject">
+        <b-col class="subject" id="time">
           {{detail.time}}교시
-          <div id="time">{{ detail.start }} ~ {{ detail.end }}</div>
+          <div id="term">
+            시작
+            <input
+            type="time"
+            class="time-picker-start"
+            id="startDate"
+            name="trip-start"
+            v-model="detail.start"
+            /> 
+          </div>
+          <div id="term">
+              종료
+              <input
+                type="time"
+                class='time-picker-end'
+                id="endDate"
+                name="trip-start"
+                v-model="detail.end"
+              />
+          </div>
         </b-col>
-        <b-col class="subject"><b-form-input id="mon" :value="detail.mon" :class="`${detail.time}`"></b-form-input></b-col>
-        <b-col class="subject"><b-form-input id="tue" :value="detail.tue" :class="`${detail.time}`"></b-form-input></b-col>
-        <b-col class="subject"><b-form-input id="wed" :value="detail.wed" :class="`${detail.time}`"></b-form-input></b-col>
-        <b-col class="subject"><b-form-input id="thu" :value="detail.thu" :class="`${detail.time}`"></b-form-input></b-col>
-        <b-col class="subject"><b-form-input id="fri" :value="detail.fri" :class="`${detail.time}`"></b-form-input></b-col>
+        <b-col class="subject"><b-form-input class="subject-input" id="mon" :value="detail.mon" :class="`${detail.time}`"></b-form-input></b-col>
+        <b-col class="subject"><b-form-input class="subject-input" id="tue" :value="detail.tue" :class="`${detail.time}`"></b-form-input></b-col>
+        <b-col class="subject"><b-form-input class="subject-input" id="wed" :value="detail.wed" :class="`${detail.time}`"></b-form-input></b-col>
+        <b-col class="subject"><b-form-input class="subject-input" id="thu" :value="detail.thu" :class="`${detail.time}`"></b-form-input></b-col>
+        <b-col class="subject"><b-form-input class="subject-input" id="fri" :value="detail.fri" :class="`${detail.time}`"></b-form-input></b-col>
         <b-col class="button-field"><button @click="changeTimetableContent" :id="detail.time">수정하기</button></b-col>
       </b-row>
     </b-container>
@@ -104,36 +123,41 @@ export default {
         console.log(e.target.parentElement);
         const day=["mon","tue","wed",'thu','fri'];
         const data={
-          timetable_id: this.timetable.id,
+          start: document.getElementsByClassName('time-picker-start')[Number(e.target.id)-1].value+":00.000000",
+          end: document.getElementsByClassName('time-picker-end')[Number(e.target.id)-1].value+":00.000000",
         };
+        console.log(document.getElementsByClassName('time-picker-start')[Number(e.target.id)-1].value);
+        this.timetableDetail.forEach((detail)=>{
+          if(detail.time=== Number(e.target.id)) {
+            data.targetId=detail.id;
+          }
+        });
         document.getElementsByClassName(e.target.id).forEach((el,idx)=>{
           if(!el.value) {
-            alert("빈 칸이 존재합니다.")
-            return;
+            if(!confirm("빈 칸이 존재합니다. 이대로 수정 할까요?"))
+              return;
           }
           data[`${day[idx]}`] = el.value;
         });
-
 
         // do update
         // axios update -> id === Period
         axios({
             method: "put",
-            url: `http://i5a205.p.ssafy.io:8000/classroom/timetable-detail/${this.timetableDetail[e.target.id-1].id}/`,
+            url: `http://i5a205.p.ssafy.io:8000/classroom/timetable-detail/${data.targetId}/`,
             headers: this.headers,
             data: {
-              id: this.timetableDetail[e.target.id-1].id,
               time: e.target.id,
               mon: data.mon,
               tue: data.tue,
               wed: data.wed,
               thu: data.thu,
               fri: data.fri,
-              // timetable_id: data.timetable_id,
+              end: data.end,
+              start: data.start,
             },
         })
-        .then((res) => {
-            console.log(res.data)
+        .then(() => {
             alert('수정되었습니다.');
         })
         .catch((err) => {
@@ -168,8 +192,7 @@ export default {
             classroom_id:this.now_user.classroom,
           },
       })
-      .then((res) => {
-          console.log(res.data)
+      .then(() => {
           alert('등록되었습니다');
       })
       .catch((err) => {
@@ -345,5 +368,28 @@ export default {
     border-radius: 5px;
     min-width: 80px;
     min-height: 30px;
+}
+
+#timetable-change #time {
+  font-size: 20px;
+  padding: 10px;
+}
+
+#timetable-change .subject-input {
+  font-size: 22px !important;
+  text-align: center;
+}
+
+#timetable-change .subject {
+  font-size: 27px;
+}
+
+#timetable-change #term {
+  font-size: 10px;
+}
+
+#timetable-change .time-picker {
+  width:80% !important;
+  font-size: 10px;
 }
 </style>
