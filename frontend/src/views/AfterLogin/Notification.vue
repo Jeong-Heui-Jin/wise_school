@@ -7,11 +7,10 @@
 
     <div id="notificationForm">
       <div>
-        <button id="notificationBtn" @click="deleteAll()">전체 삭제</button>
+        <button id="notificationBtn" @click="deleteAll">전체 삭제</button>
       </div>
       <!-- 📗📘📔📙📒📕 -->
       <!-- previous version -->
-
       <!-- <b-list-group id="groupPosition">
         <b-list-group-item
           id="textNotification my-table"
@@ -128,7 +127,21 @@ export default {
           console.log(err);
         });
     },
-    deleteAll: function () {},
+    deleteAll: function () {
+      console.log("deleteAll function call");
+      axios({
+        method: "delete",
+        url: `http://127.0.0.1:8000/notice/notification_detail/`,
+        headers: this.headers,
+      })
+        .then((res) => {
+          console.log(res);
+          alert("전체삭제되었습니다!");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     deleteNotification: function (notification) {
       console.log(notification);
       axios({
