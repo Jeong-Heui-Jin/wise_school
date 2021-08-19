@@ -26,11 +26,11 @@
       <b-row class="period" v-for="student in studentAttendances" :key="student.id">
         <div class="w-100"></div>
         <b-col class="subject name">{{student.name}}</b-col>
-        <b-col class="subject" :class="student.mon" @click="statusChange(student.userCode, student.name, student.mon, 0)">{{student.mon}}</b-col>
-        <b-col class="subject" :class="student.tue" @click="statusChange(student.userCode, student.name, student.tue, 1)">{{student.tue}}</b-col>
-        <b-col class="subject" :class="student.wed" @click="statusChange(student.userCode, student.name, student.wed, 2)">{{student.wed}}</b-col>
-        <b-col class="subject" :class="student.thu" @click="statusChange(student.userCode, student.name, student.thu, 3)">{{student.thu}}</b-col>
-        <b-col class="subject" :class="student.fri" @click="statusChange(student.userCode, student.name, student.fri, 4)">{{student.fri}}</b-col>
+        <b-col class="subject" :class="student.mon.status" @click="statusChange(student,0)">{{student.mon.status}}</b-col>
+        <b-col class="subject" :class="student.tue.status" @click="statusChange(student, 1)">{{student.tue.status}}</b-col>
+        <b-col class="subject" :class="student.wed.status" @click="statusChange(student, 2)">{{student.wed.status}}</b-col>
+        <b-col class="subject" :class="student.thu.status" @click="statusChange(student, 3)">{{student.thu.status}}</b-col>
+        <b-col class="subject" :class="student.fri.status" @click="statusChange(student, 4)">{{student.fri.status}}</b-col>
       </b-row>      
     </b-container>
     <div v-if="isChangingStatus" class="status-change-container">
@@ -98,6 +98,7 @@ export default {
       ],
       isChangingStatus:false,
       changeInfo:{},
+      day: ["mon", "tue", "wed", "thu", "fri"],
     }
   },
   methods: {
@@ -116,11 +117,26 @@ export default {
           const studentAttendance = {
             userCode: student.id,
             name: student.name?student.name:"null",
-            mon: "",
-            tue: "",
-            wed: '',
-            thu: '',
-            fri: '',
+            mon: {
+              status:"",
+              attendance_id:"",
+            },
+            tue:{
+              status:"",
+              attendance_id:"",
+            },
+            wed: {
+              status:"",
+              attendance_id:"",
+            },
+            thu:{
+              status:"",
+              attendance_id:"",
+            },
+            fri: {
+              status:"",
+              attendance_id:"",
+            },
           }
           this.studentAttendances.push(studentAttendance)
         })
@@ -148,17 +164,29 @@ export default {
                   this.studentAttendances.forEach((student)=>{
 
                     if(student['userCode'] === attendance.student) {
-                      if(attendance.student===6) {
-                        console.log(attendance)
-                      }
+                    
                       if(attendance.status==="출석") { // 출석은 무조건 반영
-                        student[`${day[i]}`] = attendance.status;
+                        // student[`${day[i]}`] = attendance.status;
+                        // student['attendance_id'] = attendance.id;
+                        student[`${day[i]}`] = {
+                          status: attendance.status,
+                          attendance_id: attendance.id,
+                        }
+                        console.log(attendance)
 
                       } else if (attendance.status==="조퇴") {
-                        student[`${day[i]}`] = attendance.status;
-
-                      } else if (!student[`${day[i]}`]) {
-                        student[`${day[i]}`] = attendance.status;
+                        student[`${day[i]}`] = {
+                          status: attendance.status,
+                          attendance_id: attendance.id,
+                        }
+                        console.log(attendance.id)
+                        console.log(student['attendance_id'])
+                      } else if (!student[`${day[i]}`].status) {
+                        student[`${day[i]}`] = {
+                          status: attendance.status,
+                          attendance_id: attendance.id,
+                        }
+                        console.log(attendance)
 
                       }
                     }
@@ -172,8 +200,8 @@ export default {
           this.studentAttendances.forEach((student)=>{
             const today = new Date().getDay();
             for(var i=0; i<today; i+=1) {
-              if(!student[`${day[i]}`]) {
-                student[`${day[i]}`]="결석";
+              if(!student[`${day[i]}`].status) {
+                student[`${day[i]}`].status="결석";
               }
             }
           });
@@ -220,14 +248,16 @@ export default {
         el.style.color="blue";
       });
     },
-    statusChange: function (id, name, status, day) {
+    statusChange: function (student, day) {
       this.isChangingStatus = true;
       this.changeInfo={
-        student_id: id,
-        status: status,
-        name: name,
+        attendance_id: student[`${this.day[day]}`].attendance_id,
+        student_id: student.userCode,
+        status: student[`${this.day[day]}`].status,
+        name: student.name,
         day:day,
       }
+      console.log(this.changeInfo)
     },
     statusChangeRequest: function () {
       var newStatus = document.getElementById('combo').value;
@@ -240,16 +270,17 @@ export default {
       //   student_id: changeInfo.student_id,
       //   classroom_id: this.now_user.classroom,
       // }
-      console.log()
+      
       const attendanceChange = {
         reason:document.getElementById('status-change-reason').value,
-        id:this.changeInfo.student_id,
-        attendanceId:"",
+        attendance_id:this.changeInfo.attendance_id,
+
       }
-      attendanceChange
+      console.log(attendanceChange)
+      
     //   axios({
     //     method: "post",
-		// 		url: "http://i5a205.p.ssafy.io:8000/student-manage/attendance/",
+		// 		url: "http://i5a205.p.ssafy.io:8000/student-manage/attendance/detail/10/",
 		// 		data: {
     //       status: this.attendanceValue,
     //       student_id: this.now_user.id,
