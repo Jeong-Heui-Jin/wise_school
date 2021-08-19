@@ -26,19 +26,35 @@
       <b-row class="period" v-for="student in studentAttendances" :key="student.id">
         <div class="w-100"></div>
         <b-col class="subject name">{{student.name}}</b-col>
-        <b-col class="subject" :class="student.mon">{{student.mon}}</b-col>
-        <b-col class="subject" :class="student.tue">{{student.tue}}</b-col>
-        <b-col class="subject" :class="student.wed">{{student.wed}}</b-col>
-        <b-col class="subject" :class="student.thu">{{student.thu}}</b-col>
-        <b-col class="subject" :class="student.fri">{{student.fri}}</b-col>
+        <b-col class="subject" :class="student.mon" @click="statusChange(student.userCode, student.name, student.mon, 0)">{{student.mon}}</b-col>
+        <b-col class="subject" :class="student.tue" @click="statusChange(student.userCode, student.name, student.tue, 1)">{{student.tue}}</b-col>
+        <b-col class="subject" :class="student.wed" @click="statusChange(student.userCode, student.name, student.wed, 2)">{{student.wed}}</b-col>
+        <b-col class="subject" :class="student.thu" @click="statusChange(student.userCode, student.name, student.thu, 3)">{{student.thu}}</b-col>
+        <b-col class="subject" :class="student.fri" @click="statusChange(student.userCode, student.name, student.fri, 4)">{{student.fri}}</b-col>
       </b-row>      
     </b-container>
-    <div v-if="isChangingStatus" class="status-change-container" style="position:absolute;top:0;left:0; background-color:black; width:100%; height:100%; z-index: 5; opacity:0.3;">
+    <div v-if="isChangingStatus" class="status-change-container">
+      <div class="status-change-background" @click="closeModal"></div>
       <div class="status-change-wrapper">
         <div class="status-change-title">출결 상태 변경</div>
         <div class="status-change-status">
-          <ul>1</ul>
-          <ul>2</ul>
+          <div>- 학생 이름 : {{changeInfo.name}}</div>
+          <div>- 상태 변경 : {{changeInfo.status}} --->
+            <select class="status-change-combo" id="combo" name="status" >
+              <option value="출석">출석</option>
+              <option value="조퇴">조퇴</option>
+              <option value="지각">지각</option>
+              <option value="결석">결석</option>
+            </select>
+          </div>
+        </div>
+        <div class="status-change-content">
+          * 변경 사유 <div class="btn-save" @click="statusChangeRequest">저장</div>
+          <div>
+            <textarea name="" id="status-change-reason" cols="30" rows="10"></textarea>
+            <div>파일 첨부가 들어갈 자립니당</div>
+            <!-- 파일 첨부좀 넣어주세요 -->
+          </div>
         </div>
       </div>
     </div>
@@ -67,6 +83,7 @@ export default {
         //   date: "18",
         //   day: 2,
         // },
+        // "two":{...
       },
       studentAttendances: [
         // {
@@ -77,9 +94,10 @@ export default {
         //   wed:"결석",
         //   thu:"취업",
         //   fri:"",
-        // },
+        // }, ...
       ],
       isChangingStatus:false,
+      changeInfo:{},
     }
   },
   methods: {
@@ -188,7 +206,7 @@ export default {
     zeroPadding: function (num) {
 			return num < 10 ? "0"+num : String(num);
 		},
-    adjustColor: function () {
+    adjustStatusColor: function () {
       document.getElementsByClassName("결석").forEach((el)=>{
         el.style.color="red";
       });
@@ -201,6 +219,53 @@ export default {
       document.getElementsByClassName("출석").forEach((el)=>{
         el.style.color="blue";
       });
+    },
+    statusChange: function (id, name, status, day) {
+      this.isChangingStatus = true;
+      this.changeInfo={
+        student_id: id,
+        status: status,
+        name: name,
+        day:day,
+      }
+    },
+    statusChangeRequest: function () {
+      var newStatus = document.getElementById('combo').value;
+      if (this.changeInfo.status === newStatus) {
+        alert("출결 상태가 변하지 않았습니다. 다시 선택해 주세요.")
+        return;
+      }
+      // const data={
+      //   status: document.getElementById('combo').value,
+      //   student_id: changeInfo.student_id,
+      //   classroom_id: this.now_user.classroom,
+      // }
+      console.log()
+      const attendanceChange = {
+        reason:document.getElementById('status-change-reason').value,
+        id:this.changeInfo.student_id,
+        attendanceId:"",
+      }
+      attendanceChange
+    //   axios({
+    //     method: "post",
+		// 		url: "http://i5a205.p.ssafy.io:8000/student-manage/attendance/",
+		// 		data: {
+    //       status: this.attendanceValue,
+    //       student_id: this.now_user.id,
+    //       classroom_id: this.now_user.classroom
+    //     },
+		// 		headers: this.headers
+    //   })
+    //     .then((res) => {
+    //       console.log(res)
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    },
+    closeModal: function () {
+      this.isChangingStatus=false;
     },
   },
   computed: {
@@ -216,7 +281,7 @@ export default {
     this.getMembers();
   },
   updated() {
-    this.adjustColor();
+    this.adjustStatusColor();
   }
 }
 </script>
@@ -246,4 +311,94 @@ export default {
 .attendance-wrapper #date {
   font-size: 30px;
 }
+
+#attendance .status-change-container {
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.status-change-container .status-change-background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  opacity: 0.3;
+}
+
+.status-change-container .status-change-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width:500px;
+
+  background-color: white;
+  z-index: 6;
+}
+
+.status-change-wrapper .status-change-title {
+  font-size: 30px;
+  font-weight: bold;
+  text-align: left;
+  margin: 25px;
+}
+
+.status-change-wrapper .status-change-status {
+  display: flex;
+  flex-direction: column;
+  font-size: 24px;
+  text-align: left;
+  margin: 0 25px;
+}
+
+.status-change-status .status-change-combo {
+  width: 200px;
+  text-align-last: center;
+  text-align: center;
+  -ms-text-align-last: center;
+  -moz-text-align-last: center;
+}
+
+.status-change-wrapper .status-change-content {
+  font-size: 20px;
+  text-align: left;
+  margin: 0 25px;
+}
+
+.status-change-content .btn-save {
+  display: inline-block;
+  color:#ffffff;
+  background-color: #003de4;
+  border-radius: 20px;
+  padding: 2px 20px;
+  font-size: 16px;
+}
+
+.status-change-content .btn-save:hover {
+  background-color: #3060e4;
+}
+
+.status-change-content .btn-save:active {
+  background-color: #a3aabd;
+}
+
+.status-change-content textarea {
+  width:100%;
+  resize: none;
+  border: 2px solid #6ce9ff;
+  border-radius: 20px;
+  margin: 10px 0;
+}
+
+.status-change-content textarea:focus {
+  outline: none;
+}
+
 </style>
