@@ -55,6 +55,7 @@ export default {
     setToken: function () {
       this.$store.dispatch("setToken");
     },
+
     getAttitudes:async function () {
       console.log("Attitude")
       await axios({
@@ -82,6 +83,7 @@ export default {
         console.log(err);
       });
     },
+
     async getTeachers () {
       await axios({
         method: "get",
@@ -119,6 +121,7 @@ export default {
         console.log(err);
       });
     },
+
     getMembers: function () {
       axios({
         method: "get",
@@ -140,6 +143,10 @@ export default {
       .catch((err) => {
         console.log(err);
       });
+    },
+    
+    createAttitude () {
+      window.open(`/attitude_create/${this.number}`,"_self");
     },
   },
   computed: {
