@@ -8,5 +8,5 @@ urlpatterns = [
     path('file/<int:notice_id>/', views.noticefile, name='noticefile'),
     path('<int:notice_id>/', views.notice_detail, name='notice_detail'),
     path('notification/<int:user_id>/', views.notification, name='notification'),
-    path('notification/<int:notification_id>/', views.notification_detail, name='notification_detail'),
+    path('notification_detail/<int:notification_id>/', views.notification_detail, name='notification_detail'),
 ]
