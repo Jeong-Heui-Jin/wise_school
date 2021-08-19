@@ -51,7 +51,10 @@
         <button id="homeworkChangeBtn" @click="editHomework">수정</button>
         <button id="homeworkDeleteBtn" @click="deleteHomework">삭제</button>
       </div>
-      <b-button id="submitBtn" @click="goSubmit()">숙제 제출</b-button>
+      <div v-if="usertype===2">
+        <b-button id="submitBtn" @click="goSubmit()">숙제 제출</b-button>
+      </div>
+      
     </b-form>
   </div>
 </template>
@@ -71,7 +74,7 @@ export default {
   data: function () {
     return {
       homework: {},
-      usertype: 2,
+      usertype: 0,
       images: [],
     };
   },
@@ -114,7 +117,9 @@ export default {
       // window.open("/homework", "_self");
       this.$router.push({ name: "Homework" });
     },
-    editHomework: function () {},
+    editHomework: function () {
+      
+    },
     deleteHomework: function (event) {
       event.preventDefault();
       axios({
