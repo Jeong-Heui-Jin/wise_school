@@ -181,15 +181,16 @@ export default {
         infoChange() {  
             const name = document.querySelector('#name');
             const phone_number = document.querySelector('#phone-number');
+            const userclass = document.querySelector('#userclass');
 
             // POST BODY
-            let body = { name: name.value, phone: phone_number.value };
+            let body = { name: name.value, phone: phone_number.value, classroom: userclass.value};
             console.log(body);
             // axios PUT
             axios({
               method: "put",
-              url: `http://127.0.0.1:8000/accounts/info/${this.user_id}/`,
-            //   url: `http://i5a205.p.ssafy.io:8000/accounts/info/${this.user_id}/`,
+            //   url: `http://127.0.0.1:8000/accounts/info/${this.user_id}/`,
+              url: `http://i5a205.p.ssafy.io:8000/accounts/info/${this.user_id}/`,
               data: body,
               headers: this.headers,
             })
@@ -199,7 +200,7 @@ export default {
               .catch(function(err){
                 console.log(err);
               });
-            this.$router.go();
+            // this.$router.go();
         },
         passwordChange() {  
             const username = document.querySelector('#username');

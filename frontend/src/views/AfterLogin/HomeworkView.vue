@@ -36,7 +36,7 @@
           <p>숙제 사진</p>
         </b-modal>
       </div>
-      <button id="fileBtn" v-b-modal.modal-center>보기</button>
+      <button id="fileBtn" v-b-modal.modal-center>상세보기</button>
       <button id="cancelBtn" @click="goHomeworkList">닫기</button>
       <div v-if="usertype === 1">
         <button id="homeworkChangeBtn" @click="editHomework">수정</button>

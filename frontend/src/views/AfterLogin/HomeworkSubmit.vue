@@ -29,7 +29,7 @@
 
       <!-- 취소/저장 버튼 -->
       <button id="saveBtn" @click="homeworkSubmit">저장</button>
-      <button id="cancelBtn">취소</button>
+      <button id="cancelBtn" @click="goHomeworkList">취소</button>
     </b-form>
   </div>
 </template>
@@ -102,6 +102,10 @@ export default {
     },
     handleFileUpload() {
       this.files = this.$refs.files.files;
+    },
+    goHomeworkList: function () {
+      // window.open("/homework", "_self");
+      this.$router.push({ name: "Homework" });
     },
   },
   computed: {
