@@ -43,7 +43,7 @@
         <template #cell(content)="data">
           <div id="textNotification">
             <a id="alignLeft">{{ data.item.content }}</a
-            ><button id="deleteBtn" @click="deleteNotification(notification)">
+            ><button id="deleteBtn" @click="deleteNotification(data.item)">
               삭제
             </button>
           </div>
@@ -133,8 +133,7 @@ export default {
       console.log(notification);
       axios({
         method: "delete",
-        url: `http://i5a205.p.ssafy.io:8000/notice/notification/${notification.id}/`,
-        // url: `http://127.0.0.1:8000/notice/notification/${notification.id}/`,
+        url: `http://127.0.0.1:8000/notice/notification_detail/${notification.id}/`,
         headers: this.headers,
       })
         .then((res) => {
