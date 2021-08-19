@@ -10,7 +10,7 @@
       작성하기
     </button>
 
-    <b-container id="attitude-container">
+    <b-container id="attitude-container" v-if="attitudes.length>0">
       <!-- 요일 -->
       <b-row class="attitude-title" >
         <b-col cols="1">번호</b-col>
@@ -25,6 +25,7 @@
         <b-col cols="2">{{attitude.teacher}}</b-col>
       </b-row>
     </b-container>
+    <div id="attitude-container" v-else>아직 작성된 내용이 없습니다.</div>
   </div>
 </template>
 
