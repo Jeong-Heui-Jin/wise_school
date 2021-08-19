@@ -57,7 +57,10 @@
         <b-col class="subject"><b-form-input class="subject-input" id="wed" :value="detail.wed" :class="`${detail.time}`"></b-form-input></b-col>
         <b-col class="subject"><b-form-input class="subject-input" id="thu" :value="detail.thu" :class="`${detail.time}`"></b-form-input></b-col>
         <b-col class="subject"><b-form-input class="subject-input" id="fri" :value="detail.fri" :class="`${detail.time}`"></b-form-input></b-col>
-        <b-col class="button-field"><button @click="changeTimetableContent" :id="detail.time">수정하기</button></b-col>
+        <b-col class="button-field">
+          <button class="btn-update" v-if="!detail.isCreated" @click="changeTimetableContent" :id="detail.time">수정하기</button>
+          <div v-else style="text-align:center;font-size:12px; background-color: #c4f778; border-radius:20px;">새 시간표</div>
+        </b-col>
       </b-row>
     </b-container>
     
@@ -66,7 +69,9 @@
       <br/>
       <button style="background-color: #f8fadb" @click="addTimetable">추가하기</button>
         <br/>
-      <button style="background-color: #ff8c82" @click="deleteTimeTable">삭제하기</button>
+      <button style="background-color: #ff8c82" @click="deleteTimetable">삭제하기</button>
+        <br/>
+      <button v-if="isNewTableCreated" style="background-color: #9cfc0c" @click="requestAddTimetable">적용하기</button>
     </div>
   </div>
 </template>
@@ -87,11 +92,19 @@ export default {
     return {
       idx: 1,
       timetable: { Title: '1학기 시간표' },
+      day:[
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+      ],
       // 오름 차순 정렬 가정
       timetableDetail : [
         {Period : '1', Monday: '국어', Tuesday: '체육', Wednesday: '영어', Thursday: '사회', Friday: '수학'},
         {Period : '2', Monday: '수학', Tuesday: '영어', Wednesday: '체육', Thursday: '국어', Friday: '과학'},
       ],
+      isNewTableCreated:false,
     }
   },
   mounted() {
@@ -165,19 +178,30 @@ export default {
         });
     },
     // 시간표 삭제하기 버튼 함수
-    deleteTimetable: function () {
-      // axios({
-      //   method: "get",
-      //   url: 'http://127.0.0.1:8000/classroom/timetable/',
-      //   // url: 'http://i5a205.p.ssafy.io:8000/classroom/timetable/',
-      //   headers: this.headers,
-      // })
-      //   .then((res) => {
-      //     console.log(res.data)
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   });
+    deleteTimetable () {
+      if(!confirm("정말로 마지막 수업시간을 삭제하시곘습니까?")){
+        return;
+      }
+      const last = this.timetableDetail.length;
+      var lastTable=0;
+      this.timetableDetail.forEach((detail)=>{
+        if(Number(detail.time)===last) {
+          lastTable = detail
+        }
+      });
+
+      axios({
+        method: "delete",
+        url: `http://i5a205.p.ssafy.io:8000/classroom/timetable-detail/${lastTable.id}/`,
+        headers: this.headers,
+      })
+        .then(() => {
+          this.timetableDetail = this.timetableDetail.slice(0,lastTable.time-1)
+          alert("마지막 수업시간이 삭제되었습니다.");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
 
     // 시간표 제목 바꾸기 버튼 함수
@@ -201,35 +225,37 @@ export default {
     },
     // 시간표 한 줄 추가
     addTimetable() {
-        this.timetableDetail.push({
-          id:1,
-          mon:"1",
-          tue:"1",
-          wed:'1',
-          thu:'1',
-          fri:'1',
-          start:"1",
-          end:"1",
-          time:`${this.timetableDetail.length+1}`,
-        })
-        // const timetableBody = document.getElementsByClassName(this.timetableDetail.length+'-class');
-        // console.log(timetableBody[0].children[1].children[0].value.length);
+      const last = this.timetableDetail[this.timetableDetail.length-1];
+      this.timetableDetail.push({
+        isCreated:true,
+        mon:"",
+        tue:"",
+        wed:'',
+        thu:'',
+        fri:'',
+        start:last.end,
+        end:last.end,
+        time:`${+(last.time)+1}`,
+      })
+      this.isNewTableCreated=true;
+      // const timetableBody = document.getElementsByClassName(this.timetableDetail.length+'-class');
+      // console.log(timetableBody[0].children[1].children[0].value.length);
 
-        // if (timetableBody[0].children[1].children[0].value.length > 0 &&
-        //     timetableBody[0].children[2].children[0].value.length > 0 &&
-        //     timetableBody[0].children[3].children[0].value.length > 0 &&
-        //     timetableBody[0].children[4].children[0].value.length > 0 &&
-        //     timetableBody[0].children[5].children[0].value.length > 0) {
-        //     if (this.timetableDetail.length <= 5) {
-        //         this.timetableDetail.push({Period: this.timetableDetail.length + 1, Monday: '', Tuesday: '', Wednesday: '', Thursday: '', Friday: ''});
-        //     }
-        //     else {
-        //         alert('더 이상 추가할 수 없습니다');
-        //     }
-        // }
-        // else {
-        //     alert('빈칸을 채워주세요');
-        // }
+      // if (timetableBody[0].children[1].children[0].value.length > 0 &&
+      //     timetableBody[0].children[2].children[0].value.length > 0 &&
+      //     timetableBody[0].children[3].children[0].value.length > 0 &&
+      //     timetableBody[0].children[4].children[0].value.length > 0 &&
+      //     timetableBody[0].children[5].children[0].value.length > 0) {
+      //     if (this.timetableDetail.length <= 5) {
+      //         this.timetableDetail.push({Period: this.timetableDetail.length + 1, Monday: '', Tuesday: '', Wednesday: '', Thursday: '', Friday: ''});
+      //     }
+      //     else {
+      //         alert('더 이상 추가할 수 없습니다');
+      //     }
+      // }
+      // else {
+      //     alert('빈칸을 채워주세요');
+      // }
     },
 
     getTimetable: function () {
@@ -255,6 +281,64 @@ export default {
           console.log(err);
         });
     },
+
+    requestAddTimetable () {
+      const newTimes = [];
+      var isBlank=false;  // 빈 시간표 생성 시 사용자에게 확인
+      var isOk = true;   // 통신 수행 결과
+      // 생성된 시간표 검색
+      this.timetableDetail.forEach((detail)=>{
+        if(detail.isCreated) {
+          newTimes.push(detail.time);
+        }
+      });
+
+      // 생성된 시간표 DB에 저장
+      newTimes.forEach(async (newTime)=>{        
+        const subjects = document.getElementsByClassName(`${newTime}`); // 해당 교시의 DOM요소를 가져옴
+        const data={                                                    // 쿼리에 사용할 데이터
+          time: newTime,
+          start: document.getElementsByClassName('time-picker-start')[Number(newTime)-1].value+":00.000000",
+          end: document.getElementsByClassName('time-picker-end')[Number(newTime)-1].value+":00.000000",
+        };
+        
+        subjects.forEach((el,idx)=>{
+          if(!el.value) {
+            isBlank=true;
+          }
+          data[`${this.day[idx]}`] = el.value; // 순서대로 월, 화, 수, 목, 금에 매핑
+        });
+
+        if(isBlank &&  !confirm(`${newTime}교시에 빈 칸이 존재합니다. 이대로 수정 할까요?`)) // 사용자에게 최종 확인.
+          return;
+
+        // do create
+        await axios({
+            method: "post",
+            url: `http://i5a205.p.ssafy.io:8000/classroom/timetable/`,
+            headers: this.headers,
+            data: data,
+        })
+        .then((res) => {
+            console.log(res.data)
+            this.timetableDetail[Number(newTime)-1].isCreated=false;
+        })
+        .catch((err) => {
+            console.log(err);
+            isOk=false;
+        });
+
+      }); 
+
+      if(isOk) {
+        alert("시간표가 정상적으로 추가되었습니다.");
+        this.isNewTableCreated=false;
+      } else {
+        alert("시간표 변경 실패.")
+      }
+
+      this.getTimetable();
+    }
   },
   computed: {
       ...mapState([
