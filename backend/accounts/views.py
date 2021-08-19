@@ -6,7 +6,11 @@ from django.shortcuts import get_object_or_404, get_list_or_404
 from rest_framework import serializers, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+<<<<<<< HEAD
 from .serializers import ParentSerializer, StudentInfoSerializer, UserSerializer, UserListSerializer, ServiceRequestSerializer, SignupSerializer, StudentInfoSerializer, UserImgSerializer
+=======
+from .serializers import UserImageChangeSerializer, ParentSerializer, StudentInfoSerializer, UserSerializer, UserListSerializer, ServiceRequestSerializer, SignupSerializer, StudentInfoSerializer
+>>>>>>> profile
 from classroom.serializers import ClassroomSerializer
 from django.contrib.auth import get_user_model
 from django.contrib.auth import update_session_auth_hash
@@ -103,10 +107,40 @@ def profile(request):
     return Response(serializer.data)
 
 
+@api_view(['PUT',])
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
+def image_change(request, user_id):
+    user = get_object_or_404(get_user_model(), pk=user_id)
+
+    # 프로필 image 파일
+    image = request.FILES['files']
+    image_time = (str(datetime.now())).replace(" ","") # 이미지이름을 시간으로 설정하기 위해 datetime를 사용했다.
+    image_type = (image.content_type).split("/")[1]
+    s3_client.upload_fileobj(
+        image,
+        "dycho96", # 버킷이름
+        image_time+"."+image_type,
+        ExtraArgs = {
+            "ContentType" : image.content_type
+        }
+    )
+    image_url = "http://dycho96.s3.ap-northeast-2.amazonaws.com/"+image_time+"."+image_type  # 업로드된 이미지의 url이 설정값으로 저장됨
+    image_url = image_url.replace(" ","/")
+
+    data = {
+        'image': image_url,
+    }
+    serializer = UserImageChangeSerializer(user, data=data)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save()
+        return Response(serializer.data)
+
+
 # 해당 사용자의 정보 조회/수정/삭제
 @api_view(['GET', 'PUT','DELETE',])
-# @authentication_classes([JSONWebTokenAuthentication])
-# @permission_classes([IsAuthenticated])
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
 def info(request, user_id):
     user = get_object_or_404(User, pk=user_id)
     if request.method == 'GET':
@@ -129,25 +163,19 @@ def info(request, user_id):
             serializer.save()
 
         # 프로필 image 파일
-        image_url = user.image
-        if (request.FILES.getlist('files')):
-            image = request.FILES.getlist('files')[0]
-            image_time = (str(datetime.now())).replace(" ","") # 이미지이름을 시간으로 설정하기 위해 datetime를 사용했다.
-            image_type = (image.content_type).split("/")[1]
-            s3_client.upload_fileobj(
-                image,
-                "dycho96", # 버킷이름
-                image_time+"."+image_type,
-                ExtraArgs = {
-                    "ContentType" : image.content_type
-                }
-            )
-            image_url = image_time+"."+image_type  # 업로드된 이미지의 url이 설정값으로 저장됨
-            image_url = image_url.replace(" ","/")
-            serializer = UserImgSerializer(user, data=image_url)
-            if serializer.is_valid(raise_exception=True):
-                serializer.save(image=image_url)
-                return Response(serializer.data)
+        # image = request.FILES['files']
+        # image_time = (str(datetime.now())).replace(" ","") # 이미지이름을 시간으로 설정하기 위해 datetime를 사용했다.
+        # image_type = (image.content_type).split("/")[1]
+        # s3_client.upload_fileobj(
+        #     image,
+        #     "dycho96", # 버킷이름
+        #     image_time+"."+image_type,
+        #     ExtraArgs = {
+        #         "ContentType" : image.content_type
+        #     }
+        # )
+        # image_url = "http://dycho96.s3.ap-northeast-2.amazonaws.com/"+image_time+"."+image_type  # 업로드된 이미지의 url이 설정값으로 저장됨
+        # image_url = image_url.replace(" ","/")
         
         # user 정보 수정
         user_data = {
