@@ -6,7 +6,7 @@
 
     <!-- 작성 Form -->
     <b-form id="noticeViewForm">
-      <h1 id="noticeTitle">공지 보기</h1>
+      <h1 id="noticeViewTitle">공지 보기</h1>
       <!-- 제목 -->
       <h2 id="sub-title">제목</h2>
       <b-form-input readonly id="titleName" v-model="notice.title">{{
@@ -90,7 +90,7 @@ export default {
           console.log(err);
         });
     },
-    goNotice: function() {
+    goNotice: function () {
       window.open("/notice", "_self");
     },
   },
@@ -99,7 +99,7 @@ export default {
   },
   created: function () {
     this.setToken();
-    this.notice = this.selected_notice
+    this.notice = this.selected_notice;
   },
 };
 </script>
@@ -120,10 +120,12 @@ export default {
   font-size: 160%;
 }
 
-#noticeViewForm #noticeTitle {
-  position: absolute;
-  top: -92px;
-  left: -20px;
+#noticeViewForm #noticeViewTitle {
+  position: fixed;
+  top: 10px;
+  left: 120px;
+  margin-left: 220px;
+  margin-top: 20px;
 }
 
 #noticeViewForm #sub-title {

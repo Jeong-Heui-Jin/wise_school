@@ -6,7 +6,7 @@
 
     <!-- 작성 Form -->
     <b-form id="noticeCreateForm">
-      <h1 id="homeworkTitle">숙제 제출</h1>
+      <h1 id="homeworkSubmitTitle">숙제 제출</h1>
 
       <!-- 내용 -->
       <h2 id="content" style="font-size: 32px">내용</h2>
@@ -129,10 +129,12 @@ export default {
   font-size: 160%;
 }
 
-#noticeCreateForm #homeworkTitle {
-  position: absolute;
-  top: -92px;
-  left: -20px;
+#noticeCreateForm #homeworkSubmitTitle {
+  position: fixed;
+  top: 10px;
+  left: 120px;
+  margin-left: 220px;
+  margin-top: 20px;
 }
 
 #noticeCreateForm #sub-title {

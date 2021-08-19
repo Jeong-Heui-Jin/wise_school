@@ -213,11 +213,6 @@ export default {
   text-decoration: underline;
 }
 
-#noticeTitle {
-  position: absolute;
-  left: 22%;
-}
-
 #noticeForm {
   position: fixed;
   left: 400px;
@@ -228,6 +223,14 @@ export default {
   border-radius: 10px;
   /* padding: 100; */
   /* background-color: white; */
+}
+
+#noticeForm #noticeTitle {
+  position: fixed;
+  top: 10px;
+  left: 120px;
+  margin-left: 220px;
+  margin-top: 20px;
 }
 
 #noticeForm #noticeTable {
