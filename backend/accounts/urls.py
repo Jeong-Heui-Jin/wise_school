@@ -24,6 +24,7 @@ urlpatterns = [
     path('teachers/', views.teachers, name='teachers'),   # 전체 선생님 목록
     path('students/', views.students, name='students'),   # 전체 학생 목록
     path('signup/', views.signup, name='signup'),
+    path('image-change/<int:user_id>/', views.image_change, name='image_change'),
 
     # path('create-students/<int:school_id>/', views.create_students),   # 학생 계정 생성 (서비스측)
     # path('create-teachers/<int:school_id>/', views.create_teachers),   # 선생님 계정 생성 (서비스측)

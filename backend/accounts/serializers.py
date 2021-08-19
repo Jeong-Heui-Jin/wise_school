@@ -43,6 +43,15 @@ class UserListSerializer(serializers.ModelSerializer):
         # fields = '__all__'
 
 
+# 관리자 페이지에서 선생님/학생 목록 불러올 때 사용
+class UserImageChangeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('image',)
+        # read_only_fields = ('image',)
+
+
 class ServiceRequestSerializer(serializers.ModelSerializer):
 
     class Meta:
