@@ -6,7 +6,7 @@
     <h1 id="title">우리반 친구들</h1>
 
     <div id="teacher" class="d-flex">
-      <img id="teacher-img" src="@/assets/owl.png" alt="프로필" />
+      <img :src="teacher.image" id="teacher-img" alt="프로필" />
       <div id="teacher-form">
         <h3 id="class-num" style="font-size: 24px">{{ teacher.class }}</h3>
         <div class="d-flex">
@@ -40,6 +40,7 @@ export default {
         name: "유재석",
         number: "02-123-4567",
         class: "2학년 2반",
+        image:''
       },
       students: [],
       usertype: 2,
@@ -65,6 +66,7 @@ export default {
           console.log(res.data);
           this.teacher.name = res.data.teacher.name
           this.teacher.number = res.data.teacher.phone
+          this.teacher.image = res.data.teacher.image
           this.teacher.class = String(res.data.classroom.grade)[0] + "학년 " + String(res.data.classroom.grade)[2] + "반"
 
           this.students = Object.assign([], res.data.students);

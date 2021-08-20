@@ -30,10 +30,10 @@
                 </div>
             </div>
         </div>
-        <div v-if="usertype === 1">
+        <!-- <div v-if="usertype === 1"> -->
             <button id="student-info-change" type="button" @click="infoChange">수정하기</button>
             <button id="student-info-recovery" type="button" @click="infoRecovery">되돌리기</button>
-        </div>
+        <!-- </div> -->
         <!-- 파일 업로드 -->
         <span v-if="imgBtnClick==0">
             <button id="img-change-btn" type="button" @click="updateImgBtn">사진 변경</button>
@@ -120,7 +120,7 @@ export default {
         return {
             data: '',
             student_id: this.$route.params.id,
-            usertype: 1,
+            usertype: 0,
             student: { ID: 1234, name: '목상원', number: '16', phone: '010-3542-8554', address: '서울시 강남구 테헤란로 212' },
             parents: [
                 { ID: 123, student_id: 1234, relation: '어머니', name: '김다정', phone: '010-1234-5678' },
