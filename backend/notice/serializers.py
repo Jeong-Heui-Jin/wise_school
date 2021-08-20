@@ -22,12 +22,11 @@ class NoticeSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('classroom', 'teacher',)
 
-class NoticeFileSerializer(serializers.ModelSerializer):
+# class NoticeFileSerializer(serializers.ModelSerializer):
 
-    class Meta:
-        model = NoticeFile
-        fields = ('image', 'homework',)
-        # read_only_fields = ('homework',)
+#     class Meta:
+#         model = NoticeFile
+#         fields = ('image', 'notice',)
 
 class NoticeListSerializer(serializers.ModelSerializer):
     noticefile_set = NoticeFileSerializer(many=True, read_only=True)
