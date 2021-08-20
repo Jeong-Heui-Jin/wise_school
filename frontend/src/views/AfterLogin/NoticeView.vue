@@ -116,10 +116,11 @@ export default {
       this.$router.push({ name: "Notice" });
     },
     deleteNotice: function (e) {
+      console.log(this.notice.id)
       e.preventDefault();
       axios({
         method: "delete",
-        url: `http://i5a205.p.ssafy.io:8000/notice/detail/${this.notice.id}/`,
+        url: `http://i5a205.p.ssafy.io:8000/notice/${this.notice.id}/`,
         headers: this.headers,
       })
         .then((res) => {
