@@ -17,7 +17,7 @@
           전화 번호 : {{ teacher.number }}
         </h3>
       </div>
-      <button id="teacher-button" href="#">메시지 보내기</button>
+      <!-- <button id="teacher-button" href="#">메시지 보내기</button> -->
     </div>
     <div
       id="content"
@@ -31,16 +31,6 @@ import axios from "axios";
 import NavSideBar from '@/components/NavSideBar.vue';
 import NavBar from "@/components/NavBar.vue";
 import { mapState } from 'vuex'
-import Whale from "@/assets/whale.png";
-import Beaver from "@/assets/beaver.png";
-import Cat from "@/assets/cat.png";
-import Elephant from "@/assets/elephant.png";
-import Frog from "@/assets/frog.png";
-import Koala from "@/assets/koala.png";
-// import Owl from '@/assets/owl.png'
-import Shark from "@/assets/shark.png";
-import Sheep from "@/assets/sheep.png";
-import Squirrel from "@/assets/squirrel.png";
 
 export default {
   name: "Class",
@@ -84,25 +74,7 @@ export default {
           .map((li) => {
             var img;
 
-            if (Number(li.id) % 9 === 0) {
-              img = Whale;
-            } else if (Number(li.id) % 9 === 1) {
-              img = Beaver;
-            } else if (Number(li.id) % 9 === 2) {
-              img = Cat;
-            } else if (Number(li.id) % 9 === 3) {
-              img = Elephant;
-            } else if (Number(li.id) % 9 === 4) {
-              img = Frog;
-            } else if (Number(li.id) % 9 === 5) {
-              img = Koala;
-            } else if (Number(li.id) % 9 === 6) {
-              img = Shark;
-            } else if (Number(li.id) % 9 === 7) {
-              img = Sheep;
-            } else {
-              img = Squirrel;
-            }
+            img = li.image;
 
             if (this.usertype == 1) {
               return `
@@ -110,9 +82,9 @@ export default {
                 <h3>${li.name}</h3>
                 <img id="img" src=${img} alt="프로필"/>
                 <br/>
-                <div class="d-flex" id="button-field">
+                <div class="d-flex" id="button-field" style="text-align: center">
                   <button onclick="window.open('/student_info/${li.id}', '_self')" id="student-button">학생정보</button>
-                  <button href="#" id="message-button">메시지 보내기</button>
+                  <!-- <button href="#" id="message-button">메시지 보내기</button> -->
                 </div>
               </div>`;
             } else {
@@ -122,7 +94,7 @@ export default {
                 <img id="img" src=${img} alt="프로필"/>
                 <br/>
                 <div class="d-flex" id="button-field">
-                  <button href="#" id="message-button" style="margin-left:43px;">메시지 보내기</button>
+                  <!--<button href="#" id="message-button" style="margin-left:43px;">메시지 보내기</button> -->
                 </div>
               </div>`;
             }
@@ -248,10 +220,11 @@ export default {
 }
 
 #class #student-button {
+  position: absolute;
   border-radius: 10px;
   min-width: 60px;
   min-height: 30px;
   border: 0;
-  margin-left: 12px;
+  margin-left: 60px;
 }
 </style>

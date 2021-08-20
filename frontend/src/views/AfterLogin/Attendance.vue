@@ -39,7 +39,7 @@
         <div class="status-change-title">출결 상태 변경</div>
         <div class="status-change-status">
           <div>- 학생 이름 : {{changeInfo.name}}</div>
-          <div>- 상태 변경 : {{changeInfo.status}} --->
+          <div>- 상태 변경 : <span style="color:blue; font-size:30px">{{changeInfo.status}}</span> --->
             <select class="status-change-combo" id="combo" name="status" >
               <option value="출석">출석</option>
               <option value="조퇴">조퇴</option>
@@ -48,13 +48,12 @@
             </select>
           </div>
         </div>
-        <div class="status-change-content">
-          * 변경 사유 <div class="btn-save" @click="statusChangeRequest">저장</div>
-          <div>
+        <div class="status-change-content" style="text-align: center; padding:10px" >
+          <div class="btn-save" @click="statusChangeRequest">저장</div>
+          <!-- <div>
             <textarea name="" id="status-change-reason" cols="30" rows="10"></textarea>
-            <div>파일 첨부가 들어갈 자립니당</div>
-            <!-- 파일 첨부좀 넣어주세요 -->
-          </div>
+            
+          </div> -->
         </div>
       </div>
     </div>
@@ -259,34 +258,32 @@ export default {
       }
     },
     statusChangeRequest: function () {
-      var newStatus = document.getElementById('combo').value;
+      var newStatus = document.querySelector('#combo').value;
+
       if (this.changeInfo.status === newStatus) {
         alert("출결 상태가 변하지 않았습니다. 다시 선택해 주세요.")
         return;
       }
+      console.log(123, this.changeInfo)
 
       axios({
         method: "PUT",
         url: `http://i5a205.p.ssafy.io:8000/student-manage/attendance/detail/${this.changeInfo.attendance_id}/`,
         data: {
-          status: newStatus,
+          status: newStatus
         },
         headers: this.headers
       })
       .then((res) => {
         console.log(res)
         this.changeInfo.student[`${this.day[this.changeInfo.day]}`].status=newStatus;
-        alert("수정에 성공했습니다.")
+        alert("수정에 성공했습니다.");
       })
       .catch((err) => {
         console.log(err);
       });
+      this.$router.go();
       
-      const attendanceChangeDetail = {
-        reason:document.getElementById('status-change-reason').value,
-        attendance_id:this.changeInfo.attendance_id,
-      }
-      console.log(attendanceChangeDetail)
       
     //   axios({
     //     method: "post",
@@ -420,6 +417,7 @@ export default {
   border-radius: 20px;
   padding: 2px 20px;
   font-size: 16px;
+  
 }
 
 .status-change-content .btn-save:hover {
