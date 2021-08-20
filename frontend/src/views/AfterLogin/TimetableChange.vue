@@ -246,7 +246,7 @@ export default {
           thu:'',
           fri:'',
           start:"09:00",
-          end:"09:50",
+          end:"09:40",
           time:1,
         })
       }

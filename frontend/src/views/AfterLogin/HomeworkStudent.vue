@@ -17,7 +17,7 @@
         <textarea readonly id="homework-content-text" v-model="selected_submited_homework.content"></textarea>
       </div>
       <div id="homework-file-wrapper" v-if="selected_submited_homework.submithomeworkfile_set">
-        <img style="height:300px;width:600px; margin:10px; background-color:white;" :src="selected_submited_homework.submithomeworkfile_set[0].image" alt="">
+        <!-- <img style="height:300px;width:600px; margin:10px; background-color:white;" :src="selected_submited_homework.submithomeworkfile_set[0].image" alt=""> -->
       </div>
 
       <button id="btn-cancel" @click="goHomeworkStatus">닫기</button>
