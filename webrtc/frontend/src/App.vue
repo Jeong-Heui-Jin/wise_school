@@ -789,14 +789,14 @@ export default {
 		document.createElement("img").src = "../public/resources/images/circlesqure2.png"	// 이미지 preload
 		document.createElement("img").src = "../public/resources/images/mute.png"	// 이미지 preload
 		document.createElement("img").src = "../public/resources/images/unmute.png"	// 이미지 preload
-		document.createElement("img").src = "../public/resources/images/hand_up_lime.png"	// 이미지 preload
-		document.createElement("img").src = "../public/resources/images/hand_up_black.png"	// 이미지 preload
-		document.createElement("img").src = "../public/resources/images/mic_mute.png"	// 이미지 preload
-		document.createElement("img").src = "../public/resources/images/mic_red.png"	// 이미지 preload
-		document.createElement("img").src = "../public/resources/images/mic.png"	// 이미지 preload
-		document.createElement("img").src = "../public/resources/images/chat.png"	// 이미지 preload
-		document.createElement("img").src = "../public/resources/images/btn_left.png"	// 이미지 preload
-		document.createElement("img").src = "../public/resources/images/btn_right.png"	// 이미지 preload
+		// document.createElement("img").src = "../public/resources/images/hand_up_lime.png"	// 이미지 preload
+		// document.createElement("img").src = "../public/resources/images/hand_up_black.png"	// 이미지 preload
+		// document.createElement("img").src = "../public/resources/images/mic_mute.png"	// 이미지 preload
+		// document.createElement("img").src = "../public/resources/images/mic_red.png"	// 이미지 preload
+		// document.createElement("img").src = "../public/resources/images/mic.png"	// 이미지 preload
+		// document.createElement("img").src = "../public/resources/images/chat.png"	// 이미지 preload
+		// document.createElement("img").src = "../public/resources/images/btn_left.png"	// 이미지 preload
+		// document.createElement("img").src = "../public/resources/images/btn_right.png"	// 이미지 preload
 		setInterval(this.clock,1000);
 		
 		if (!window.opener) { // 직접 주소를 사용해서 들어왔을 때
