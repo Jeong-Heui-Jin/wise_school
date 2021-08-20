@@ -90,7 +90,7 @@ def noticefile(request, notice_id):
 def notice_detail(request, notice_id):
     notice = get_object_or_404(Notice, pk=notice_id)
     if request.method == 'GET':
-        serializer = NoticeSerializer(notice)    
+        serializer = NoticeListSerializer(notice)    
         return Response(serializer.data)
 
     elif request.method == 'PUT':
