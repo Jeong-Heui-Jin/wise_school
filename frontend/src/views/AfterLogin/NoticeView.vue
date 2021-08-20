@@ -29,10 +29,32 @@
         >{{ notice.content }}</b-form-textarea
       >
 
+      <!-- 이미지 -->
+      <div>
+        <b-button id="fileBtn" v-b-modal.modal-center>첨부파일</b-button>
+        
+        <b-modal id="modal-center" scrollable centered no-fade title="첨부 사진"
+          size="lg"
+        >
+          <form ref="form" style="text-align: center;">
+            <div v-if="images.length==0">
+              첨부파일이 없습니다.
+            </div>
+            <div v-else>
+              <ul>
+                <li v-for="image in images" :key="image">
+                  <!-- <img :src="image" class="gallery-image" style="max-width:800px; max-height:800px "> -->
+                  <img :src="image">
+                </li>
+              </ul>
+            </div>
+          </form>
+        </b-modal>
+      </div>
       <!-- 취소/수정/삭제 버튼 -->
       <button id="cancelBtn" @click="goNotice">목록</button>
       <!-- <button id="changeBtn">수정</button> -->
-      <button id="deleteBtn">삭제하기</button>
+      <button id="deleteBtn" @click="deleteNotice">삭제하기</button>
     </b-form>
   </div>
 </template>
@@ -63,8 +85,8 @@ export default {
       // console.log(notice_id); // undefined
       axios({
         method: "get",
-        // url: `http://127.0.0.1:8000/notice/${notice.id}/`,
-        url: `http://i5a205.p.ssafy.io:8000/notice/detail/${this.notice_id}/`,
+        url: `http://127.0.0.1:8000/notice/detail/${this.notice.id}/`,
+        // url: `http://i5a205.p.ssafy.io:8000/notice/detail/${this.notice.id}/`,
         headers: this.headers,
       })
         .then((res) => {
@@ -93,6 +115,21 @@ export default {
     goNotice: function () {
       this.$router.push({ name: "Notice" });
     },
+    deleteNotice: function (e) {
+      e.preventDefault();
+      axios({
+        method: "delete",
+        url: `http://i5a205.p.ssafy.io:8000/notice/detail/${this.notice.id}/`,
+        headers: this.headers,
+      })
+        .then((res) => {
+          console.log(res);
+          this.$router.push({ name: "Notice" });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
   computed: {
     ...mapState(["headers", "selected_notice"]),
@@ -100,6 +137,7 @@ export default {
   created: function () {
     this.setToken();
     this.notice = this.selected_notice;
+    console.log(this.notice)
   },
 };
 </script>
