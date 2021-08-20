@@ -100,10 +100,7 @@ export default {
         "fri",
       ],
       // 오름 차순 정렬 가정
-      timetableDetail : [
-        {Period : '1', Monday: '국어', Tuesday: '체육', Wednesday: '영어', Thursday: '사회', Friday: '수학'},
-        {Period : '2', Monday: '수학', Tuesday: '영어', Wednesday: '체육', Thursday: '국어', Friday: '과학'},
-      ],
+      timetableDetail : [],
       isNewTableCreated:false,
     }
   },
@@ -225,18 +222,34 @@ export default {
     },
     // 시간표 한 줄 추가
     addTimetable() {
-      const last = this.timetableDetail[this.timetableDetail.length-1];
-      this.timetableDetail.push({
-        isCreated:true,
-        mon:"",
-        tue:"",
-        wed:'',
-        thu:'',
-        fri:'',
-        start:last.end,
-        end:last.end,
-        time:`${+(last.time)+1}`,
-      })
+      console.log("@@@@@@@")
+      if(this.timetableDetail.length){
+        const last = this.timetableDetail[this.timetableDetail.length-1];
+        this.timetableDetail.push({
+          isCreated:true,
+          mon:"",
+          tue:"",
+          wed:'',
+          thu:'',
+          fri:'',
+          start:last.end,
+          end:last.end,
+          time:`${+(last.time)+1}`,
+        })
+      
+      } else {
+        this.timetableDetail.push({
+          isCreated:true,
+          mon:"",
+          tue:"",
+          wed:'',
+          thu:'',
+          fri:'',
+          start:"09:00",
+          end:"09:50",
+          time:1,
+        })
+      }
       this.isNewTableCreated=true;
       // const timetableBody = document.getElementsByClassName(this.timetableDetail.length+'-class');
       // console.log(timetableBody[0].children[1].children[0].value.length);
