@@ -4,53 +4,23 @@
     style="font-family: 'Jua', sans-serif"
     variant="light"
     v-if="this.now_user.usertype === 1"
+    id="homework-student"
   >
     <NavSideBar />
     <NavBar />
 
-    <h1 id="homeworkTitle">숙제 검사</h1>
+    <h1 id="homeworkTitle">{{selected_submited_homework.name}} 친구의 숙제</h1>
 
-    <!-- Homework Create Button -->
-    <button id="homeworkCreateBtn" @click="goHomeworkCreate()">
-      숙제 추가하기
-    </button>
+    <div id="homework-wrapper">
+      <div id="homework-content-wrapper">
+        <div id="homework-content-title">내용</div>
+        <textarea readonly id="homework-content-text" v-model="selected_submited_homework.content"></textarea>
+      </div>
+      <div id="homework-file-wrapper" v-if="selected_submited_homework.submithomeworkfile_set">
+        <img :src="selected_submited_homework.submithomeworkfile_set[0].image" alt="">
+      </div>
 
-    <!-- table/button/pagination div -->
-    <div id="homeworkForm">
-      <b-table
-        id="homeworkTable my-table"
-        :hover="true"
-        :small="false"
-        :borderless="true"
-        :items="items"
-        :fields="fields"
-        :per-page="perPage"
-        :current-page="currentPage"
-        @row-clicked="goHomeworkView"
-      >
-        <!-- items column -->
-        <!-- <template #cell(items)="data">
-          <b-link>{{ data.items.submitHomework }}</b-link>
-        </template> -->
-
-        <!-- Button -->
-        <template #cell(submitHomework)="data">
-          <b-button v-on:click="goHomeworkStatus(item)">
-            {{ data.item.submitHomework }}
-          </b-button>
-        </template>
-      </b-table>
-
-      <!-- Pagination -->
-      <b-pagination
-        id="paginationForm"
-        pills
-        v-model="currentPage"
-        :total-rows="rows"
-        :per-page="perPage"
-        aria-controls="my-table"
-        align="center"
-      ></b-pagination>
+      <button id="btn-cancel" @click="goHomeworkStatus">닫기</button>
     </div>
   </div>
 </template>
@@ -76,6 +46,7 @@ export default {
       ],
       items: [],
       classNum: 1,
+      text:"adsfasdfa",
     };
   },
   components: {
@@ -165,14 +136,12 @@ export default {
     rows() {
       return this.items.length;
     },
-    ...mapState(["headers", "now_user"]),
+    ...mapState(["headers", "now_user","information_homework", "selected_submited_homework"]),
   },
   created: function () {
     this.setToken();
-    this.getHomeworkList();
     this.getClassNum();
-    // console.log("this.now_user :", this.now_user);
-    // this.now_user = 1 // test
+    console.log(this.selected_submited_homework.submithomeworkfile_set[0].image)
   },
 };
 </script>
@@ -182,6 +151,60 @@ export default {
   position: fixed;
   top: 10px;
   left: 120px;
+}
+
+#homework-student #homework-wrapper{
+  position:absolute;
+  display: flex;
+  flex-direction: column;
+
+  top: 112px;
+  left: 370px;
+
+  max-width: 700px;
+  min-width: 700px;
+
+  min-height: 300px;
+
+  padding: 30px 40px;
+  border-radius: 20px;
+
+  background-color: #dcffaa;
+}
+
+#homework-wrapper #homework-content-wrapper{
+  text-align: left;
+  width: 100%;
+}
+
+#homework-content-wrapper #homework-content-title {
+  font-size: 25px;
+  margin: 0 0px 5px 10px;
+}
+
+#homework-content-wrapper #homework-content-text {
+  width: 100%;
+  min-height: 300px;
+
+  border-radius: 20px;
+  padding: 15px;
+
+  font-size: 25px;
+
+  resize: none;
+}
+
+#homework-content-wrapper #homework-content-text:focus {
+  outline: none;
+}
+
+#homework-wrapper #btn-cancel {
+  border-radius: 12px;
+  border: 0px;
+  color: red;
+  background-color: #fcb6b6;
+
+  min-width: 11%;
 }
 
 #homeworkForm {

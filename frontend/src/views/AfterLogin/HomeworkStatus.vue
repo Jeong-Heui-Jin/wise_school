@@ -3,7 +3,7 @@
     <NavSideBar />
     <NavBar />
 
-    <h1>안녕</h1>
+    <h1>{{information_homework.title}} 숙제 제출 명단</h1>
 
     <!-- Table -->
     <div id="homeworkStatusForm">
@@ -16,6 +16,7 @@
         :items="items"
         :per-page="perPage"
         :current-page="currentPage"
+        @row-clicked="goHomeworkStudent"
       >
       </b-table>
 
@@ -98,8 +99,10 @@ export default {
                 for (hw = 0; hw < submitHomeworkLength; ++hw) {
                   if (
                     res_student.data.students[i].id ===
-                    res.data.submithomework_set[hw].id
+                    res.data.submithomework_set[hw].student
                   ) {
+                    this.homeworkInfo = res.data.submithomework_set[hw];
+                    this.homeworkInfo.name=res_student.data.students[i].name
                     thisStudentSubmit = true;
                     break;
                   }
@@ -145,6 +148,15 @@ export default {
           console.error(error);
         });
     },
+
+    goHomeworkStudent (e) {
+      if(e.isSubmit==="제출") {   // 제출자만 화면이 넘어감.
+        // console.log(e.isSubmit)
+        console.log(this.homeworkInfo)
+        this.$store.dispatch("selectSubmitedHomework", this.homeworkInfo);
+        this.$router.push({ name: "HomeworkStudent" });
+      }
+    }
   },
   computed: {
     rows() {
