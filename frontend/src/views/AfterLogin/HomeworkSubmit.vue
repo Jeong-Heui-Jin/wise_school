@@ -180,18 +180,18 @@ export default {
 #noticeCreateForm #content {
   position: absolute;
   left: 100px;
-  top: 200px;
+  top: 80px;
 }
 
 #noticeCreateForm #contentText {
   position: absolute;
   left: 250px;
-  top: 200px;
+  top: 80px;
 
   max-width: 700px;
   min-width: 700px;
-  max-height: 220px;
-  min-height: 220px;
+  max-height: 320px;
+  min-height: 320px;
 
   padding: 10px;
 

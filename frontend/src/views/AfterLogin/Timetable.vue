@@ -99,7 +99,7 @@
       </b-row>      
     </b-container>
     <div id="button-form">
-      <button style="background-color: #74a7fe" @click="$router.push('/timetable_change')">수정하기</button>
+      <button v-if="now_user.usertype===1" style="background-color: #74a7fe" @click="$router.push('/timetable_change')">수정하기</button>
     </div>
   </div>
 </template>
@@ -267,7 +267,8 @@ export default {
   },
   computed: {
     ...mapState([
-      'headers'
+      'headers',
+      'now_user',
     ]),
   },
   created: function() {
