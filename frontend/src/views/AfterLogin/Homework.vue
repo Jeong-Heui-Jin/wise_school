@@ -6,7 +6,7 @@
     <h1 id="homeworkTitle">숙제 검사</h1>
 
     <!-- Homework Create Button -->
-    <div v-if="now_user==1">
+    <div v-if="now_user.usertype===1">
       <button id="homeworkCreateBtn" @click="goHomeworkCreate()">
       숙제 추가하기
       </button>
