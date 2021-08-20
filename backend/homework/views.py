@@ -99,8 +99,8 @@ def homeworkfile(request, homework_id):
 
 # 숙제 상세 조회 / 수정 / 삭제
 @api_view(['GET', 'PUT', 'DELETE', 'POST',])
-@authentication_classes([JSONWebTokenAuthentication])
-@permission_classes([IsAuthenticated])
+# @authentication_classes([JSONWebTokenAuthentication])
+# @permission_classes([IsAuthenticated])
 def homework_detail(request, homework_id):
     homework = get_object_or_404(Homework, pk=homework_id)
 
