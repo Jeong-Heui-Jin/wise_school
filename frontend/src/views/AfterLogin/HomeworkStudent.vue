@@ -17,7 +17,7 @@
         <textarea readonly id="homework-content-text" v-model="selected_submited_homework.content"></textarea>
       </div>
       <div id="homework-file-wrapper" v-if="selected_submited_homework.submithomeworkfile_set">
-        <img :src="selected_submited_homework.submithomeworkfile_set[0].image" alt="">
+        <img style="height:300px;width:600px; margin:10px; background-color:white;" :src="selected_submited_homework.submithomeworkfile_set[0].image" alt="">
       </div>
 
       <button id="btn-cancel" @click="goHomeworkStatus">닫기</button>
@@ -26,7 +26,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import NavSideBar from "@/components/NavSideBar.vue";
 import NavBar from "@/components/NavBar.vue";
 import { mapState } from "vuex";
@@ -54,82 +53,13 @@ export default {
     NavBar,
   },
   methods: {
-    btnClick: function () {
-      console.log("아야");
-    },
     setToken: function () {
       this.$store.dispatch("setToken");
     },
-    getHomeworkList: function () {
-      axios({
-        method: "get",
-        url: "http://i5a205.p.ssafy.io:8000/homework/list/",
-        headers: this.headers,
-      })
-        .then((res) => {
-          console.log("res.data :", res.data);
-          for (let i = 0; i < res.data.length; ++i) {
-            temp = {
-              id: res.data[i].id,
-              title: res.data[i].title,
-              end: res.data[i].end,
-              submitHomework:
-                String(res.data[i].submithomework_count) +
-                "/" +
-                String(this.classNum),
-            };
-            // console.log(temp);
-            this.items.push(temp);
-          }
-          // this.items = res.data;
-          // console.log(this.items);
-          // console.log(this.now_user);
 
-          // 모든 items의 end 데이터를 가공한다.
-          for (let i = 0; i < this.items.length; ++i) {
-            var temp = this.items[i].end;
-            // console.log(temp);
-
-            this.items[i].end =
-              temp.substring(5, 7) +
-              "월 " +
-              temp.substring(8, 10) +
-              "일 " +
-              temp.substring(11, 13) +
-              "시 " +
-              temp.substring(14, 16) +
-              "분";
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    goHomeworkCreate: function () {
-      window.open("/homework_create", "_self");
-    },
-    goHomeworkView: function (homework) {
-      this.$store.dispatch("selectHomework", homework);
-      this.$router.push({ name: "HomeworkView" });
-    },
     goHomeworkStatus: function (homework) {
       this.$store.dispatch("selectHomework", homework);
       this.$router.push({ name: "HomeworkStatus" });
-    },
-    getClassNum: function () {
-      axios({
-        method: "get",
-        url: "http://i5a205.p.ssafy.io:8000/accounts/class-members/",
-        headers: this.headers,
-      })
-        .then((res) => {
-          // 선생님을 제외한 학생의 수 저장
-          this.classNum = res.data.length - 1;
-          console.log(this.classNum);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
     },
   },
   computed: {
@@ -184,7 +114,7 @@ export default {
 
 #homework-content-wrapper #homework-content-text {
   width: 100%;
-  min-height: 300px;
+  min-height: 100px;
 
   border-radius: 20px;
   padding: 15px;
@@ -205,46 +135,5 @@ export default {
   background-color: #fcb6b6;
 
   min-width: 11%;
-}
-
-#homeworkForm {
-  position: fixed;
-
-  /* 최대 가로/세로 길이 설정 */
-  /* 너비는 최소/최대 길이 동일 설정 */
-  max-width: 1000px;
-  min-width: 1000px;
-  height: 600px;
-  /* min-height: 75%; */
-
-  top: 152px;
-  left: 400px;
-
-  /* font-size 증가 */
-  font-size: 130%;
-}
-
-#homeworkForm #homeworkTable {
-  position: absolute;
-  top: 60px;
-}
-
-#homeworkCreateBtn {
-  position: absolute;
-  top: 112px;
-  left: 1200px;
-
-  min-width: 155px;
-
-  border-radius: 10px;
-  border: 0px;
-  background-color: #dcffaa;
-}
-
-#paginationForm {
-  /* position: absolute; */
-  /* left: 220px; */
-  /* align: center; */
-  bottom: 50px;
 }
 </style>
