@@ -13,7 +13,7 @@
         notice.title
       }}</b-form-input>
 
-      <h2 id="endTitle">마감일</h2>
+      <h2 id="endTitle">등록날짜</h2>
       <b-form-input readonly id="endDate" v-model="notice.registertime">
         {{ notice.registertime }}
       </b-form-input>
@@ -138,9 +138,11 @@ export default {
   created: function () {
     this.setToken();
     this.notice = this.selected_notice;
-    for(let i;i<this.notice.noticefile_set.length;i++){
-      this.images.push(this.notice.noticefile_set[i].image);
+    console.log(this.notice)
+    for(let i;i<this.notice.noticefile_set.image.length;i++){
+      this.images.push(this.notice.noticefile_set.image[length]);
     }
+    
   },
 };
 </script>

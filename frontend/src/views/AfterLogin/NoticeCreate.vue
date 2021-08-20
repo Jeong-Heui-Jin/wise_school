@@ -217,7 +217,7 @@ export default {
 #noticeCreateForm #content {
   position: absolute;
   left: 100px;
-  top: 200px;
+  top: 300px;
 }
 
 #noticeCreateForm #contentText {
@@ -227,8 +227,8 @@ export default {
 
   max-width: 700px;
   min-width: 700px;
-  max-height: 220px;
-  min-height: 220px;
+  max-height: 120px;
+  min-height: 120px;
 
   padding: 10px;
 
