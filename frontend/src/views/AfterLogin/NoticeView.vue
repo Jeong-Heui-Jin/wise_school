@@ -43,7 +43,6 @@
             <div v-else>
               <ul>
                 <li v-for="image in images" :key="image">
-                  <!-- <img :src="image" class="gallery-image" style="max-width:800px; max-height:800px "> -->
                   <img :src="image">
                 </li>
               </ul>
@@ -52,7 +51,7 @@
         </b-modal>
       </div>
       <!-- 취소/수정/삭제 버튼 -->
-      <button id="cancelBtn" @click="goNotice">목록</button>
+      <b-button id="cancelBtn" @click="goNotice">목록</b-button>
       <!-- <button id="changeBtn">수정</button> -->
       <button id="deleteBtn" @click="deleteNotice">삭제하기</button>
     </b-form>
@@ -74,6 +73,7 @@ export default {
   data: function () {
     return {
       notice: {},
+      images:[]
     };
   },
   methods: {
@@ -85,8 +85,8 @@ export default {
       // console.log(notice_id); // undefined
       axios({
         method: "get",
-        url: `http://127.0.0.1:8000/notice/detail/${this.notice.id}/`,
-        // url: `http://i5a205.p.ssafy.io:8000/notice/detail/${this.notice.id}/`,
+        // url: `http://127.0.0.1:8000/notice/detail/${this.notice.id}/`,
+        url: `http://i5a205.p.ssafy.io:8000/notice/detail/${this.notice.id}/`,
         headers: this.headers,
       })
         .then((res) => {
@@ -137,7 +137,9 @@ export default {
   created: function () {
     this.setToken();
     this.notice = this.selected_notice;
-    console.log(this.notice)
+    for(let i;i<this.notice.noticefile_set.length;i++){
+      this.images.push(this.notice.noticefile_set[i].image);
+    }
   },
 };
 </script>
@@ -284,6 +286,6 @@ export default {
   vertical-align: auto;
 
   width: 70px;
-  height: 25px;
+  height: 35px;
 }
 </style>
