@@ -70,7 +70,6 @@ export default {
   },
   created: function () {
     this.setToken();
-    console.log(this.selected_submited_homework.submithomeworkfile_set[0])
   },
 };
 </script>
