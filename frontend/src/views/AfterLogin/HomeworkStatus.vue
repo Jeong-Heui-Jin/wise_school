@@ -54,7 +54,7 @@ export default {
       items: [],
 
       studentInfo: null,
-      homeworkInfo: null,
+      homeworkInfo: [],
     };
   },
   components: {
@@ -101,7 +101,12 @@ export default {
                     res_student.data.students[i].id ===
                     res.data.submithomework_set[hw].student
                   ) {
-                    this.homeworkInfo = res.data.submithomework_set[hw];
+                    var data={
+                      homeworkInfo:res.data.submithomework_set[hw],
+                      name:res_student.data.students[i].name
+                    }
+                    data.homeworkInfo.name=res_student.data.students[i].name;
+                    this.homeworkInfo.push(data)
                     this.homeworkInfo.name=res_student.data.students[i].name
                     thisStudentSubmit = true;
                     break;
@@ -153,8 +158,12 @@ export default {
       if(e.isSubmit==="제출") {   // 제출자만 화면이 넘어감.
         // console.log(e.isSubmit)
         console.log(this.homeworkInfo)
-        this.$store.dispatch("selectSubmitedHomework", this.homeworkInfo);
-        this.$router.push({ name: "HomeworkStudent" });
+        this.homeworkInfo.forEach((arr)=>{
+          if(arr.name === e.studentName) {
+            this.$store.dispatch("selectSubmitedHomework", arr.homeworkInfo);
+            this.$router.push({ name: "HomeworkStudent" });
+          }
+        });
       }
     }
   },
