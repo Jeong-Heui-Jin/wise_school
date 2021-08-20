@@ -96,6 +96,9 @@ export default {
           // 모든 notice의 registertime 데이터를 가공한다.
           var temp = this.notice.registertime;
           // console.log(temp);
+          for(let i=0;i<this.notice.noticefile_set.length;i++){
+            this.images.push(this.notice.noticefile_set[i].image);
+          }
 
           this.notice.registertime =
             temp.substring(5, 7) +
@@ -116,7 +119,7 @@ export default {
       this.$router.push({ name: "Notice" });
     },
     deleteNotice: function (e) {
-      console.log(this.notice.id)
+      // console.log(this.notice.id)
       e.preventDefault();
       axios({
         method: "delete",
@@ -138,11 +141,9 @@ export default {
   created: function () {
     this.setToken();
     this.notice = this.selected_notice;
-    console.log(this.notice)
-    for(let i;i<this.notice.noticefile_set.image.length;i++){
-      this.images.push(this.notice.noticefile_set.image[length]);
+    for(let i=0;i<this.notice.noticefile_set.length;i++){
+      this.images.push(this.notice.noticefile_set[i].image);
     }
-    
   },
 };
 </script>

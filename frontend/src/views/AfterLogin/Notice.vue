@@ -133,7 +133,7 @@ export default {
             this.items.push(res.data[i]);
           }
           // this.items = res.data;
-          console.log(this.items);
+          // console.log(this.items);
 
           // console.log(this.importantItems);
         })
