@@ -5,7 +5,7 @@
     <NavBar />
 
     <!-- 작성 Form -->
-    <b-form id="noticeCreateForm">
+    <b-form id="homeworkSubmitForm">
       <h1 id="homeworkSubmitTitle">숙제 제출</h1>
 
       <!-- 내용 -->
@@ -118,7 +118,7 @@ export default {
 </script>
 
 <style>
-#noticeCreateForm {
+#homeworkSubmitForm {
   position: fixed;
 
   width: 1100px;
@@ -133,7 +133,7 @@ export default {
   font-size: 160%;
 }
 
-#noticeCreateForm #homeworkSubmitTitle {
+#homeworkSubmitForm #homeworkSubmitTitle {
   position: fixed;
   top: 10px;
   left: 120px;
@@ -141,13 +141,13 @@ export default {
   margin-top: 20px;
 }
 
-#noticeCreateForm #sub-title {
+#homeworkSubmitForm #sub-title {
   position: absolute;
   left: 100px;
   top: 70px;
 }
 
-#noticeCreateForm #titleName {
+#homeworkSubmitForm #titleName {
   position: absolute;
   left: 250px;
   top: 60px;
@@ -159,13 +159,13 @@ export default {
   border-radius: 10px;
 }
 
-#noticeCreateForm #endTitle {
+#homeworkSubmitForm #endTitle {
   position: absolute;
   left: 100px;
   top: 135px;
 }
 
-#noticeCreateForm #endDate {
+#homeworkSubmitForm #endDate {
   position: absolute;
   left: 250px;
   top: 135px;
@@ -177,13 +177,13 @@ export default {
   border-radius: 10px;
 }
 
-#noticeCreateForm #content {
+#homeworkSubmitForm #content {
   position: absolute;
   left: 100px;
   top: 80px;
 }
 
-#noticeCreateForm #contentText {
+#homeworkSubmitForm #contentText {
   position: absolute;
   left: 250px;
   top: 80px;
@@ -201,14 +201,14 @@ export default {
   border-radius: 10px;
 }
 
-#noticeCreateForm #fileUploadTitle {
+#homeworkSubmitForm #fileUploadTitle {
   position: absolute;
   left: 100px;
   top: 445px;
   background-color: transparent;
 }
 
-#noticeCreateForm #files {
+#homeworkSubmitForm #files {
   position: absolute;
   left: 250px;
   top: 440px;
@@ -223,7 +223,7 @@ export default {
   padding-left: 15px;
 }
 
-#noticeCreateForm #cancelBtn {
+#homeworkSubmitForm #cancelBtn {
   position: absolute;
   top: 550px;
   left: 670px;
@@ -236,7 +236,7 @@ export default {
   min-width: 11%;
 }
 
-#noticeCreateForm #saveBtn {
+#homeworkSubmitForm #saveBtn {
   position: absolute;
   top: 550px;
   left: 330px;
