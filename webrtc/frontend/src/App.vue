@@ -51,15 +51,16 @@
 				</div>
 				<div class="my-function">
 					<div class="function" id="mic" @click="muteMyVoice">
-						<img src="../public/resources/images/mic.png" alt="" v-if="!muted">
-						<img src="../public/resources/images/mic_mute.png" alt="" v-else>
+						<img src="http://dycho96.s3.ap-northeast-2.amazonaws.com/2021-08-2010:47:19.942401.png" alt="" v-if="!muted">
+						<img src="http://dycho96.s3.ap-northeast-2.amazonaws.com/2021-08-2010:47:20.017923.png" alt="" v-else>
 					</div>
 					<!-- 화면공유 -->														
 					<div class="function" id="screen-sharing" @click="startScreenSharing">
 						<img src="../public/resources/images/screen.png" alt="">
 					</div>
 					<div class="function" id="hand-up" @click="raiseMyHand">
-						<img src="../public/resources/images/hand_up_lime.png" alt="" v-if="handUp">
+						<!-- 라임색 손들기 아이콘 -->
+						<img src="http://dycho96.s3.ap-northeast-2.amazonaws.com/2021-08-2010:47:19.824859.png" alt="" v-if="handUp">
 						<img src="../public/resources/images/hand_up.png" alt="" v-else>
 					</div>
 				</div>
@@ -98,13 +99,13 @@
 								<img style="width:25px; height:25px;" src="../public/resources/images/mute.png" alt="" v-else>
 							</div>
 							<div class="student-function student-hand-up-clicked" id="student-hand-up" @click="downHand(sub)" v-if="sub.handUp">
-								<img style="width:25px; height:25px;" src="../public/resources/images/hand_up_black.png" alt="">
+								<img style="width:25px; height:25px;" src="http://dycho96.s3.ap-northeast-2.amazonaws.com/2021-08-2010:47:19.792856.png" alt="">
 							</div>
 							<div class="student-function" id="student-hand-up" @click="downHand(sub)" v-else>
-								<img style="width:25px; height:25px;" src="../public/resources/images/hand_up_black.png" alt="">
+								<img style="width:25px; height:25px;" src="http://dycho96.s3.ap-northeast-2.amazonaws.com/2021-08-2010:47:19.792856.png" alt="">
 							</div>
 							<div class="student-function" id="student-alert" @click="makeMessage(sub.stream.connection)">
-								<img style="width:25px; height:25px;" src="../public/resources/images/chat.png" alt="">
+								<img style="width:25px; height:25px;" src="http://dycho96.s3.ap-northeast-2.amazonaws.com/2021-08-2010:47:19.727092.png" alt="">
 							</div>
 						</div>
 					</div>
@@ -126,7 +127,7 @@
 		<div class="alert-message-wrapper" v-if='alertMessage' @click="closeModal">
 			<div class="alert-message-background"></div>
 			<div class="alert-message-modal" >
-				<img src="../public/resources/images/memo2.png" alt="">
+				<img src="http://dycho96.s3.ap-northeast-2.amazonaws.com/2021-08-2010:47:19.882288.png" alt="">
 				<div class="alert-message-title">{{receivedFrom}}님이 쪽지를 보냈어요</div>
 				<div class="alert-message-content"> {{alertMessage}} </div>
 			</div>
