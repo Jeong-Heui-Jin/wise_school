@@ -36,7 +36,7 @@
 			</div>
 			<!-- 나가기 버튼 -->
 			<div class="exit" @click="leaveSession">
-				<img id="exit" src="../public/resources/images/opened-door-aperture.png" alt="">
+				<img id="exit" src="http://dycho96.s3.ap-northeast-2.amazonaws.com/2021-08-2011:04:13.226065.png" alt="">
 			</div>
 		</div>
 
@@ -45,7 +45,7 @@
 				<div class="session-title">
 					화목한 {{ mySessionId }}반
 					<div class="session-personel">
-						<div class="session-personel-image"><img src="../public/resources/images/class.png" alt=""></div>
+						<div class="session-personel-image"><img src="http://dycho96.s3.ap-northeast-2.amazonaws.com/2021-08-2011:04:13.084093.png" alt=""></div>
 						<div id="session-count">{{count}} </div>
 					</div>
 				</div>
@@ -56,12 +56,12 @@
 					</div>
 					<!-- 화면공유 -->														
 					<div class="function" id="screen-sharing" @click="startScreenSharing">
-						<img src="../public/resources/images/screen.png" alt="">
+						<img src="http://dycho96.s3.ap-northeast-2.amazonaws.com/2021-08-2011:04:13.311077.png" alt="">
 					</div>
 					<div class="function" id="hand-up" @click="raiseMyHand">
 						<!-- 라임색 손들기 아이콘 -->
 						<img src="http://dycho96.s3.ap-northeast-2.amazonaws.com/2021-08-2010:47:19.824859.png" alt="" v-if="handUp">
-						<img src="../public/resources/images/hand_up.png" alt="" v-else>
+						<img src="http://dycho96.s3.ap-northeast-2.amazonaws.com/2021-08-2011:04:13.115793.png" alt="" v-else>
 					</div>
 				</div>
 				<div class="session-title"></div>
@@ -95,8 +95,8 @@
 						<user-video :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
 						<div class="video-function">
 							<div class="student-function" id="student-mute" @click="muteStudent(sub.stream.connection)">
-								<img style="width:25px; height:25px;" src="../public/resources/images/unmute.png" alt="" v-if="sub.muted">
-								<img style="width:25px; height:25px;" src="../public/resources/images/mute.png" alt="" v-else>
+								<img style="width:25px; height:25px;" src="http://dycho96.s3.ap-northeast-2.amazonaws.com/2021-08-2011:04:13.359956.png" alt="" v-if="sub.muted">
+								<img style="width:25px; height:25px;" src="http://dycho96.s3.ap-northeast-2.amazonaws.com/2021-08-2011:04:13.186597.png" alt="" v-else>
 							</div>
 							<div class="student-function student-hand-up-clicked" id="student-hand-up" @click="downHand(sub)" v-if="sub.handUp">
 								<img style="width:25px; height:25px;" src="http://dycho96.s3.ap-northeast-2.amazonaws.com/2021-08-2010:47:19.792856.png" alt="">
@@ -113,12 +113,12 @@
 			</div>
 			<div id="btn-left" v-if="count>16">
 				<div class="btn-move" @click="move(-1)">
-					<img src="../public/resources/images/btn_left.png" alt="">
+					<img src="http://dycho96.s3.ap-northeast-2.amazonaws.com/2021-08-2011:04:12.914434.png" alt="">
 				</div>
 			</div>
 			<div id="btn-right" v-if="count>16">
 				<div class="btn-move" @click="move(1)">
-					<img src="../public/resources/images/btn_right.png" alt="">
+					<img src="http://dycho96.s3.ap-northeast-2.amazonaws.com/2021-08-2011:04:13.008388.png" alt="">
 				</div>
 			</div>
 		</div>
@@ -136,7 +136,7 @@
 		<div class="alert-message-write-wrapper no-drag" v-if="isAlertWriting">
 			<div class="alert-message-write">
 				<div class="alert-message-write-nav">
-					<img src="../public/resources/images/circlesqure2.png" alt="">
+					<img src="http://dycho96.s3.ap-northeast-2.amazonaws.com/2021-08-2011:04:13.048204.png" alt="">
 					<div class="alert-message-write-to">{{alertTo}}</div><div class="alert-message-write-close" @click="closeWriter">X</div>
 				</div>
 				<div class="alert-message-write-foot">
@@ -786,18 +786,6 @@ export default {
 	},
 
 	created() {
-		document.createElement("img").src = "../public/resources/images/memo2.png"	// 이미지 preload
-		document.createElement("img").src = "../public/resources/images/circlesqure2.png"	// 이미지 preload
-		document.createElement("img").src = "../public/resources/images/mute.png"	// 이미지 preload
-		document.createElement("img").src = "../public/resources/images/unmute.png"	// 이미지 preload
-		// document.createElement("img").src = "../public/resources/images/hand_up_lime.png"	// 이미지 preload
-		// document.createElement("img").src = "../public/resources/images/hand_up_black.png"	// 이미지 preload
-		// document.createElement("img").src = "../public/resources/images/mic_mute.png"	// 이미지 preload
-		// document.createElement("img").src = "../public/resources/images/mic_red.png"	// 이미지 preload
-		// document.createElement("img").src = "../public/resources/images/mic.png"	// 이미지 preload
-		// document.createElement("img").src = "../public/resources/images/chat.png"	// 이미지 preload
-		// document.createElement("img").src = "../public/resources/images/btn_left.png"	// 이미지 preload
-		// document.createElement("img").src = "../public/resources/images/btn_right.png"	// 이미지 preload
 		setInterval(this.clock,1000);
 		
 		if (!window.opener) { // 직접 주소를 사용해서 들어왔을 때
