@@ -30,7 +30,7 @@
                 </div>
             </div>
         </div>
-        <div v-if="usertype == 1">
+        <div v-if="now_user.usertype == 1">
             <button id="student-info-change" type="button" @click="infoChange">수정하기</button>
             <button id="student-info-recovery" type="button" @click="infoRecovery">되돌리기</button>
         </div>
